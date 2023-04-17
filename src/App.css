@@ -2,10 +2,6 @@
   text-align: center;
 }
 
-body {
-  background-color: gray;
-}
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -36,7 +32,8 @@ body {
   display: none;
 }
 
-a, ul {
+a,
+ul {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -50,4 +47,49 @@ a, ul {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Path: src\index.css */
+.sectionFirst {
+  background: url('https://malaebapp.com/images/bgImage.png');
+  background-position: center;
+  min-height: 20rem;
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.sectionFirst .overlay {
+  background-color: rgb(0 0 0 / 48%);
+  min-height: 20rem;
+}
+
+.cardPlayground {
+  background: #ffffff;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.12);
+  border-radius: 20px;
+}
+
+input[type='range'] {
+  outline: none;
+  width: 100%;
+  background: transparent;
+}
+
+/* Path: src\components\Header.css */
+.fa-star:before {
+  content: "\f005";
+}
+
+.stars {
+  color: #F0803C;
+}
+
+.cardList .card-img-top {
+  height: 190px;
+  width: 100%;
+  border-radius: 20px 0px 0px 20px;
+  object-fit: cover;
 }
