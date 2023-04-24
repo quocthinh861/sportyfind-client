@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { useState } from 'react'
 import DistanceSlider from './components/DistanceSlider.tsx'
+import Layout from './layouts/Layout.tsx'
 
 function App() {
   const [startDate, setStartDate] = useState(new Date())
@@ -17,8 +18,7 @@ function App() {
   }
 
   return (
-    <div>
-      <Header />
+    <Layout>
       <div className="sectionFirst">
         <div className="overlay">
           <div className="container pt-5">
@@ -348,9 +348,7 @@ function App() {
                         <small title="Bahrain, Riffa - Southern Governorate">
                           Riffa Alshamali, Riffa, Bahrain
                         </small>
-                        <small
-                          class="badge badge-dark label-dark mx-1 p-1 text-black-50"
-                        >
+                        <small class="badge badge-dark label-dark mx-1 p-1 text-black-50">
                           2.26 KM Away
                         </small>
                       </p>
@@ -579,7 +577,7 @@ function App() {
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   )
 }
 
