@@ -1,3 +1,4 @@
+
 .App {
   text-align: center;
 }
@@ -78,13 +79,18 @@ input[type='range'] {
   background: transparent;
 }
 
+.text-green {
+  color: #85C240;
+}
+
+
 /* Path: src\components\Header.css */
 .fa-star:before {
-  content: "\f005";
+  content: '\f005';
 }
 
 .stars {
-  color: #F0803C;
+  color: #f0803c;
 }
 
 .cardList .card-img-top {
@@ -92,4 +98,218 @@ input[type='range'] {
   width: 100%;
   border-radius: 20px 0px 0px 20px;
   object-fit: cover;
+}
+
+/* Path: Home */
+
+.imgMedia {
+  width: 100px;
+  height: 100px;
+  border-radius: 20px;
+}
+
+.bgImage {
+  background: url(https://malaebapp.com/images/bg.png);
+  object-fit: cover;
+  width: 112px;
+  height: 112px;
+  position: relative;
+  margin: auto;
+}
+
+.imageFixedHeight {
+  align-self: center;
+  max-height: 100%;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+
+/* Path: src\components\SignIn.css */
+.mt-7 {
+  margin-top: 8rem !important;
+}
+
+.form-inline {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+.login .btn {
+  display: inline-block;
+  color: #212529;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0.525rem 0.75rem;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  border-radius: 0.2rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.login .btn-block {
+  display: block;
+  width: 100%;
+}
+
+.login .btn-secondary {
+  color: #fff;
+  background-color: #3d348b;
+  border-color: #3d348b;
+}
+
+.login .btn-green {
+  background-color: #85C240;
+  border-color: #85C240;
+  color: #fff;
+}
+
+.login .btn-green:hover {
+  background-color: #619a2e;
+  border-color: #619a2e;
+  color: #fff;
+}
+
+.login .btn-social {
+  position: relative;
+  padding-left: 3rem;
+}
+
+.login .btn {
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.login .btn-outline-red {
+  color: #cf4332!important;
+  border-color: #cf4332;
+}
+
+.login .btn-outline-primary {
+  color: #3d348b!important;
+  border-color: #3d348b;
+}
+
+.login .btn-outline-primary:hover {
+  color: #fff!important;
+  background-color: #3d348b;
+  border-color: #3d348b;
+}
+
+.login .btn-outline-red:hover {
+  color: #fff!important;
+  border-color: #fff;
+  background-color: #cf4332;
+}
+
+.login .btn-block+.btn-block {
+  margin-top: 0.5rem;
+}
+
+.login .row > div:nth-of-type(2) {
+  position: relative;
+}
+
+.login .btn-social-icon {
+  position: absolute;
+  left: 1rem;
+  width: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.login h1, .login h3 {
+  font-weight: 700;
+  font-family: "Noto Sans", sans-serif;
+}
+
+.custom-control {
+  position: relative;
+  display: block;
+  min-height: 1.6rem;
+  padding-left: 1.5rem;
+}
+
+.custom-control-input {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
+
+.custom-control-label {
+  position: relative;
+  margin-bottom: 0;
+  vertical-align: top;
+}
+
+.custom-control-label::before {
+  position: absolute;
+  top: 0.3rem;
+  left: -1.5rem;
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  pointer-events: none;
+  content: "";
+  background-color: #fff;
+  border: #adb5bd solid 1px;
+}
+
+.custom-checkbox .custom-control-label::before {
+  border-radius: 0.4rem;
+}
+
+.custom-control-input:checked~.custom-control-label::before {
+  color: #fff;
+  border-color: #4e66f8;
+  background-color: #4e66f8;
+}
+
+.custom-control-label::after {
+  position: absolute;
+  top: 0.3rem;
+  left: -1.5rem;
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  content: "";
+  background: no-repeat 50% / 50% 50%;
+}
+
+.custom-checkbox .custom-control-input:checked~.custom-control-label::after {
+  background-image: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e);
+}
+
+.bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  filter: brightness(0.5);
+}
+
+img.bg-image {
+  font-family: "object-fit: cover;";
+  -o-object-fit: cover;
+  object-fit: cover;
+}
+
+.float-right {
+  float: right !important;
 }
