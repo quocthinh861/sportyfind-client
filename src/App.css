@@ -29,16 +29,22 @@
   color: #61dafb;
 }
 
-.hide {
-  display: none;
-}
-
 a,
 ul {
   margin: 0;
   padding: 0;
   list-style: none;
   text-decoration: none;
+}
+
+.hide {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.show {
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
 }
 
 @keyframes App-logo-spin {
@@ -135,6 +141,10 @@ input[type='range'] {
 /* Path: src\components\SignIn.css */
 .mt-7 {
   margin-top: 8rem !important;
+}
+
+.mt-6 {
+  margin-top: 5rem !important;
 }
 
 .form-inline {
@@ -313,3 +323,20 @@ img.bg-image {
 .float-right {
   float: right !important;
 }
+
+/* Path: src\components\List.css */
+
+/* custom-datepicker.css */
+.react-datepicker__day--selected {
+  background-color: #4caf50!important; /* Change this to your desired color */
+  border-radius: 50%!important;
+}
+
+
+/* Path: src\components\Findgame.css */
+.findteam .yourteam .card {
+  text-align: center;
+  width: 48%;
+  border-radius: 30px;
+}
+

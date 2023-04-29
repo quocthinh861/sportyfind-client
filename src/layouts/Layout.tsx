@@ -1,18 +1,17 @@
-import React, { ReactNode } from 'react'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-
+import React, { ReactNode } from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 type LayoutProps = {
-    children: ReactNode
-}
+  children: ReactNode;
+};
 
 export default function Layout({ children }: LayoutProps) {
-    return (
-        <div>
-            <Header />
-            {children}
-            <Footer />
-        </div>
-    )
+  return (
+    <div>
+      <Header />
+      <main style={{ paddingTop: "60px" }}>{children}</main>
+      <Footer />
+    </div>
+  );
 }

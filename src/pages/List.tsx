@@ -1,18 +1,10 @@
 import React, { useState } from "react";
-import DatePicker from 'react-datepicker'
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import DistanceSlider from "../components/DistanceSlider.tsx";
 
 function List() {
-
-  const [startDate, setStartDate] = useState(new Date())
-  const [endDate, setEndDate] = useState(new Date())
-
-  const onChange = (dates) => {
-    const [start, end] = dates
-    setStartDate(start)
-    setEndDate(end)
-  }
+  const [startDate, setStartDate] = useState(new Date());
 
   return (
     <>
@@ -42,8 +34,10 @@ function List() {
                     className="me-2"
                     src="https://malaebapp.com/images/point.png"
                     alt="img"
-                  />{' '}
-                  <span className="border-bottom text-uppercase">Filter By</span>{' '}
+                  />{" "}
+                  <span className="border-bottom text-uppercase">
+                    Filter By
+                  </span>{" "}
                   <img
                     className="ms-2"
                     src="https://malaebapp.com/images/point.png"
@@ -51,14 +45,24 @@ function List() {
                   />
                 </h3>
               </div>
-              <DatePicker
-                selected={startDate}
-                onChange={onChange}
-                startDate={startDate}
-                endDate={endDate}
-                selectsRange
-                inline
-              />
+              <p className="mt-2 mb-1 fw-bold">Date</p>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  minDate={new Date()}
+                  maxDate={new Date().setDate(new Date().getDate() + 7)}
+                  inline
+                  calendarClassName="custom-calendar" // add a custom CSS class to the calendar container
+                  className="custom-datepicker" // add a custom CSS class to the date-picker container
+                  dayClassName={(date) =>
+                    date.getTime() === startDate.getTime()
+                      ? "custom-selected"
+                      : undefined
+                  } // add a custom CSS class to the selected date element
+                  showMonthYearPicker={false} // disable month and year picker
+                />
+              </div>
               <div className="row">
                 <div className="col">
                   <div className="form-group">
@@ -347,9 +351,7 @@ function List() {
                         <small title="Bahrain, Riffa - Southern Governorate">
                           Riffa Alshamali, Riffa, Bahrain
                         </small>
-                        <small
-                          className="badge badge-dark label-dark mx-1 p-1 text-black-50"
-                        >
+                        <small className="badge badge-dark label-dark mx-1 p-1 text-black-50">
                           2.26 KM Away
                         </small>
                       </p>
@@ -360,7 +362,7 @@ function List() {
                             src="https://malaebapp.com/images/sports/1.png"
                             width="20"
                             alt="img"
-                          />{' '}
+                          />{" "}
                           7 v 7
                         </span>
                         <span className="badge text-dark border mx-1 p-0 px-1 p-1">
@@ -368,7 +370,7 @@ function List() {
                             src="https://malaebapp.com/images/sports/1.png"
                             width="20"
                             alt="img"
-                          />{' '}
+                          />{" "}
                           7 v 7
                         </span>
                       </h6>
@@ -400,9 +402,7 @@ function List() {
                         <small title="Bahrain, Riffa - Southern Governorate">
                           Riffa Alshamali, Riffa, Bahrain
                         </small>
-                        <small
-                          className="badge badge-dark label-dark mx-1 p-1 text-black-50"
-                        >
+                        <small className="badge badge-dark label-dark mx-1 p-1 text-black-50">
                           2.26 KM Away
                         </small>
                       </p>
@@ -413,7 +413,7 @@ function List() {
                             src="https://malaebapp.com/images/sports/1.png"
                             width="20"
                             alt="img"
-                          />{' '}
+                          />{" "}
                           7 v 7
                         </span>
                         <span className="badge text-dark border mx-1 p-0 px-1 p-1">
@@ -421,7 +421,7 @@ function List() {
                             src="https://malaebapp.com/images/sports/1.png"
                             width="20"
                             alt="img"
-                          />{' '}
+                          />{" "}
                           7 v 7
                         </span>
                       </h6>
@@ -453,9 +453,7 @@ function List() {
                         <small title="Bahrain, Riffa - Southern Governorate">
                           Riffa Alshamali, Riffa, Bahrain
                         </small>
-                        <small
-                          className="badge badge-dark label-dark mx-1 p-1 text-black-50"
-                        >
+                        <small className="badge badge-dark label-dark mx-1 p-1 text-black-50">
                           2.26 KM Away
                         </small>
                       </p>
@@ -466,7 +464,7 @@ function List() {
                             src="https://malaebapp.com/images/sports/1.png"
                             width="20"
                             alt="img"
-                          />{' '}
+                          />{" "}
                           7 v 7
                         </span>
                         <span className="badge text-dark border mx-1 p-0 px-1 p-1">
@@ -474,12 +472,12 @@ function List() {
                             src="https://malaebapp.com/images/sports/1.png"
                             width="20"
                             alt="img"
-                          />{' '}
+                          />{" "}
                           7 v 7
                         </span>
                       </h6>
                       <button className="btn btnBook w-100 d-none d-md-block">
-                        Booking now 
+                        Booking now
                       </button>
                     </div>
                   </div>
@@ -506,9 +504,7 @@ function List() {
                         <small title="Bahrain, Riffa - Southern Governorate">
                           Riffa Alshamali, Riffa, Bahrain
                         </small>
-                        <small
-                          className="badge badge-dark label-dark mx-1 p-1 text-black-50"
-                        >
+                        <small className="badge badge-dark label-dark mx-1 p-1 text-black-50">
                           2.26 KM Away
                         </small>
                       </p>
@@ -519,7 +515,7 @@ function List() {
                             src="https://malaebapp.com/images/sports/1.png"
                             width="20"
                             alt="img"
-                          />{' '}
+                          />{" "}
                           7 v 7
                         </span>
                         <span className="badge text-dark border mx-1 p-0 px-1 p-1">
@@ -527,7 +523,7 @@ function List() {
                             src="https://malaebapp.com/images/sports/1.png"
                             width="20"
                             alt="img"
-                          />{' '}
+                          />{" "}
                           7 v 7
                         </span>
                       </h6>

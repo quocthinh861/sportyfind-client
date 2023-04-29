@@ -6,7 +6,6 @@ import React from "react";
 
 function SignIn() {
   return (
-    <main style={{paddingTop: '60px'}}>
       <div className="container-fluid px-3 login">
         <div className="row min-vh-100">
           <div className="col-md-8 col-lg-6 col-xl-5 d-flex align-items-center">
@@ -183,7 +182,6 @@ function SignIn() {
           </div>
         </div>
       </div>
-    </main>
   );
 }
 

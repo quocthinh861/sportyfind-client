@@ -10,6 +10,7 @@ import Layout from './layouts/Layout.tsx'
 import Home from './pages/Home.tsx'
 import List from './pages/List.tsx'
 import SignIn from './pages/SignIn.tsx'
+import FindTeam from './pages/FindTeam.tsx'
 
 function App() {
   const [startDate, setStartDate] = useState(new Date())
@@ -27,6 +28,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/list" element={<List />}></Route>
+          <Route path="/find-team" element={<FindTeam />}></Route>
           <Route path="/users/sign-in" element={<SignIn />}></Route>
         </Routes>
       </BrowserRouter>
