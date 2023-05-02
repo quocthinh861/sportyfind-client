@@ -11,6 +11,8 @@ import Home from './pages/Home.tsx'
 import List from './pages/List.tsx'
 import SignIn from './pages/SignIn.tsx'
 import FindTeam from './pages/FindTeam.tsx'
+import Detail from './pages/Detail.tsx'
+import Profile from './pages/Profile'
 
 function App() {
   const [startDate, setStartDate] = useState(new Date())
@@ -28,8 +30,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/list" element={<List />}></Route>
+          <Route path="/detail" element={<Detail />}></Route>
           <Route path="/find-team" element={<FindTeam />}></Route>
           <Route path="/users/sign-in" element={<SignIn />}></Route>
+          <Route path="/profile" element={<Profile />}></Route>
         </Routes>
       </BrowserRouter>
     </Layout>

@@ -30,7 +30,7 @@ function Header() {
               <i className="fa fa-bars"></i>
             </button>
             {/* Navbar Collapse */}
-            <div id="navbarCollapse" className="collapse navbar-collapse mr-3">
+            <div id="navbarCollapse">
               <ul className="navbar-nav ml-auto">
                 <li className="nav-item ">
                   <a className="nav-link" href="/bang-xep-hang">

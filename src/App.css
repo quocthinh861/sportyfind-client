@@ -1,4 +1,3 @@
-
 .App {
   text-align: center;
 }
@@ -33,8 +32,6 @@ a,
 ul {
   margin: 0;
   padding: 0;
-  list-style: none;
-  text-decoration: none;
 }
 
 .hide {
@@ -42,9 +39,20 @@ ul {
   transition: opacity 0.5s ease-in-out;
 }
 
+.description-cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px; /* set a maximum width to prevent cell from expanding */
+}
+
 .show {
   opacity: 1;
   transition: opacity 0.5s ease-in-out;
+}
+
+.btn-green:hover {
+  background-color: rgb(128 186 61) !important;
 }
 
 @keyframes App-logo-spin {
@@ -86,9 +94,8 @@ input[type='range'] {
 }
 
 .text-green {
-  color: #85C240;
+  color: #85c240;
 }
-
 
 /* Path: src\components\Header.css */
 .fa-star:before {
@@ -137,7 +144,6 @@ input[type='range'] {
   margin: auto;
 }
 
-
 /* Path: src\components\SignIn.css */
 .mt-7 {
   margin-top: 8rem !important;
@@ -167,7 +173,8 @@ input[type='range'] {
   font-size: 0.8rem;
   line-height: 1.6;
   border-radius: 0.2rem;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .login .btn-block {
@@ -182,8 +189,8 @@ input[type='range'] {
 }
 
 .login .btn-green {
-  background-color: #85C240;
-  border-color: #85C240;
+  background-color: #85c240;
+  border-color: #85c240;
   color: #fff;
 }
 
@@ -205,28 +212,28 @@ input[type='range'] {
 }
 
 .login .btn-outline-red {
-  color: #cf4332!important;
+  color: #cf4332 !important;
   border-color: #cf4332;
 }
 
 .login .btn-outline-primary {
-  color: #3d348b!important;
+  color: #3d348b !important;
   border-color: #3d348b;
 }
 
 .login .btn-outline-primary:hover {
-  color: #fff!important;
+  color: #fff !important;
   background-color: #3d348b;
   border-color: #3d348b;
 }
 
 .login .btn-outline-red:hover {
-  color: #fff!important;
+  color: #fff !important;
   border-color: #fff;
   background-color: #cf4332;
 }
 
-.login .btn-block+.btn-block {
+.login .btn-block + .btn-block {
   margin-top: 0.5rem;
 }
 
@@ -242,9 +249,10 @@ input[type='range'] {
   transform: translateY(-50%);
 }
 
-.login h1, .login h3 {
+.login h1,
+.login h3 {
   font-weight: 700;
-  font-family: "Noto Sans", sans-serif;
+  font-family: 'Noto Sans', sans-serif;
 }
 
 .custom-control {
@@ -274,7 +282,7 @@ input[type='range'] {
   width: 1rem;
   height: 1rem;
   pointer-events: none;
-  content: "";
+  content: '';
   background-color: #fff;
   border: #adb5bd solid 1px;
 }
@@ -283,7 +291,7 @@ input[type='range'] {
   border-radius: 0.4rem;
 }
 
-.custom-control-input:checked~.custom-control-label::before {
+.custom-control-input:checked ~ .custom-control-label::before {
   color: #fff;
   border-color: #4e66f8;
   background-color: #4e66f8;
@@ -296,12 +304,12 @@ input[type='range'] {
   display: block;
   width: 1rem;
   height: 1rem;
-  content: "";
+  content: '';
   background: no-repeat 50% / 50% 50%;
 }
 
-.custom-checkbox .custom-control-input:checked~.custom-control-label::after {
-  background-image: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e);
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
+  background-image: url(data:image/svg+xml,%3csvg xmlns=http://www.w3.org/2000/svg viewBox=0 0 8 8%3e%3cpath fill=%23fff d=M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z/%3e%3c/svg%3e);
 }
 
 .bg-image {
@@ -315,7 +323,7 @@ input[type='range'] {
 }
 
 img.bg-image {
-  font-family: "object-fit: cover;";
+  font-family: 'object-fit: cover;';
   -o-object-fit: cover;
   object-fit: cover;
 }
@@ -328,10 +336,9 @@ img.bg-image {
 
 /* custom-datepicker.css */
 .react-datepicker__day--selected {
-  background-color: #4caf50!important; /* Change this to your desired color */
-  border-radius: 50%!important;
+  background-color: #4caf50 !important; /* Change this to your desired color */
+  border-radius: 50% !important;
 }
-
 
 /* Path: src\components\Findgame.css */
 .findteam .yourteam .card {
@@ -340,3 +347,125 @@ img.bg-image {
   border-radius: 30px;
 }
 
+/*Path: src\components\Detail.css */
+.facilities {
+  border: 1px solid #c2c9d1;
+  border-radius: 8px;
+  padding: 0.5rem;
+  min-width: 140px;
+  transition: all linear 0.2s;
+}
+
+.facilities:hover {
+  background-color: #97cb5d !important;
+  color: white !important;
+  cursor: pointer;
+}
+
+.imgCircle {
+  height: 48px;
+  width: 48px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.time-picker input {
+  padding: 15px 20px 15px 10px;
+  font-size: 15px;
+}
+
+.time-picker:nth-of-type(2) {
+  margin-left: 10px;
+}
+
+.showError .close {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.showError .close svg {
+  fill: #842029;
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Path: src\components\Info.css */
+
+ul.dropdown-menu > li {
+  text-align: center;
+}
+
+.dropdown-header {
+  padding: 0.7rem 1.5rem;
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.dropdown-header {
+  display: block;
+  padding: 0.5rem 1.5rem;
+  margin-bottom: 0;
+  font-size: 0.875rem;
+  color: #adb5bd;
+  white-space: nowrap;
+}
+
+.user-brief .user-brief_avatar .sporta-avatar img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 50%;
+}
+
+.user-brief .user-brief_avatar .sporta-avatar {
+  display: inline-block;
+  position: relative;
+  border-radius: 50%;
+  border: 0.0625rem solid rgba(0, 0, 0, 0.09);
+}
+
+.user-brief .user-brief_avatar {
+  display: flex;
+  width: 40px;
+  height: 40px;
+}
+
+.user-brief {
+  display: flex;
+}
+
+div._border {
+  border-bottom: 1px solid #efefef;
+  content: '';
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin: 10px auto;
+  width: 50%;
+}
+
+.menu-items > li > svg {
+  color: #93a3b5;
+}
+
+.menu-items > li > a {
+  text-decoration: none;
+  margin-left: 5px;
+  color: #93a3b5;
+}
+
+@media (min-width: 768px) {
+  .user-sidebar .dropdown-menu {
+    border-width: 0px;
+    box-shadow: none;
+    display: block;
+    position: relative;
+    width: 100%;
+  }
+
+  .minimum-heigh {
+    min-height: 400px;
+  }
+}
