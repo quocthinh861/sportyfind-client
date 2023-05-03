@@ -66,6 +66,7 @@ function Footer() {
                 <li className="text-muted">
                   <a className="text-muted text-hover-primary">
                     <img
+                      className="d-inline"
                       style={{ height: "25px", marginBottom: "10px" }}
                       src="https://www.sporta.vn/assets/momo-f2c88c55af645265139d91c8ec6e31182b68283d335ef35dff10bc90da8ddb3b.png"
                       alt="Momo"

@@ -75,27 +75,27 @@ function Profile() {
         accessor: "id",
       },
       {
-        Header: "Date",
+        Header: "Ngày",
         accessor: "date",
       },
       {
-        Header: "Time",
+        Header: "Thời gian",
         accessor: "time",
       },
       {
-        Header: "Status",
+        Header: "Trạng thái",
         accessor: "status",
       },
       {
-        Header: "Facility",
+        Header: "Cơ sỏ vật chất",
         accessor: "facility",
       },
       {
-        Header: "Location",
+        Header: "Địa chỉ",
         accessor: "location",
       },
       {
-        Header: "Action",
+        Header: "",
         accessor: "action",
         Cell: ({ row }) => (
           <Button className="btn btn-danger btn-sm">

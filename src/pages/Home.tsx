@@ -24,13 +24,13 @@ function Home() {
         <div>
           <h3 className="text-center text-uppercase">
             <img
-              className="me-2"
+              className="me-2 d-inline"
               src="https://malaebapp.com/images/point.png"
               alt="img"
             />{" "}
             Sân thể thao Thành phố Hồ Chí Minh {" "}
             <img
-              className="ms-2"
+              className="ms-2 d-inline"
               src="https://malaebapp.com/images/point.png"
               alt="img"
             />
@@ -161,13 +161,13 @@ function Home() {
         <div className="pt-5">
           <h3 className="text-center">
             <img
-              className="me-2"
+              className="me-2 d-inline"
               src="https://malaebapp.com/images/point.png"
               alt="img"
             />{" "}
             Chọn sân theo nhu cầu{" "}
             <img
-              className="ms-2"
+              className="ms-2 d-inline"
               src="https://malaebapp.com/images/point.png"
               alt="img"
             />
@@ -292,13 +292,13 @@ function Home() {
         <div className="pt-5">
           <h3 className="text-center">
             <img
-              className="me-2"
+              className="me-2 d-inline"
               src="https://malaebapp.com/images/point.png"
               alt="img"
             />{" "}
             Đặt sân trong vòng vài phút{" "}
             <img
-              className="ms-2"
+              className="ms-2 d-inline"
               src="https://malaebapp.com/images/point.png"
               alt="img"
             />
