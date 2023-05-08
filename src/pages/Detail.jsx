@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import TimePicker from "rc-time-picker";
 import "rc-time-picker/assets/index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Spinner } from "react-bootstrap";
 import {
   faPhone,
   faLocationDot,
@@ -17,11 +18,12 @@ function Detail() {
   const [selectedStartTime, setSelectedStartTime] = useState(null);
   const [selectedEndTime, setSelectedEndTime] = useState(null);
   const [isAvailable, setIsAvailable] = useState(false);
+  const [isCheckLoading, setIsCheckLoading] = useState(false); // [TODO
 
   // Validation
   const [errors, setErrors] = useState({});
   const validate = () => {
-    let errors: any = {};
+    let errors = {};
     if (!fieldType.trim()) {
       errors.fieldType = "Field type is required";
     }
@@ -51,12 +53,38 @@ function Detail() {
   const handleBookNow = () => {
     // Validate form fields
     if (!validate()) return;
+
+    const formattedDate = startDate.toLocaleDateString("en-US", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "numeric",
+    });
+
+    // [TODO] Book now
+    var data = {
+      startTime: selectedStartTime.format("HH:mm:00"),
+      endTime: selectedEndTime.format("HH:mm:00"),
+      bookingStatus: "pending",
+      fieldId: fieldType,
+      customerId: "1",
+      bookingDate: formattedDate,
+    };
+
+    console.log(data);
   };
 
   const handleCheckAvailability = () => {
     // Check if selected start time and end time are available
-    if (!validate()) return;
-    setIsAvailable(true); // Update state based on availability
+    // if (!validate()) return;
+
+    // [TODO] Check availability
+    setIsCheckLoading(true); // Show loading spinner
+    setIsAvailable(false); // Reset state
+
+    setTimeout(() => {
+      setIsCheckLoading(false); // Hide loading spinner
+      setIsAvailable(true); // Update state based on availability
+    }, 1500);
   };
 
   // Effects
@@ -64,11 +92,6 @@ function Detail() {
     // Reset errors when form fields change
     setErrors({});
   }, [fieldType, startDate, selectedStartTime, selectedEndTime]);
-
-  useEffect(() => {
-    // Reset availability when form fields change
-    setIsAvailable(false);
-  }, [fieldType, startDate]);
 
   return (
     <div className="container pt-4">
@@ -118,7 +141,6 @@ function Detail() {
               loading="lazy"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3453.1839669308755!2d-74.00594178474802!3d40.71277540697792!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a17bc9f409f%3A0x8c8d43c031a34aaf!2sStatue%20of%20Liberty%20National%20Monument!5e0!3m2!1sen!2sus!4v1620410414013!5m2!1sen!2sus"
               allowFullScreen=""
-              loading="lazy"
             ></iframe>
           </div>
         </div>
@@ -180,9 +202,9 @@ function Detail() {
                 aria-label="Default select example"
               >
                 <option selected>Chọn loại sân</option>
-                <option value="sân 5">Sân 5</option>
-                <option value="sân 7">Sân 7</option>
-                <option value="sân 11">Sân 11</option>
+                <option value="1">Sân 5</option>
+                <option value="2">Sân 7</option>
+                <option value="3">Sân 11</option>
               </select>
             </div>
             <div className="form-group mb-4">
@@ -191,7 +213,9 @@ function Detail() {
               </label>
               <DatePicker
                 selected={startDate}
-                onChange={(date) => setStartDate(date)}
+                onChange={(date) => {
+                  setStartDate(date);
+                }}
                 minDate={new Date()}
                 maxDate={new Date().setDate(new Date().getDate() + 7)}
                 calendarClassName="custom-calendar" // add a custom CSS class to the calendar container
@@ -230,14 +254,27 @@ function Detail() {
                     className="time-picker"
                     minuteStep={15}
                   />
-                  <button
-                    style={{ display: "block" }}
-                    type="button"
-                    className="btn btn-primary btn-sm mt-2"
-                    onClick={handleCheckAvailability}
-                  >
-                    Kiểm tra
-                  </button>
+                  {isCheckLoading ? (
+                    <div className="mt-2">
+                      <Spinner
+                        animation="border"
+                        role="status"
+                        variant="primary"
+                        style={{ width: "1.5rem", height: "1.5rem" }}
+                      >
+                        <span className="sr-only">Loading...</span>
+                      </Spinner>
+                    </div>
+                  ) : (
+                    <button
+                      style={{ display: "block" }}
+                      type="button"
+                      className="btn btn-primary btn-sm mt-2"
+                      onClick={handleCheckAvailability}
+                    >
+                      Kiểm tra
+                    </button>
+                  )}
                   {isAvailable && (
                     <div className="mt-2 text-success">
                       Thời gian đã chọn có sẵn.
@@ -261,6 +298,7 @@ function Detail() {
               type="submit"
               className="btn btn-primary btn-md"
               disabled={!isAvailable}
+              onClick={handleBookNow}
             >
               Đặt sân
             </button>

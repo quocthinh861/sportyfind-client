@@ -1,10 +1,46 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebookF, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { faArrowRight, faSpinner } from "@fortawesome/free-solid-svg-icons";
-
-import React from "react";
+import { Link, useNavigate } from 'react-router-dom'
+import axios from '../api/axios'
+import { useSelector, useDispatch } from 'react-redux'
+import {login} from '../features/user/useSlice'
+import React, { useState } from "react";
 
 function SignIn() {
+  // States
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+
+  // Handlers
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await axios.post(
+        '/auth/login',
+        JSON.stringify({ username: username, password: password }),
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        },
+      )
+
+      if(response.status === 200) {
+        alert('Đăng nhập thành công')
+        dispatch(login(response.data.result))
+        navigate('/')
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  
+  };
+
+
   return (
       <div className="container-fluid px-3 login">
         <div className="row min-vh-100">
@@ -68,9 +104,7 @@ function SignIn() {
               <form
                 className="new_user"
                 id="new_user"
-                action="/users/sign_in"
-                acceptCharset="UTF-8"
-                method="post"
+                onSubmit={handleLogin}
               >
                 <input name="utf8" type="hidden" value="✓" autoComplete="off" />
                 <input
@@ -81,17 +115,18 @@ function SignIn() {
                 />
                 <div className="form-group">
                   <label htmlFor="loginUsername" className="form-label">
-                    Địa chỉ Email
+                    Tên người dùng
                   </label>
                   <input
                     autoFocus
                     required
-                    placeholder="Email"
+                    placeholder="Username"
                     className="form-control"
-                    type="email"
-                    value=""
-                    name="user[email]"
-                    id="user_email"
+                    name="username"
+                    type="text"
+                    onChange={(e) => setUsername(e.target.value)}
+                    value={username}
+                    id="username"
                   />
                 </div>
                 <div className="form-group mb-2">
@@ -106,9 +141,11 @@ function SignIn() {
                     autoComplete="off"
                     required
                     className="form-control"
+                    name="password"
+                    onChange={(e) => setPassword(e.target.value)}
                     type="password"
-                    name="user[password]"
-                    id="user_password"
+                    value={password}
+                    id="password"
                   />
                 </div>
                 <div className="form-group mb-4">
