@@ -1,0 +1,16 @@
+.model-content {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.model-content p:last-of-type {
+    margin-bottom: 0;
+}
+
+.note {
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+  }

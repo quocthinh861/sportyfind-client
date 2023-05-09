@@ -6,6 +6,8 @@ import axios from '../api/axios'
 import { useSelector, useDispatch } from 'react-redux'
 import {login} from '../features/user/useSlice'
 import React, { useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function SignIn() {
   // States
@@ -13,7 +15,6 @@ function SignIn() {
   const navigate = useNavigate()
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
 
   // Handlers
   const handleLogin = async (e) => {
@@ -30,11 +31,14 @@ function SignIn() {
       )
 
       if(response.status === 200) {
-        alert('Đăng nhập thành công')
+        toast.success("Đăng nhập thành công");
         dispatch(login(response.data.result))
         navigate('/')
+      } else {
+        toast.error("Đăng nhập thất bại");
       }
     } catch (error) {
+      toast.error("Đã có lỗi xảy ra");
       console.log(error);
     }
   
@@ -190,6 +194,7 @@ function SignIn() {
                   </div>
                 </div>
               </form>
+              <p className="login-form__footer">Đồ án chuyên ngành hướng Công nghệ phần mềm - Đại học Bách Khoa HCM</p>
             </div>
           </div>
           <div className="col-md-4 col-lg-6 col-xl-7 d-none d-md-block">
@@ -218,6 +223,11 @@ function SignIn() {
             </div>
           </div>
         </div>
+        <ToastContainer
+        hideProgressBar={true}
+        autoClose={1500}
+        theme="colored"
+        />
       </div>
   );
 }

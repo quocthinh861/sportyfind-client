@@ -7,67 +7,100 @@ import {
   faUnlockAlt,
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import Table, { AvatarCell } from '../components/Table'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import Table, { AvatarCell } from "../components/Table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Row, Col, InputGroup, Button } from "react-bootstrap";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { Spinner } from "react-bootstrap";
 
 function Profile() {
-  const products = [
-    {
-      id: 1,
-      name: "Product A",
-      description: "Description for Product A",
-      price: 100000,
-      discounted_price: 10,
-      imgUrl: "https://via.placeholder.com/50",
-    },
-    {
-      id: 2,
-      name: "Product B",
-      description: "Description for Product B",
-      price: 200000,
-      discounted_price: 20,
-      imgUrl: "https://via.placeholder.com/50",
-    },
-    {
-      id: 3,
-      name: "Product C",
-      description: "Description for Product C",
-      price: 300000,
-      discounted_price: 30,
-      imgUrl: "https://via.placeholder.com/50",
-    },
-    {
-      id: 4,
-      name: "Product D",
-      description: "Description for Product D",
-      price: 400000,
-      discounted_price: 40,
-      imgUrl: "https://via.placeholder.com/50",
-    },
-  ];
+  const axiosPrivate = useAxiosPrivate();
 
-    // mock data for booking requests table
-    const bookingRequests = [
-      {
-        id: 1,
-        date: "02/04/2023",
-        time: "09:00 - 10:00",
-        status: "new",
-        facility: "Sân tennis A",
-        location: "Quận 1",
-      },
-      {
-        id: 2,
-        date: "02/05/2023",
-        time: "14:00 - 15:00",
-        status: "done",
-        facility: "Sân bóng đá B",
-        location: "Quận 2",
-      },
-    ];
-  
+  const [bookingList, setBookingList] = React.useState([]);
+  const [beginDate, setBeginDate] = React.useState(
+    new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
+  );
+  const [endDate, setEndDate] = React.useState(
+    new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)
+  );
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    var startDateFormatted = beginDate.toLocaleDateString("en-US", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "numeric",
+    });
+
+    var endDateFormatted = endDate.toLocaleDateString("en-US", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "numeric",
+    });
+
+    var query = {
+      beginDate: startDateFormatted,
+      endDate: endDateFormatted,
+      customerId: 1,
+      fieldId: 2,
+    };
+
+    setIsLoading(true);
+    axiosPrivate.post("/booking/searchBooking", query).then((res) => {
+      if (res.status === 200) {
+        setTimeout(() => {
+          setIsLoading(false);
+          var bookingList = res.data.result.map((booking) => {
+            return {
+              id: booking.bookingId,
+              date: booking.bookingDate,
+              time: `${booking.startTime} - ${booking.endTime}`,
+              status: booking.bookingStatus,
+              venue: booking.fieldName,
+              price: booking.price,
+            };
+          });
+          setBookingList(bookingList);
+        }, 1000);
+      }
+    });
+  };
+
+  useEffect(() => {
+    axiosPrivate
+      .get("/booking/getBookingListByCustomerId", {
+        params: {
+          customerId: 1,
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          var bookingList = res.data.result.map((booking) => {
+            return {
+              id: booking.bookingId,
+              date: booking.bookingDate,
+              time: `${booking.startTime} - ${booking.endTime}`,
+              status: booking.bookingStatus,
+              venue: booking.fieldName,
+              price: booking.price,
+            };
+          });
+
+          console.log(bookingList);
+
+          setBookingList(bookingList);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   const columns = React.useMemo(
     () => [
       {
@@ -87,24 +120,22 @@ function Profile() {
         accessor: "status",
       },
       {
-        Header: "Cơ sỏ vật chất",
-        accessor: "facility",
+        Header: "Đia điểm",
+        accessor: "venue",
       },
       {
-        Header: "Địa chỉ",
-        accessor: "location",
+        Header: "Giá tiền",
+        accessor: "price",
       },
       {
         Header: "",
         accessor: "action",
         Cell: ({ row }) => (
-          <Button className="btn btn-danger btn-sm">
-            Hủy
-          </Button>
+          <Button className="btn btn-danger btn-sm">Hủy</Button>
         ),
-      }
+      },
     ],
-    [bookingRequests]
+    [bookingList]
   );
   return (
     <div className="container mx-auto lg:px-5 pt-3 pb-3 border-b px-3 lg:px-0">
@@ -197,29 +228,39 @@ function Profile() {
                   </Col>
                   <Col xl={3} md={3} mb={4}>
                     <Form.Label htmlFor="begin_date">Từ ngày</Form.Label>
-                    <InputGroup>
-                      <Form.Control
-                        type="text"
-                        id="begin_date"
-                        name="begin_date"
-                        className="datepicker datepicker-begin form-control"
-                        data-provide="datepicker"
-                        defaultValue="02/04/2023"
-                      />
-                    </InputGroup>
+                    <DatePicker
+                      selected={beginDate}
+                      onChange={(date) => {
+                        setBeginDate(date);
+                      }}
+                      calendarClassName="custom-calendar" // add a custom CSS class to the calendar container
+                      className="custom-datepicker" // add a custom CSS class to the date-picker container
+                      dayClassName={(date) =>
+                        date.getTime() === beginDate.getTime()
+                          ? "custom-selected"
+                          : undefined
+                      } // add a custom CSS class to the selected date element
+                      showMonthYearPicker={false} // disable month and year picker
+                      dateFormat={"dd/MM/yyyy"}
+                    />
                   </Col>
                   <Col xl={3} md={3} mb={4}>
                     <Form.Label htmlFor="end_date">Đến ngày</Form.Label>
-                    <InputGroup>
-                      <Form.Control
-                        type="text"
-                        id="end_date"
-                        name="end_date"
-                        className="datepicker datepicker-end form-control"
-                        data-provide="datepicker"
-                        defaultValue="02/05/2023"
-                      />
-                    </InputGroup>
+                    <DatePicker
+                      selected={endDate}
+                      onChange={(date) => {
+                        setEndDate(date);
+                      }}
+                      calendarClassName="custom-calendar" // add a custom CSS class to the calendar container
+                      className="custom-datepicker" // add a custom CSS class to the date-picker container
+                      dayClassName={(date) =>
+                        date.getTime() === endDate.getTime()
+                          ? "custom-selected"
+                          : undefined
+                      } // add a custom CSS class to the selected date element
+                      showMonthYearPicker={false} // disable month and year picker
+                      dateFormat={"dd/MM/yyyy"}
+                    />
                   </Col>
                   <Col
                     sm={3}
@@ -231,6 +272,7 @@ function Profile() {
                       <Button
                         type="submit"
                         className="btn btn-green"
+                        onClick={handleSearch}
                         style={{
                           backgroundColor: "#85c240",
                           borderColor: "#85c240",
@@ -243,7 +285,24 @@ function Profile() {
                   </Col>
                 </Row>
               </Form>
-              <Table columns={columns} data={bookingRequests} />
+              {isLoading ? (
+                <>
+                  <div className="mt-4 w-full text-center">
+                    <Spinner
+                      animation="border"
+                      role="status"
+                      variant="primary"
+                      style={{ width: "1.5rem", height: "1.5rem" }}
+                    >
+                      <span className="sr-only">Loading...</span>
+                    </Spinner>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Table columns={columns} data={bookingList} />
+                </>
+              )}
               {/* <div className="table-responsive mt-4">
                 <table className="table">
                   <thead>
@@ -281,10 +340,6 @@ function Profile() {
                   <p style={{ textAlign: "center" }}>Không có dữ liệu. </p>
                 </div>
               )} */}
-
-              <div className="row justify-content-center m-4">
-                <p style={{ textAlign: "center" }}>Không có dữ liệu. </p>
-              </div>
             </section>
           </div>
         </div>

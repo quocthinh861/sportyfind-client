@@ -10,8 +10,12 @@ import {
   faLocationDot,
   faClock,
 } from "@fortawesome/free-solid-svg-icons";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import Modal from "../components/Popup";
 
 function Detail() {
+  const axiosPrivate = useAxiosPrivate();
+
   // States
   const [fieldType, setFieldType] = useState("");
   const [startDate, setStartDate] = useState(new Date());
@@ -50,7 +54,7 @@ function Detail() {
     setSelectedEndTime(value);
   };
 
-  const handleBookNow = () => {
+  const handleBookNow = async () => {
     // Validate form fields
     if (!validate()) return;
 
@@ -60,22 +64,30 @@ function Detail() {
       year: "numeric",
     });
 
-    // [TODO] Book now
+    // Create booking object
     var data = {
-      startTime: selectedStartTime.format("HH:mm:00"),
-      endTime: selectedEndTime.format("HH:mm:00"),
+      startTime: selectedStartTime.format("HH:mm"),
+      endTime: selectedEndTime.format("HH:mm"),
       bookingStatus: "pending",
       fieldId: fieldType,
       customerId: "1",
       bookingDate: formattedDate,
     };
 
+    // Send booking request
+    const response = await axiosPrivate.post("/booking/create", data);
+    if (response.status === 200) {
+      alert("Đặt sân thành công");
+    } else {
+      alert("Đặt sân thất bại");
+    }
+
     console.log(data);
   };
 
   const handleCheckAvailability = () => {
     // Check if selected start time and end time are available
-    // if (!validate()) return;
+    if (!validate()) return;
 
     // [TODO] Check availability
     setIsCheckLoading(true); // Show loading spinner
@@ -168,9 +180,10 @@ function Detail() {
                   className="showError alert alert-danger alert-dismissible fade show mb-4"
                   role="alert"
                 >
-                  <strong className="font-weight-bold">Lỗi! </strong>
-                  <span>{Object.keys(errors).length} lỗi đã xảy ra:</span>
-                  <ul className="mb-0">
+                  <strong className="font-weight-bold">
+                    Vui lòng điền các thông tin còn thiếu
+                  </strong>
+                  <ul className="mb-0" style={{ listStyleType: "disc" }}>
                     {Object.keys(errors).map((key) => (
                       <li key={key}>{errors[key]}</li>
                     ))}
@@ -294,14 +307,38 @@ function Detail() {
                 placeholder="Ghi chú"
               ></textarea>
             </div>
-            <button
-              type="submit"
-              className="btn btn-primary btn-md"
-              disabled={!isAvailable}
-              onClick={handleBookNow}
-            >
-              Đặt sân
-            </button>
+            <Modal
+              buttonText="Đặt sân"
+              title="Kiểm tra thông tin"
+              disabled={isCheckLoading || !isAvailable}
+              content={
+                <div className="model-content">
+                  <p>
+                    Người đặt: <i>Đặng Quốc Thịnh</i>
+                  </p>
+                  <p>
+                    Địa điểm: <i>Nhà thi đấu Bình Minh (sân 1)</i>
+                  </p>
+                  <p>
+                    thời gian: <i>21/3/2023 (18:30 - 19:30)</i>
+                  </p>
+                  <p>
+                    Tổng tiền: <i>350.000đ</i>
+                  </p>
+                  <p>
+                    Ghi chú: <i>Testing</i>
+                  </p>
+                  <p class="note">
+                    Lưu ý: Cần thanh toán trong vòng 24h kể từ khi đặt sân, hệ
+                    thống tự động hủy đơn nếu không hoàn tất thanh toán. Tình
+                    trạng sân các bạn theo dõi <a class="text-primary">ở đây</a>
+                    .
+                  </p>
+                </div>
+              }
+              onConfirm={() => handleBookNow()}
+              onCancel={() => console.log("Cancelled!")}
+            />
           </div>
         </div>
       </div>
