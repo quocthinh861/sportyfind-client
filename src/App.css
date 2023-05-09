@@ -55,6 +55,10 @@ ul {
   background-color: rgb(128 186 61) !important;
 }
 
+.breadcrumb-item+.breadcrumb-item:before {
+  content: ">"!important;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -66,9 +70,9 @@ ul {
 
 /* Path: src\index.css */
 .sectionFirst {
-  background: url('https://malaebapp.com/images/bgImage.png');
+  background: url('/src/assets/images/peakpx.jpg');
   background-position: center;
-  min-height: 20rem;
+  min-height: 28rem;
   background-repeat: no-repeat;
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -78,7 +82,7 @@ ul {
 
 .sectionFirst .overlay {
   background-color: rgb(0 0 0 / 48%);
-  min-height: 20rem;
+  min-height: 28rem;
 }
 
 .cardPlayground {
@@ -107,7 +111,7 @@ input[type='range'] {
 }
 
 .cardList .card-img-top {
-  height: 190px;
+  height: 180px;
   width: 100%;
   border-radius: 20px 0px 0px 20px;
   object-fit: cover;
@@ -115,7 +119,21 @@ input[type='range'] {
 
 /* Path: Home */
 
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover .imgMedia {
+  filter: brightness(0.8);
+  transition: all 0.3s ease-in-out;
+}
+
+.sport-list .clickable:hover h6 {
+  color: #5abd3a;
+}
+
 .imgMedia {
+  object-fit: cover;
   width: 100px;
   height: 100px;
   border-radius: 20px;
@@ -142,6 +160,80 @@ input[type='range'] {
   left: 0;
   right: 0;
   margin: auto;
+}
+
+.cardPlayground:hover img {
+  animation: bounce 0.5s ease-in-out;
+}
+
+.cardPlayground {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.cardPlayground:hover {
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.cardPlayground img {
+  display: block;
+  height: auto;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.cardPlayground h5 {
+  font-size: 1.2rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.cardPlayground p {
+  font-size: 1rem;
+  margin-top: 0;
+  margin-bottom: 0;
+  color: #6c757d;
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.search-now:hover {
+  background-color: #388e3c;
+  transform: translateY(-3px);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+}
+
+.search-now {
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  animation: bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-10px);
+  }
 }
 
 /* Path: src\components\SignIn.css */
@@ -347,6 +439,22 @@ img.bg-image {
   border-radius: 50% !important;
 }
 
+.cardList .book-now {
+  background-color: #4caf50;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  width: 100%;
+  font-weight: bold;
+  padding: 6px 12px;
+  transition: background-color 0.3s ease;
+}
+
+.cardList .book-now:hover {
+  background-color: #388e3c;
+}
+
 /* Path: src\components\Findgame.css */
 .findteam .yourteam .card {
   text-align: center;
@@ -461,6 +569,10 @@ div._border {
   text-decoration: none;
   margin-left: 5px;
   color: #93a3b5;
+}
+
+.menu-items > .menu-item:hover > a, .menu-items > .menu-item.active > a{
+  color: #28a745!important;
 }
 
 @media (min-width: 768px) {

@@ -26,10 +26,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/list" element={<List />}></Route>
-          <Route path="/detail" element={<Detail />}></Route>
+          <Route path="/san-bong-thien-tan" element={<Detail />}></Route>
           <Route path="/find-team" element={<FindTeam />}></Route>
-          <Route path="/users/sign-in" element={<SignIn />}></Route>
-          <Route path="/profile" element={<Profile />}></Route>
+          <Route path="/tai-khoan/dang-nhap" element={<SignIn />}></Route>
+          <Route path="/tai-khoan/lich-su-dat-cua-toi" element={<Profile />}></Route>
         </Routes>
       </Layout>
     </BrowserRouter>

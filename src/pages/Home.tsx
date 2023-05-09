@@ -9,11 +9,12 @@ function Home() {
             <div className="row justify-content-center">
               <div className="col-lg-10 text-center">
                 <h1 className="text-white fw-bold pt-5">
-                  Đặt sân thể thao chưa bao giờ dễ dàng hơn với SportFinder.
+                  Đặt sân thể thao chưa bao giờ dễ dàng hơn với Sportyfind.
                 </h1>
-                <p className="text-white pb-4">
+                <p className="text-white py-4">
                   Tìm kiếm sân xung quanh bạn ở Thành phố Hồ Chí Minh
                 </p>
+                <button className="search-now">Tìm kiếm ngay</button>
               </div>
             </div>
           </div>
@@ -21,7 +22,7 @@ function Home() {
       </div>
 
       <div className="container pt-5">
-        <div>
+        <div className="sport-list">
           <h3 className="text-center text-uppercase">
             <img
               className="me-2 d-inline"
@@ -55,7 +56,7 @@ function Home() {
               <div className="d-flex">
                 <div className="flex-shrink-0">
                   <img
-                    src="https://vuongtrachdesign.com/w/thethao/wp-content/uploads/2019/12/img7742-8409.jpg"
+                    src="https://images.foody.vn/res/g14/131336/prof/s576x330/foody-mobile-87-jpg-428-635649729499912898.jpg"
                     className="imgMedia"
                     alt="..."
                   />
@@ -70,13 +71,13 @@ function Home() {
               <div className="d-flex">
                 <div className="flex-shrink-0">
                   <img
-                    src="https://vuongtrachdesign.com/w/thethao/wp-content/uploads/2019/12/img7742-8409.jpg"
+                    src="http://thanhphatsports.com/vantindat/images/image1.jpeg"
                     className="imgMedia"
                     alt="..."
                   />
                 </div>
                 <div className="flex-grow-1 mx-3 pt-lg-4 pt-md-4 pt-sm-3 pt-1">
-                  <h6 className="fw-bold pt-1">Quận 10</h6>
+                  <h6 className="fw-bold pt-1">Quận 12</h6>
                   <p className="textVsmall">10</p>
                 </div>
               </div>
@@ -85,7 +86,7 @@ function Home() {
               <div className="d-flex">
                 <div className="flex-shrink-0">
                   <img
-                    src="https://vuongtrachdesign.com/w/thethao/wp-content/uploads/2019/12/img7742-8409.jpg"
+                    src="https://nld.mediacdn.vn/k:thumb_w/684/2015/thethao-1444486269151/khanh-thanh-cau-lac-bo-tdtt-ho-xuan-huong.jpg"
                     className="imgMedia"
                     alt="..."
                   />
@@ -100,7 +101,7 @@ function Home() {
               <div className="d-flex">
                 <div className="flex-shrink-0">
                   <img
-                    src="https://vuongtrachdesign.com/w/thethao/wp-content/uploads/2019/12/img7742-8409.jpg"
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/S%C3%A2n_v%E1%BA%ADn_%C4%91%E1%BB%99ng_Qu%C3%A2n_khu_7.jpg/330px-S%C3%A2n_v%E1%BA%ADn_%C4%91%E1%BB%99ng_Qu%C3%A2n_khu_7.jpg"
                     className="imgMedia"
                     alt="..."
                   />
@@ -115,7 +116,7 @@ function Home() {
               <div className="d-flex">
                 <div className="flex-shrink-0">
                   <img
-                    src="https://vuongtrachdesign.com/w/thethao/wp-content/uploads/2019/12/img7742-8409.jpg"
+                    src="https://thethaodonga.com/wp-content/uploads/2022/03/san-bong-chuyen-tai-tphcm-3.png"
                     className="imgMedia"
                     alt="..."
                   />
@@ -130,7 +131,7 @@ function Home() {
               <div className="d-flex">
                 <div className="flex-shrink-0">
                   <img
-                    src="https://vuongtrachdesign.com/w/thethao/wp-content/uploads/2019/12/img7742-8409.jpg"
+                    src="https://cdnmedia.webthethao.vn/uploads/img/files/images/fullsize/2019/09/28/tennis/ntd-pt.jpg"
                     className="imgMedia"
                     alt="..."
                   />
@@ -145,7 +146,7 @@ function Home() {
               <div className="d-flex">
                 <div className="flex-shrink-0">
                   <img
-                    src="https://vuongtrachdesign.com/w/thethao/wp-content/uploads/2019/12/img7742-8409.jpg"
+                    src="https://fileth.hcm.edu.vn/UploadImages/thvothisauq7/2022_11/12_BONGROCAPQUAN/023_3011202211.jpg?w=1130"
                     className="imgMedia"
                     alt="..."
                   />

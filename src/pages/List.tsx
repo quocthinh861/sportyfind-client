@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 import DistanceSlider from "../components/DistanceSlider.tsx";
 
 function List() {
@@ -8,22 +10,6 @@ function List() {
 
   return (
     <>
-      <div className="sectionFirst">
-        <div className="overlay">
-          <div className="container pt-5">
-            <div className="row justify-content-center">
-              <div className="col-lg-10 text-center">
-                <h1 className="text-white fw-bold pt-5">
-                  Booking Sport Venues Has Never Been Easier
-                </h1>
-                <p className="text-white pb-4">
-                  Find Fields Near You In Bahrain
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
       <div className="topStaduims pb-4">
         <div className="container pt-5">
           <div className="row">
@@ -35,9 +21,7 @@ function List() {
                     src="https://malaebapp.com/images/point.png"
                     alt="img"
                   />{" "}
-                  <span className="border-bottom text-uppercase">
-                    Filter By
-                  </span>{" "}
+                  <span className="border-bottom text-uppercase">Bộ lọc</span>{" "}
                   <img
                     className="ms-2"
                     src="https://malaebapp.com/images/point.png"
@@ -45,7 +29,7 @@ function List() {
                   />
                 </h3>
               </div>
-              <p className="mt-2 mb-1 fw-bold">Date</p>
+              <p className="mt-2 mb-1 fw-bold">Ngày</p>
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <DatePicker
                   selected={startDate}
@@ -66,14 +50,14 @@ function List() {
               <div className="row">
                 <div className="col">
                   <div className="form-group">
-                    <p className="mt-2 mb-1 fw-bold">Time From</p>
+                    <p className="mt-2 mb-1 fw-bold">Thời gian</p>
                     <select className="form-control text-uppercase">
-                      <option>Choose Your Time</option>
+                      <option>Chọn khung giờ</option>
                     </select>
                   </div>
                 </div>
               </div>
-              <p className="fw-bold mt-4 mb-1">Choose Sport</p>
+              <p className="fw-bold mt-4 mb-1">Môn thể thao</p>
               <div
                 className="row pb-4 btnSlot d-md-flex d-none sports_icons"
                 dir="ltr"
@@ -186,7 +170,7 @@ function List() {
                     />
                   </label>
                 </div>
-                <p className="pt-3 mb-1 fw-bold">Match Duration</p>
+                <p className="pt-3 mb-1 fw-bold">Thời lượng</p>
                 <div className="row pb-4 btnSlot d-md-flex d-none" dir="ltr">
                   <div className="col-4">
                     <input
@@ -199,7 +183,7 @@ function List() {
                       className="btn btn-outline-success w-100 "
                       htmlFor="success-outlined"
                     >
-                      60 Mins
+                      60 phút
                     </label>
                   </div>
                   <div className="col-4">
@@ -213,7 +197,7 @@ function List() {
                       className="btn btn-outline-success w-100 "
                       htmlFor="success-outlined2"
                     >
-                      90 Mins
+                      90 phút
                     </label>
                   </div>
                   <div className="col-4">
@@ -227,10 +211,10 @@ function List() {
                       className="btn btn-outline-success w-100 "
                       htmlFor="success-outlined3"
                     >
-                      120 Mins
+                      120 phút
                     </label>
                   </div>
-                  <p className="pt-3 mb-1 fw-bold">Pitch Size</p>
+                  <p className="pt-3 mb-1 fw-bold">Loại sân</p>
                   <div className="row">
                     <div className="col-4">
                       <input
@@ -320,17 +304,17 @@ function List() {
                   </div>
                   <div className="row mt-4">
                     <button className="btn btn-outline-dark btn-lg col mx-1">
-                      Clear
+                      Xóa
                     </button>
                     <button className="btn btn-success btn-lg col mx-1">
-                      Filter
+                      Lọc
                     </button>
                   </div>
                 </div>
               </div>
             </div>
             <div className="col-lg-8 col-md-7 d-none d-md-block">
-              <div className="card mb-4 cardList d-none d-md-flex clickable">
+              <a className="card mb-4 cardList d-none d-md-flex" href="/san-bong-thien-tan">
                 <div className="row g-0">
                   <div className="col-md-4 position-relative">
                     <img
@@ -342,198 +326,56 @@ function List() {
                   <div className="col-md-8">
                     <div className="card-body">
                       <h5>
-                        Soccer World
-                        <span className="float-end stars">
-                          <i className="fa fa-star"></i> 4.3/5
+                        Sân bóng Thiện Nhân
+                        <span className="float-end stars flex flex-col justify-center items-center">
+                          <span>
+                            <FontAwesomeIcon icon={faStar} color="#f0803c" />{" "}
+                            4.3/5
+                          </span>
+                          <div>
+                            <small className="text-muted text-sm text-center w-full">
+                              3 đánh giá
+                            </small>
+                          </div>
                         </span>
                       </h5>
                       <p>
                         <small title="Bahrain, Riffa - Southern Governorate">
-                          Riffa Alshamali, Riffa, Bahrain
+                          206 Vườn Lài, An Phú Đông, Quận 12
                         </small>
                         <small className="badge badge-dark label-dark mx-1 p-1 text-black-50">
-                          2.26 KM Away
+                          13 KM Away
                         </small>
                       </p>
-                      <h6 className="d-none d-md-block">
-                        2 Pitches
-                        <span className="badge text-dark border mx-1 p-0 px-1 p-1">
-                          <img
-                            src="https://malaebapp.com/images/sports/1.png"
-                            width="20"
-                            alt="img"
-                          />{" "}
-                          7 v 7
-                        </span>
-                        <span className="badge text-dark border mx-1 p-0 px-1 p-1">
-                          <img
-                            src="https://malaebapp.com/images/sports/1.png"
-                            width="20"
-                            alt="img"
-                          />{" "}
-                          7 v 7
-                        </span>
-                      </h6>
-                      <button className="btn btnBook w-100 d-none d-md-block">
-                        Booking now <span className="textG">25$</span>
-                      </button>
+                      <div className="flex flex-row justify-between">
+                        <h6 className="d-none d-md-block">
+                          2 sân
+                          <span className="badge text-dark border mx-1 p-0 px-1 p-1">
+                            <img
+                              src="https://malaebapp.com/images/sports/1.png"
+                              width="20"
+                              alt="img"
+                            />{" "}
+                            5 v 5
+                          </span>
+                          <span className="badge text-dark border mx-1 p-0 px-1 p-1">
+                            <img
+                              src="https://malaebapp.com/images/sports/1.png"
+                              width="20"
+                              alt="img"
+                            />{" "}
+                            7 v 7
+                          </span>
+                        </h6>
+                        <i>
+                          Giá: 200.000đ - 300.000đ
+                        </i>
+                      </div>
+                      <button className="book-now">Đặt ngay</button>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="card mb-4 cardList d-none d-md-flex clickable">
-                <div className="row g-0">
-                  <div className="col-md-4 position-relative">
-                    <img
-                      src="https://cdn.malaebapp.com/images/stadium/78/small"
-                      className="card-img-top"
-                      alt="null"
-                    />
-                  </div>
-                  <div className="col-md-8">
-                    <div className="card-body">
-                      <h5>
-                        Soccer World
-                        <span className="float-end stars">
-                          <i className="fa fa-star"></i> 4.3/5
-                        </span>
-                      </h5>
-                      <p>
-                        <small title="Bahrain, Riffa - Southern Governorate">
-                          Riffa Alshamali, Riffa, Bahrain
-                        </small>
-                        <small className="badge badge-dark label-dark mx-1 p-1 text-black-50">
-                          2.26 KM Away
-                        </small>
-                      </p>
-                      <h6 className="d-none d-md-block">
-                        2 Pitches
-                        <span className="badge text-dark border mx-1 p-0 px-1 p-1">
-                          <img
-                            src="https://malaebapp.com/images/sports/1.png"
-                            width="20"
-                            alt="img"
-                          />{" "}
-                          7 v 7
-                        </span>
-                        <span className="badge text-dark border mx-1 p-0 px-1 p-1">
-                          <img
-                            src="https://malaebapp.com/images/sports/1.png"
-                            width="20"
-                            alt="img"
-                          />{" "}
-                          7 v 7
-                        </span>
-                      </h6>
-                      <button className="btn btnBook w-100 d-none d-md-block">
-                        Booking no
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="card mb-4 cardList d-none d-md-flex clickable">
-                <div className="row g-0">
-                  <div className="col-md-4 position-relative">
-                    <img
-                      src="https://cdn.malaebapp.com/images/stadium/78/small"
-                      className="card-img-top"
-                      alt="null"
-                    />
-                  </div>
-                  <div className="col-md-8">
-                    <div className="card-body">
-                      <h5>
-                        Soccer World
-                        <span className="float-end stars">
-                          <i className="fa fa-star"></i> 4.3/5
-                        </span>
-                      </h5>
-                      <p>
-                        <small title="Bahrain, Riffa - Southern Governorate">
-                          Riffa Alshamali, Riffa, Bahrain
-                        </small>
-                        <small className="badge badge-dark label-dark mx-1 p-1 text-black-50">
-                          2.26 KM Away
-                        </small>
-                      </p>
-                      <h6 className="d-none d-md-block">
-                        2 Pitches
-                        <span className="badge text-dark border mx-1 p-0 px-1 p-1">
-                          <img
-                            src="https://malaebapp.com/images/sports/1.png"
-                            width="20"
-                            alt="img"
-                          />{" "}
-                          7 v 7
-                        </span>
-                        <span className="badge text-dark border mx-1 p-0 px-1 p-1">
-                          <img
-                            src="https://malaebapp.com/images/sports/1.png"
-                            width="20"
-                            alt="img"
-                          />{" "}
-                          7 v 7
-                        </span>
-                      </h6>
-                      <button className="btn btnBook w-100 d-none d-md-block">
-                        Booking now
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="card mb-4 cardList d-none d-md-flex clickable">
-                <div className="row g-0">
-                  <div className="col-md-4 position-relative">
-                    <img
-                      src="https://cdn.malaebapp.com/images/stadium/78/small"
-                      className="card-img-top"
-                      alt="null"
-                    />
-                  </div>
-                  <div className="col-md-8">
-                    <div className="card-body">
-                      <h5>
-                        Soccer World
-                        <span className="float-end stars">
-                          <i className="fa fa-star"></i> 4.3/5
-                        </span>
-                      </h5>
-                      <p>
-                        <small title="Bahrain, Riffa - Southern Governorate">
-                          Riffa Alshamali, Riffa, Bahrain
-                        </small>
-                        <small className="badge badge-dark label-dark mx-1 p-1 text-black-50">
-                          2.26 KM Away
-                        </small>
-                      </p>
-                      <h6 className="d-none d-md-block">
-                        2 Pitches
-                        <span className="badge text-dark border mx-1 p-0 px-1 p-1">
-                          <img
-                            src="https://malaebapp.com/images/sports/1.png"
-                            width="20"
-                            alt="img"
-                          />{" "}
-                          7 v 7
-                        </span>
-                        <span className="badge text-dark border mx-1 p-0 px-1 p-1">
-                          <img
-                            src="https://malaebapp.com/images/sports/1.png"
-                            width="20"
-                            alt="img"
-                          />{" "}
-                          7 v 7
-                        </span>
-                      </h6>
-                      <button className="btn btnBook w-100 d-none d-md-block">
-                        Booking now
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              </a>
             </div>
           </div>
         </div>

@@ -15,9 +15,50 @@ import React, { useEffect } from "react";
 import { Form, Row, Col, InputGroup, Button } from "react-bootstrap";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { Spinner } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
+
+const menu = [
+  {
+    id: 1,
+    name: "Thông tin tài khoản",
+    icon: faUserCircle,
+    link: "/tai-khoan/thong-tin-tai-khoan",
+  },
+  {
+    id: 2,
+    name: "Hồ sơ thể thao",
+    icon: faFutbol,
+    link: "/tai-khoan/ho-so-the-thao",
+  },
+  {
+    id: 3,
+    name: "Lịch đặt của tôi",
+    icon: faClock,
+    link: "/tai-khoan/lich-su-dat-cua-toi",
+  },
+  {
+    id: 4,
+    name: "Thông báo",
+    icon: faBell,
+    link: "/tai-khoan/thong-bao",
+  },
+  {
+    id: 5,
+    name: "Mã giới thiệu",
+    icon: faCode,
+    link: "/tai-khoan/ma-gioi-thieu",
+  },
+  {
+    id: 6,
+    name: "Đổi mật khẩu",
+    icon: faUnlockAlt,
+    link: "/tai-khoan/doi-mat-khau",
+  },
+];
 
 function Profile() {
   const axiosPrivate = useAxiosPrivate();
+  const location = useLocation();
 
   const [bookingList, setBookingList] = React.useState([]);
   const [beginDate, setBeginDate] = React.useState(
@@ -27,6 +68,8 @@ function Profile() {
     new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)
   );
   const [isLoading, setIsLoading] = React.useState(false);
+
+  console.log(location.pathname)
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -138,7 +181,7 @@ function Profile() {
     [bookingList]
   );
   return (
-    <div className="container mx-auto lg:px-5 pt-3 pb-3 border-b px-3 lg:px-0">
+    <div className="container profile mx-auto lg:px-5 pt-3 pb-3 border-b px-3 lg:px-0">
       <div className="row justify-content-md-center mt-3 minimum-heigh">
         <div className="col-md-4 col-lg-4 text-center pl-0 pr-0">
           <div className="dropdown user-sidebar sidebar-md text-center">
@@ -166,30 +209,12 @@ function Profile() {
               <div className="_border d-none d-md-block"></div>
               <div className="row justify-content-center">
                 <div className="m-2 col-lg-7 col-7 menu-items">
-                  <li className="mb-1 ">
-                    <FontAwesomeIcon icon={faUserCircle} />
-                    <a href="/user/profile">Thông tin tài khoản</a>
-                  </li>
-                  <li className="mb-1 ">
-                    <FontAwesomeIcon icon={faFutbol} />
-                    <a href="/sport_profile">Hồ sơ thể thao</a>
-                  </li>
-                  <li className="mb-1 active">
-                    <FontAwesomeIcon icon={faClock} />
-                    <a href="/user/booking_requests">Lịch đặt của tôi</a>
-                  </li>
-                  <li className="mb-1 ">
-                    <FontAwesomeIcon icon={faBell} />
-                    <a href="/user/announcements">Thông báo</a>
-                  </li>
-                  <li className="mb-1 ">
-                    <FontAwesomeIcon icon={faCode} />
-                    <a href="/user/referral_code">Mã giới thiệu</a>
-                  </li>
-                  <li className="mb-1 ">
-                    <FontAwesomeIcon icon={faUnlockAlt} />
-                    <a href="/user/password">Đổi mật khẩu</a>
-                  </li>
+                  {menu.map((item) => (
+                    <li className={`menu-item mb-1 ${location.pathname == item.link ? 'active' : ''}`}>
+                      <FontAwesomeIcon icon={item.icon} />
+                      <a href={item.link}>{item.name}</a>
+                    </li>
+                  ))}
                 </div>
               </div>
             </ul>

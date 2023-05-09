@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import TimePicker from "rc-time-picker";
 import "rc-time-picker/assets/index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Spinner } from "react-bootstrap";
+import { Breadcrumb, Spinner } from "react-bootstrap";
 import {
   faPhone,
   faLocationDot,
   faClock,
+  faStar,
+  faDoorOpen,
 } from "@fortawesome/free-solid-svg-icons";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import Modal from "../components/Popup";
@@ -22,23 +24,23 @@ function Detail() {
   const [selectedStartTime, setSelectedStartTime] = useState(null);
   const [selectedEndTime, setSelectedEndTime] = useState(null);
   const [isAvailable, setIsAvailable] = useState(false);
-  const [isCheckLoading, setIsCheckLoading] = useState(false); // [TODO
+  const [isCheckLoading, setIsCheckLoading] = useState(false);
+
+  // Refs
+  const containerRef = useRef(null);
 
   // Validation
   const [errors, setErrors] = useState({});
   const validate = () => {
     let errors = {};
     if (!fieldType.trim()) {
-      errors.fieldType = "Field type is required";
+      errors.fieldType = "Loại sân không được để trống";
     }
     if (!startDate) {
-      errors.startDate = "Start date is required";
+      errors.startDate = "Ngày đặt sân không được để trống";
     }
-    if (!selectedStartTime) {
-      errors.startTime = "Start time is required";
-    }
-    if (!selectedEndTime) {
-      errors.endTime = "End time is required";
+    if (!selectedStartTime || !selectedEndTime) {
+      errors.startTime = "Thời gian đặt sân không được để trống";
     }
 
     setErrors(errors);
@@ -86,6 +88,7 @@ function Detail() {
   };
 
   const handleCheckAvailability = () => {
+    containerRef.current.scrollIntoView({ behavior: "smooth" });
     // Check if selected start time and end time are available
     if (!validate()) return;
 
@@ -106,30 +109,35 @@ function Detail() {
   }, [fieldType, startDate, selectedStartTime, selectedEndTime]);
 
   return (
-    <div className="container pt-4">
+    <div className="container pt-4" ref={containerRef}>
+      <Breadcrumb>
+        <Breadcrumb.Item href="/">Trang chủ</Breadcrumb.Item>
+        <Breadcrumb.Item href="/san-bong">Sân bóng đá</Breadcrumb.Item>
+        <Breadcrumb.Item>Hồ Chí Minh</Breadcrumb.Item>
+        <Breadcrumb.Item>Quận 12</Breadcrumb.Item>
+        <Breadcrumb.Item active>Sân bóng Thiện Nhân</Breadcrumb.Item>
+      </Breadcrumb>
       <div className="row">
         <div className="col-lg-8 col-md-7">
-          <h3 className="pb-2">Sân bóng thiện nhân</h3>
+          <h3 className="pb-2">Sân bóng Thiện Nhân</h3>
           <p>
-            <img src="./images/star.png" alt="img" />
-            <span className="stars fw-bold">1.3</span> (3 Reviews)
-            <span className="ps-lg-5 mx-2">
-              <img src="./images/Combined.png" alt="img" /> Bahrain, Bu Quwah
+            <FontAwesomeIcon icon={faStar} color="#f0803c" />
+            <span className="stars fw-bold">4.3</span> (3 Reviews)
+            <span className="ps-lg-2">
+              <FontAwesomeIcon
+                icon={faLocationDot}
+                color="#85c240"
+                className="mr-1"
+              />
+              206 Vườn Lài, An Phú Đông, Quận 12
             </span>
           </p>
         </div>
         <div className="col-lg-4 col-md-5">
           <div className="pb-4 /*d-none d-md-block*/">
-            <button
-              className="btn btnFilter ms-auto float-end"
-              data-bs-toggle="modal"
-              data-bs-target="#modalFilter"
-            >
-              <img src="./images/share.png" alt="img" /> Share
-            </button>
-            <button className="btn btnFilter ms-auto float-end me-2 btnActive">
-              <img src="./images/heart.png" alt="img" /> UnSave
-            </button>
+            {/* <button className="btn btnFilter ms-auto float-end me-2 btnActive">
+              <img src="./images/heart.png" alt="img" /> Yêu thích
+            </button> */}
           </div>
         </div>
       </div>
@@ -137,9 +145,9 @@ function Detail() {
         <div className="col-lg-7 col-md-7 mb-3">
           <img
             src="https://cdn.malaebapp.com/images/stadium/74/large"
-            style={{ width: "100%" }}
+            style={{ width: "100%", borderRadius: "20px" }}
           />
-          <h5 className="mb-0 pt-4 pb-0">Stadium Location</h5>
+          <h5 className="mb-0 pt-4 pb-0">Địa điểm</h5>
           <img
             src="https://malaebapp.com/images/bgLarge.png"
             className="bgImg"
@@ -151,18 +159,23 @@ function Detail() {
               width="100%"
               height="450"
               loading="lazy"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3453.1839669308755!2d-74.00594178474802!3d40.71277540697792!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a17bc9f409f%3A0x8c8d43c031a34aaf!2sStatue%20of%20Liberty%20National%20Monument!5e0!3m2!1sen!2sus!4v1620410414013!5m2!1sen!2sus"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.794455546505!2d106.691472!3d10.843459799999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3175285b5ba680cd%3A0x57e89123fa14bd3e!2s206%20V%C6%B0%E1%BB%9Dn%20L%C3%A0i%2C%20Ph%C6%B0%E1%BB%9Dng%208%2C%20Qu%E1%BA%ADn%204%2C%20Th%C3%A0nh%20ph%E1%BB%91%20H%E1%BB%93%20Ch%C3%AD%20Minh%2C%20Vietnam!5e0!3m2!1sen!2sus!4v1653039044912!5m2!1sen!2sus"
               allowFullScreen=""
             ></iframe>
           </div>
         </div>
         <div className="col-lg-5 col-md-5">
           <div>
-            <p className="pb-3 m-0 text-capitalize">
-              <b>
-                <FontAwesomeIcon icon={faLocationDot} />{" "}
-              </b>{" "}
-              34/7 Nguyễn Văn Lượng, Quận Gò Vấp, Tp. Hồ Chí Minh <br />
+            <button
+              type="button"
+              class="btn btn-success"
+              disabled
+              style={{ backgroundColor: "#28a745", border: "none" }}
+            >
+              <FontAwesomeIcon icon={faDoorOpen} className="mr-2" />
+              Đang mở cửa
+            </button>
+            <p className="mt-2 text-capitalize">
               <b>
                 <FontAwesomeIcon icon={faPhone} />
               </b>{" "}
@@ -290,7 +303,7 @@ function Detail() {
                   )}
                   {isAvailable && (
                     <div className="mt-2 text-success">
-                      Thời gian đã chọn có sẵn.
+                      Thời gian đã chọn có sẵn
                     </div>
                   )}
                 </div>
@@ -330,8 +343,11 @@ function Detail() {
                   </p>
                   <p class="note">
                     Lưu ý: Cần thanh toán trong vòng 24h kể từ khi đặt sân, hệ
-                    thống tự động hủy đơn nếu không hoàn tất thanh toán. Tình
-                    trạng sân các bạn theo dõi <a class="text-primary">ở đây</a>
+                    thống tự động hủy đơn nếu không hoàn tất thanh toán. Theo
+                    dõi và hoàn tất thanh toán{" "}
+                    <a class="text-primary" href="/lich-dat-cua-toi">
+                      tại đây
+                    </a>
                     .
                   </p>
                 </div>
