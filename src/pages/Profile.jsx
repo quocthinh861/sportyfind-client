@@ -16,6 +16,8 @@ import { Form, Row, Col, InputGroup, Button } from "react-bootstrap";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { Spinner } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
+import Booking from "../components/Booking";
+import Account from "../components/Account";
 
 const menu = [
   {
@@ -68,8 +70,6 @@ function Profile() {
     new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)
   );
   const [isLoading, setIsLoading] = React.useState(false);
-
-  console.log(location.pathname);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -224,152 +224,8 @@ function Profile() {
           </div>
         </div>
         <div className="col-md-9 col-lg-9 pl-3 pr-3">
-          <div className="user-page-content">
-            <section className="border-light">
-              <div className="row justify-content-center m-2">
-                <h5
-                  className="w-100 text-center d-none d-md-block"
-                  style={{ fontWeight: 700 }}
-                >
-                  Lịch Đặt
-                </h5>
-              </div>
-              <Form action="/user/booking_requests" autoComplete="off">
-                <Row className="pl-md-2">
-                  <Col xl={3} md={3} mb={4}>
-                    <Form.Label htmlFor="form_guests">Trạng thái</Form.Label>
-                    <Form.Select
-                      id="form_guests"
-                      name="status"
-                      data-style="btn-selectpicker"
-                      title=" "
-                      className="form-control"
-                    >
-                      <option value="all" selected="">
-                        Tất cả
-                      </option>
-                      <option value="new">Mới/Đã xác nhận</option>
-                      <option value="pending">Chờ xác nhận</option>
-                      <option value="done">Đã qua/Hoàn thành</option>
-                      <option value="cancelled">Đã hủy</option>
-                    </Form.Select>
-                  </Col>
-                  <Col xl={3} md={3} mb={4}>
-                    <Form.Label htmlFor="begin_date">Từ ngày</Form.Label>
-                    <DatePicker
-                      selected={beginDate}
-                      onChange={(date) => {
-                        setBeginDate(date);
-                      }}
-                      calendarClassName="custom-calendar" // add a custom CSS class to the calendar container
-                      className="custom-datepicker" // add a custom CSS class to the date-picker container
-                      dayClassName={(date) =>
-                        date.getTime() === beginDate.getTime()
-                          ? "custom-selected"
-                          : undefined
-                      } // add a custom CSS class to the selected date element
-                      showMonthYearPicker={false} // disable month and year picker
-                      dateFormat={"dd/MM/yyyy"}
-                    />
-                  </Col>
-                  <Col xl={3} md={3} mb={4}>
-                    <Form.Label htmlFor="end_date">Đến ngày</Form.Label>
-                    <DatePicker
-                      selected={endDate}
-                      onChange={(date) => {
-                        setEndDate(date);
-                      }}
-                      calendarClassName="custom-calendar" // add a custom CSS class to the calendar container
-                      className="custom-datepicker" // add a custom CSS class to the date-picker container
-                      dayClassName={(date) =>
-                        date.getTime() === endDate.getTime()
-                          ? "custom-selected"
-                          : undefined
-                      } // add a custom CSS class to the selected date element
-                      showMonthYearPicker={false} // disable month and year picker
-                      dateFormat={"dd/MM/yyyy"}
-                    />
-                  </Col>
-                  <Col
-                    sm={3}
-                    mb={4}
-                    order={{ sm: 1, md: 2 }}
-                    className="d-flex flex-column"
-                  >
-                    <div className="mt-auto">
-                      <Button
-                        type="submit"
-                        className="btn btn-green"
-                        onClick={handleSearch}
-                        style={{
-                          backgroundColor: "#85c240",
-                          borderColor: "#85c240",
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faSearch} />
-                        Tìm kiếm
-                      </Button>
-                    </div>
-                  </Col>
-                </Row>
-              </Form>
-              {isLoading ? (
-                <>
-                  <div className="mt-4 w-full text-center">
-                    <Spinner
-                      animation="border"
-                      role="status"
-                      variant="primary"
-                      style={{ width: "1.5rem", height: "1.5rem" }}
-                    >
-                      <span className="sr-only">Loading...</span>
-                    </Spinner>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <Table columns={columns} data={bookingList} />
-                </>
-              )}
-              {/* <div className="table-responsive mt-4">
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Ngày</th>
-                      <th>Thời gian</th>
-                      <th>Trạng thái</th>
-                      <th>Địa điểm</th>
-                      <th>Sân thể thao</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {bookingRequests.map((booking) => (
-                      <tr key={booking.id}>
-                        <td>{booking.id}</td>
-                        <td>{booking.date}</td>
-                        <td>{booking.time}</td>
-                        <td>{booking.status}</td>
-                        <td>{booking.location}</td>
-                        <td>{booking.facility}</td>
-                        <td>
-                          {booking.status !== "cancelled" && (
-                            <button className="btn btn-smbtn-danger">Hủy</button>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              {bookingRequests.length === 0 && (
-                <div className="row justify-content-center m-4">
-                  <p style={{ textAlign: "center" }}>Không có dữ liệu. </p>
-                </div>
-              )} */}
-            </section>
-          </div>
+          {/* <Booking /> */}
+          <Account />
         </div>
       </div>
     </div>
