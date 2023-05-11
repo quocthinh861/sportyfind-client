@@ -14,7 +14,7 @@ function Home() {
                 <p className="text-white py-4">
                   Tìm kiếm sân xung quanh bạn ở Thành phố Hồ Chí Minh
                 </p>
-                <button className="search-now">Tìm kiếm ngay</button>
+                <button className="search-now"><a href="/danh-sach">Tìm kiếm ngay</a></button>
               </div>
             </div>
           </div>
@@ -187,7 +187,7 @@ function Home() {
                     </div>
                     <div className="flex-grow-1 mx-3 pt-1">
                       <h5>Tất cả</h5>
-                      <p>400 sân</p>
+                      <p>98 sân</p>
                     </div>
                   </div>
                 </div>
@@ -206,7 +206,7 @@ function Home() {
                     </div>
                     <div className="flex-grow-1 mx-3 pt-1">
                       <h5>Bóng đá</h5>
-                      <p>203 sân</p>
+                      <p>32 sân</p>
                     </div>
                   </div>
                 </div>
@@ -244,7 +244,7 @@ function Home() {
                     </div>
                     <div className="flex-grow-1 mx-3 pt-1">
                       <h5>Cầu lông</h5>
-                      <p>34 sân</p>
+                      <p>18 sân</p>
                     </div>
                   </div>
                 </div>
@@ -263,7 +263,7 @@ function Home() {
                     </div>
                     <div className="flex-grow-1 mx-3 pt-1">
                       <h5>Bóng chuyền</h5>
-                      <p>21 sân</p>
+                      <p>9 sân</p>
                     </div>
                   </div>
                 </div>
@@ -282,7 +282,7 @@ function Home() {
                     </div>
                     <div className="flex-grow-1 mx-3 pt-1">
                       <h5>Fulsal</h5>
-                      <p>139 sân</p>
+                      <p>7 sân</p>
                     </div>
                   </div>
                 </div>

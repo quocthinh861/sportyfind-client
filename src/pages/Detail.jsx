@@ -345,7 +345,7 @@ function Detail() {
                     Lưu ý: Cần thanh toán trong vòng 24h kể từ khi đặt sân, hệ
                     thống tự động hủy đơn nếu không hoàn tất thanh toán. Theo
                     dõi và hoàn tất thanh toán{" "}
-                    <a class="text-primary" href="/lich-dat-cua-toi">
+                    <a class="text-primary" href="/tai-khoan/quan-ly-lich-dat">
                       tại đây
                     </a>
                     .
@@ -359,7 +359,7 @@ function Detail() {
         </div>
       </div>
       <div className="mt-4">
-        <h5 className="mb-0">We Offer</h5>
+        <h5 className="mb-0">Thông tin thêm</h5>
         <img
           src="https://malaebapp.com/images/bgLarge.png"
           className="bgImg"
@@ -431,17 +431,11 @@ function Detail() {
           </div>
         </div>
       </div>
-      <p className="p-0 m-0 my-2 mt-4 text-capitalize nl2br">
-        <b>About Us: </b> Play all your favourite sports on Aqua park indoor
-        pitches. There are football pitches, volleyball pitches, and basketball
-        pitches. You can play for 90 mins- or even 120 mins. Pitches are
-        designed with modern techniques and all needed equipment, there are also
-        showers and toilets to use. Book it now from Malaeb Bahrain. Note: The
-        pitch has the right to charge the booking amount if it's cancelled 24
-        hours before the game time. Payments are collected in advance.
+      <p className="p-0 m-0 my-2 mt-4 nl2br">
+        <b>Cở sở vật chất: </b> Có sân bóng đá, sân bóng chuyền và sân bóng rổ. Bạn có thể chơi trong 90 phút hoặc thậm chí là 120 phút. Các sân được thiết kế với các kỹ thuật hiện đại và được trang bị đầy đủ thiết bị cần thiết. Ngoài ra còn có phòng tắm và nhà vệ sinh để sử dụng. Đặt ngay từ Malaeb Bahrain. 
       </p>
       <div className="reviews mb-3 pt-4">
-        <h5 className="mb-0">Reviews</h5>
+        <h5 className="mb-0">Đánh giá</h5>
         <img
           src="https://malaebapp.com/images/bgLarge.png"
           className="bgImg"
@@ -460,17 +454,42 @@ function Detail() {
                 </div>
                 <div className="flex-grow-1 mx-3 pt-1">
                   <h5 className="fw-bold mb-1 d-flex justify-content-between">
-                    abdulla aqeel janahi{" "}
+                    Nguyễn Phúc Khang{" "}
                     <span className="float-end fw-normal textSmall">
-                      6 months ago
+                      3 ngày trước
                     </span>
                   </h5>
                   <p className="textVsmall">
-                    <img src="./images/star.png" alt="img" /> 5
+                    <img src="https://malaebapp.com/images/star.png" alt="img" /> 5
                   </p>
                 </div>
               </div>
-              <p>ملعب مزعج(الac) صوته وايد عالي… وحرررر… غالي على مستواه</p>
+              <p>Mình thấy rất hài lòng với chất lượng và dịch vụ ở sân bóng</p>
+            </div>
+          </div>
+          <div className="card mb-3">
+            <div className="card-body">
+              <div className="d-flex">
+                <div className="flex-shrink-0">
+                  <img
+                    src="https://cdn.malaebapp.com/images/user/151097/large"
+                    className="imgCircle"
+                    alt="img"
+                  />
+                </div>
+                <div className="flex-grow-1 mx-3 pt-1">
+                  <h5 className="fw-bold mb-1 d-flex justify-content-between">
+                    Bình Minh{" "}
+                    <span className="float-end fw-normal textSmall">
+                      3 ngày trước
+                    </span>
+                  </h5>
+                  <p className="textVsmall">
+                    <img src="https://malaebapp.com/images/star.png" alt="img" /> 5
+                  </p>
+                </div>
+              </div>
+              <p>Sân sạch sẽ, thoáng mát, ông chủ dễ thương. Rate 5 sao</p>
             </div>
           </div>
           <div className="card mb-3">
@@ -487,40 +506,15 @@ function Detail() {
                   <h5 className="fw-bold mb-1 d-flex justify-content-between">
                     abdulla aqeel janahi{" "}
                     <span className="float-end fw-normal textSmall">
-                      6 months ago
+                      3 ngày trước
                     </span>
                   </h5>
                   <p className="textVsmall">
-                    <img src="./images/star.png" alt="img" /> 5
+                    <img src="https://malaebapp.com/images/star.png" alt="img" /> 5
                   </p>
                 </div>
               </div>
-              <p>ملعب مزعج(الac) صوته وايد عالي… وحرررر… غالي على مستواه</p>
-            </div>
-          </div>
-          <div className="card mb-3">
-            <div className="card-body">
-              <div className="d-flex">
-                <div className="flex-shrink-0">
-                  <img
-                    src="https://cdn.malaebapp.com/images/user/151097/large"
-                    className="imgCircle"
-                    alt="img"
-                  />
-                </div>
-                <div className="flex-grow-1 mx-3 pt-1">
-                  <h5 className="fw-bold mb-1 d-flex justify-content-between">
-                    abdulla aqeel janahi{" "}
-                    <span className="float-end fw-normal textSmall">
-                      6 months ago
-                    </span>
-                  </h5>
-                  <p className="textVsmall">
-                    <img src="./images/star.png" alt="img" /> 5
-                  </p>
-                </div>
-              </div>
-              <p>ملعب مزعج(الac) صوته وايد عالي… وحرررر… غالي على مستواه</p>
+              <p>Thật tuyệt vời !!!</p>
             </div>
           </div>
         </div>

@@ -69,7 +69,7 @@ function Profile() {
   );
   const [isLoading, setIsLoading] = React.useState(false);
 
-  console.log(location.pathname)
+  console.log(location.pathname);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -167,14 +167,13 @@ function Profile() {
         accessor: "venue",
       },
       {
-        Header: "Giá tiền",
-        accessor: "price",
-      },
-      {
         Header: "",
         accessor: "action",
         Cell: ({ row }) => (
-          <Button className="btn btn-danger btn-sm">Hủy</Button>
+          <>
+            <Button className="btn btn-danger btn-sm">Hủy</Button>
+            <Button className="btn btn-primary ml-1 btn-sm">Thanh toán</Button>
+          </>
         ),
       },
     ],
@@ -183,7 +182,7 @@ function Profile() {
   return (
     <div className="container profile mx-auto lg:px-5 pt-3 pb-3 border-b px-3 lg:px-0">
       <div className="row justify-content-md-center mt-3 minimum-heigh">
-        <div className="col-md-4 col-lg-4 text-center pl-0 pr-0">
+        <div className="col-md-3 col-lg-3 text-center pl-0 pr-0">
           <div className="dropdown user-sidebar sidebar-md text-center">
             <ul className="dropdown-menu" aria-labelledby="user_sidenave">
               <li className="dropdown-header">
@@ -210,7 +209,11 @@ function Profile() {
               <div className="row justify-content-center">
                 <div className="m-2 col-lg-7 col-7 menu-items">
                   {menu.map((item) => (
-                    <li className={`menu-item mb-1 ${location.pathname == item.link ? 'active' : ''}`}>
+                    <li
+                      className={`menu-item mb-1 ${
+                        location.pathname == item.link ? "active" : ""
+                      }`}
+                    >
                       <FontAwesomeIcon icon={item.icon} />
                       <a href={item.link}>{item.name}</a>
                     </li>
@@ -220,7 +223,7 @@ function Profile() {
             </ul>
           </div>
         </div>
-        <div className="col-md-8 col-lg-8 pl-3 pr-3">
+        <div className="col-md-9 col-lg-9 pl-3 pr-3">
           <div className="user-page-content">
             <section className="border-light">
               <div className="row justify-content-center m-2">

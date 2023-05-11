@@ -33,7 +33,7 @@ function FindTeam() {
         <div className="col-md-8 col-lg-6 col-xl-5 d-flex align-items-center">
           <div className="w-100 py-5 px-md-5 px-xl-6 position-relative">
             <div className="mb-4">
-              <h3 className="">Find a team for a game</h3>
+              <h3 className="">Gia nhập đội nhóm để chơi</h3>
             </div>
             <div className="card mb-3">
               <div className="row g-0">
@@ -59,8 +59,8 @@ function FindTeam() {
                 </div>
                 <div className="col-md-10">
                   <div className="card-body">
-                    <h5 className="card-title mb-0">Location</h5>
-                    <p className="card-text text-muted">Up to 500m near you</p>
+                    <h5 className="card-title mb-0">Ví trí</h5>
+                    <p className="card-text text-muted">Phạm vi 5km gần bạn</p>
                   </div>
                 </div>
               </div>
@@ -89,7 +89,7 @@ function FindTeam() {
                 </div>
                 <div className="col-md-10">
                   <div className="card-body">
-                    <h5 className="card-title mb-0">Date and Time</h5>
+                    <h5 className="card-title mb-0">Ngày và giò</h5>
                     <p className="card-text text-muted">May 7, 2023 4:00 PM</p>
                   </div>
                 </div>
@@ -114,8 +114,8 @@ function FindTeam() {
                 </div>
                 <div className="col-md-10">
                   <div className="card-body">
-                    <h5 className="card-title mb-0">Sport</h5>
-                    <p className="card-text text-muted">Football</p>
+                    <h5 className="card-title mb-0">Môn</h5>
+                    <p className="card-text text-muted">Bóng đá</p>
                   </div>
                 </div>
               </div>
@@ -144,7 +144,8 @@ function FindTeam() {
                 </div>
                 <div className="col-md-10">
                   <div className="card-body">
-                    <h5 className="card-title mb-0">Your team</h5>
+                    <h5 className="card-title mb-0">Đội của tôi</h5>
+                    <p className="card-text text-muted">Thành viên </p>
                   </div>
                 </div>
               </div>
@@ -158,7 +159,7 @@ function FindTeam() {
             <div className={`yourteam ${showTeam ? "show" : "hide"}`} >
               <div className="row justify-content-center">
                 <div className="col-md-10 new-business-info mt-6">
-                  <h3 className="text-white mb-4">Your team</h3>
+                  <h3 className="text-white mb-4">Đội của bạn</h3>
                   <div
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
@@ -183,15 +184,15 @@ function FindTeam() {
                               fontSize: "1.5rem",
                             }}
                           >
-                            Join
+                            Tham gia
                           </h5>
                           <p className="card-text text-muted">
-                            Join another team <br /> to get some fun
+                            Tham gia ngay <br /> để tận hưởng niềm vui
                           </p>
                         </div>
                       </div>
                       <div className="card-header">
-                        <b>36 teams</b> are waiting
+                        <b>36 đội</b> đang đợi
                       </div>
                     </div>
                     <div className={`card team-card`}>
@@ -215,15 +216,15 @@ function FindTeam() {
                               fontSize: "1..5rem",
                             }}
                           >
-                            Create new
+                            Tạo mới
                           </h5>
                           <p className="card-text text-muted">
-                            Invite your friends or wait <br /> for other players
+                            Mời bạn bè hoặc đợi <br /> người chơi khác tham gia
                           </p>
                         </div>
                       </div>
                       <div className="card-header">
-                        <b>315 players</b> are near you
+                        <b>315 người chơi</b> xung quanh bạn
                       </div>
                     </div>
                   </div>

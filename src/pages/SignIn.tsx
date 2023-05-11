@@ -54,7 +54,7 @@ function SignIn() {
                 <h3 className="text-green">SPORTYFIND</h3>
                 <h4 className="d-none d-md-block">Chào mừng bạn quay lại</h4>
               </div>
-              <a
+              {/* <a
                 className="btn btn btn-outline-primary btn-block btn-social mb-3"
                 rel="nofollow"
                 data-method="post"
@@ -77,8 +77,8 @@ function SignIn() {
                   className="fa-2x btn-social-icon"
                 />{" "}
                 Đăng nhập với Google
-              </a>
-              <form className="form-inline mb-3" id="phone_number_container">
+              </a> */}
+              {/* <form className="form-inline mb-3" id="phone_number_container">
                 <div
                   className="form-group mr-3"
                   style={{
@@ -100,7 +100,7 @@ function SignIn() {
                   <FontAwesomeIcon icon={faArrowRight} />
                   <FontAwesomeIcon icon={faSpinner} spin className="d-none" />
                 </button>
-              </form>
+              </form> */}
               <hr
                 data-content="hoặc"
                 className="my-3 hr-text letter-spacing-2"

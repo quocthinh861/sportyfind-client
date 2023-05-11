@@ -9,6 +9,7 @@ import SignIn from './pages/SignIn.tsx'
 import FindTeam from './pages/FindTeam.tsx'
 import Detail from './pages/Detail'
 import Profile from './pages/Profile'
+import PaymentBookingPage from './pages/Payment'
 
 function App() {
   const [startDate, setStartDate] = useState(new Date())
@@ -25,11 +26,12 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<Home />}></Route>
-          <Route path="/list" element={<List />}></Route>
+          <Route path="/danh-sach" element={<List />}></Route>
           <Route path="/san-bong-thien-tan" element={<Detail />}></Route>
           <Route path="/find-team" element={<FindTeam />}></Route>
+          <Route path="/thanh-toan" element={<PaymentBookingPage />}></Route>
           <Route path="/tai-khoan/dang-nhap" element={<SignIn />}></Route>
-          <Route path="/tai-khoan/lich-su-dat-cua-toi" element={<Profile />}></Route>
+          <Route path="/tai-khoan/quan-ly-lich-dat" element={<Profile />}></Route>
         </Routes>
       </Layout>
     </BrowserRouter>

@@ -227,6 +227,10 @@ input[type='range'] {
   animation: bounce 1s infinite alternate;
 }
 
+.search-now > a {
+  color: #fff!important;
+}
+
 @keyframes bounce {
   0% {
     transform: translateY(0);
