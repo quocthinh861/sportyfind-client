@@ -5,6 +5,7 @@ import footballPlayer from "../../assets/images/football-player.png";
 import starIcon from "../../assets/images/icons/star.png";
 import groupIcon from "../../assets/images/icons/group.png";
 import flashIcon from "../../assets/images/icons/flash.png";
+import crownIcon from "../../assets/images/icons/crown.png";
 
 function Account() {
   return (
@@ -44,19 +45,38 @@ function Account() {
                   <img src={teamLogo} />
                 </div>
                 <div className="team-item__info">
+                  <img src={crownIcon} className="w-5 h-5 logo-owner" />
                   <div className="team-item__name">Chiến thần</div>
                   <div className="team-item__description">
                     <span>
                       <img src={flashIcon} className="w-5 h-5" />
                       369
+                      <p className="show-info">
+                        <b>Điểm trình độ: </b>
+                        Đây là điểm trình độ của bạn so với các đội khác. Điểm
+                        càng cao thì trình độ càng tốt.
+                      </p>
                     </span>
                     <span>
                       <img src={groupIcon} className="w-5 h-5" />
                       10
+                      <p className="show-info">
+                        <b>Số lượng: </b> 10 thành viên
+                      </p>
                     </span>
                     <span>
                       <img src={starIcon} className="w-5 h-5" />
                       100
+                      <p className="show-info">
+                        <b>Điểm uy tín: </b>
+                        <ul>
+                          <li>Điểm uy tín mặc định là 100.</li>
+                          <li>
+                            Đá và nhận xét thành công sẽ nhận được 1 điểm.
+                          </li>
+                          <li>Hủy kèo sát giờ chơi sẽ bị trừ 3 điểm.</li>
+                        </ul>
+                      </p>
                     </span>
                   </div>
                 </div>
@@ -157,7 +177,7 @@ function Account() {
                   </div>
                   <div className="form-group col-md-6">
                     <label htmlFor="user_name" className="form-label">
-                      Cân nặng(kg)
+                      Cân nặng (kg)
                     </label>
                     <input
                       className="form-control"
