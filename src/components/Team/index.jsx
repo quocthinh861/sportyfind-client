@@ -1,11 +1,5 @@
 import React from "react";
 import "./style.css";
-import teamLogo from "../../assets/images/barrier.png";
-import footballPlayer from "../../assets/images/football-player.png";
-import starIcon from "../../assets/images/icons/star.png";
-import groupIcon from "../../assets/images/icons/group.png";
-import flashIcon from "../../assets/images/icons/flash.png";
-
 function Account() {
   return (
     <div className="user-page-content">
@@ -19,7 +13,7 @@ function Account() {
           </h5>
         </div>
         <div className="row justify-content-center m-2">
-          <div className="col-4">
+          <div className="col-md-3">
             <div className="profile-picture">
               <div className="avatar">
                 <img
@@ -29,41 +23,13 @@ function Account() {
                     borderRadius: "50%",
                     textAlign: "center",
                   }}
-                  src={footballPlayer}
+                  src="https://www.sporta.vn/assets/default_user_image-dc0209ffeabf7fa68fcbc7d512a6ceeb051ad3fb16706d26679cccdcf3384043.png"
                 />
               </div>
             </div>
             <p className="text-center mt-4">Ảnh đại diện</p>
-            <div className="team-list">
-              <div className="flex justify-between mb-2">
-                <a>Câu lạc bộ</a>
-                <small>Tạo CLB mới</small>
-              </div>
-              <div className="team-item bg-gray-100">
-                <div className="team-item__logo">
-                  <img src={teamLogo} />
-                </div>
-                <div className="team-item__info">
-                  <div className="team-item__name">Chiến thần</div>
-                  <div className="team-item__description">
-                    <span>
-                      <img src={flashIcon} className="w-5 h-5" />
-                      369
-                    </span>
-                    <span>
-                      <img src={groupIcon} className="w-5 h-5" />
-                      10
-                    </span>
-                    <span>
-                      <img src={starIcon} className="w-5 h-5" />
-                      100
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
-          <div className="col col-8">
+          <div className="col col-md-9">
             <div className="d-flex justify-content-center">
               <div className="w-75">
                 <div className="form-row">
@@ -121,7 +87,7 @@ function Account() {
                 <div className="form-row">
                   <div className="form-group col-md-6 mb-4">
                     <label htmlFor="product-description" className="form-label">
-                      Thành phố/Tỉnh
+                    Thành phố/Tỉnh
                     </label>
                     <select
                       className="form-select"
@@ -133,7 +99,7 @@ function Account() {
                   </div>
                   <div className="form-group col-md-6 mb-4">
                     <label htmlFor="product-description" className="form-label">
-                      Quận/Huyện
+                    Quận/Huyện
                     </label>
                     <select
                       className="form-select"

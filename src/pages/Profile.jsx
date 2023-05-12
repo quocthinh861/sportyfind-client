@@ -18,7 +18,7 @@ import { Spinner } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import Booking from "../components/Booking";
 import Account from "../components/Account";
-
+import footballplayer from "../assets/images/football-player.png";
 const menu = [
   {
     id: 1,
@@ -191,7 +191,7 @@ function Profile() {
                     <div className="sporta-avatar">
                       <img
                         id="avatar"
-                        src="https://www.sporta.vn/assets/default_user_image-dc0209ffeabf7fa68fcbc7d512a6ceeb051ad3fb16706d26679cccdcf3384043.png"
+                        src={footballplayer}
                       />
                     </div>
                   </a>

@@ -11,3 +11,39 @@
   border-radius: 50%;
   border: 2px solid white;
 }
+
+.team-item {
+  border: 1px solid #fc9600;
+  padding: 10px 10px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.team-item__logo {
+  width: 50px;
+}
+
+.team-item__info {
+  margin-left: 10px;
+  width: 100%;
+}
+
+.team-item__info .team-item__name {
+  font-weight: 600;
+  margin-bottom: 0.2em;
+}
+
+.team-item__description span {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 1em;
+}
+
+.team-item__description span img {
+  margin-right: 0.2em;
+}
