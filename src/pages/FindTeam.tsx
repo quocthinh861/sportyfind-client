@@ -122,12 +122,12 @@ const TeamImage = styled.img`
   margin: auto;
   background: #fff;
   border-style: solid;
-  border-width: 5px;
+  border-width: 2px;
   border-top-color: lighten(#000, 20%);
   border-right-color: lighten(#000, 0%);
   border-bottom-color: lighten(#000, 20%);
   border-left-color: lighten(#000, 0%);
-  box-shadow: 2px 2px 4px rgba(0,0,0,.6);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
 `;
 
 function FindTeam() {
@@ -639,7 +639,10 @@ function FindTeam() {
                           </p>
                         </div>
                         <div>
-                          <div className="mb-1 font-bold">Mô tả</div>
+                          <div className="mb-1 flex justify-between">
+                            <span className="font-bold">Mô tả</span>
+                            <small style={{color: 'orange', cursor: 'pointer'}}>Xem thêm</small>
+                          </div>
                           <p>
                             <div className="d-flex align-item-center">
                               <div className="d-inline mr-2">
