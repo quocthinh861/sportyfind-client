@@ -46,7 +46,7 @@ function SignIn() {
 
 
   return (
-      <div className="container-fluid px-3 login">
+      <div className="container-fluid px-3 login auth">
         <div className="row min-vh-100">
           <div className="col-md-8 col-lg-6 col-xl-5 d-flex align-items-center">
             <div className="w-100 py-5 px-md-5 px-xl-6 position-relative">

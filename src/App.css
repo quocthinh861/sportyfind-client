@@ -55,6 +55,18 @@ ul {
   background-color: rgb(128 186 61) !important;
 }
 
+button.btn-orange {
+  text-align: center;
+  border: none;
+  background: linear-gradient(
+    90deg,
+    rgba(36, 20, 0, 1) 0%,
+    rgba(255, 98, 0, 0.7792366946778712) 0%,
+    rgba(238, 147, 24, 0.9641106442577031) 63%
+  );
+  color: #fff;
+}
+
 .breadcrumb-item + .breadcrumb-item:before {
   content: ">" !important;
 }
@@ -268,7 +280,7 @@ input[type="range"] {
   padding-left: 5px;
 }
 
-.login .btn {
+.auth .btn {
   display: inline-block;
   color: #212529;
   text-align: center;
@@ -311,12 +323,12 @@ input[type="range"] {
   color: #fff;
 }
 
-.login .btn-social {
+.auth .btn-social {
   position: relative;
   padding-left: 3rem;
 }
 
-.login .btn {
+.auth .btn {
   letter-spacing: 0.3em;
   text-transform: uppercase;
   font-weight: bold;

@@ -15,9 +15,10 @@ import React, { useEffect } from "react";
 import { Form, Row, Col, InputGroup, Button } from "react-bootstrap";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { Spinner } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Booking from "../components/Booking";
 import Account from "../components/Account";
+import CreateTeam from '../components/CreateTeam'
 import footballplayer from "../assets/images/football-player.png";
 const menu = [
   {
@@ -59,126 +60,139 @@ const menu = [
 ];
 
 function Profile() {
-  const axiosPrivate = useAxiosPrivate();
+  // const axiosPrivate = useAxiosPrivate();
   const location = useLocation();
+  const {slug} =  useParams();
 
-  const [bookingList, setBookingList] = React.useState([]);
-  const [beginDate, setBeginDate] = React.useState(
-    new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
-  );
-  const [endDate, setEndDate] = React.useState(
-    new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)
-  );
-  const [isLoading, setIsLoading] = React.useState(false);
+  let content = null;
 
-  const handleSearch = (e) => {
-    e.preventDefault();
+  if (slug === "thong-tin-tai-khoan") {
+    content = <Account />;
+  } else if (slug === "lich-su-dat-cua-toi") {
+    content = <Booking />;
+  } else if(slug === "ho-so-the-thao") {
+    content = <CreateTeam />;
+  }
 
-    var startDateFormatted = beginDate.toLocaleDateString("en-US", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "numeric",
-    });
+  // const [bookingList, setBookingList] = React.useState([]);
+  // const [beginDate, setBeginDate] = React.useState(
+  //   new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
+  // );
+  // const [endDate, setEndDate] = React.useState(
+  //   new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)
+  // );
+  // const [isLoading, setIsLoading] = React.useState(false);
 
-    var endDateFormatted = endDate.toLocaleDateString("en-US", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "numeric",
-    });
+  // const handleSearch = (e) => {
+  //   e.preventDefault();
 
-    var query = {
-      beginDate: startDateFormatted,
-      endDate: endDateFormatted,
-      customerId: 1,
-      fieldId: 2,
-    };
+  //   var startDateFormatted = beginDate.toLocaleDateString("en-US", {
+  //     month: "2-digit",
+  //     day: "2-digit",
+  //     year: "numeric",
+  //   });
 
-    setIsLoading(true);
-    axiosPrivate.post("/booking/searchBooking", query).then((res) => {
-      if (res.status === 200) {
-        setTimeout(() => {
-          setIsLoading(false);
-          var bookingList = res.data.result.map((booking) => {
-            return {
-              id: booking.bookingId,
-              date: booking.bookingDate,
-              time: `${booking.startTime} - ${booking.endTime}`,
-              status: booking.bookingStatus,
-              venue: booking.fieldName,
-              price: booking.price,
-            };
-          });
-          setBookingList(bookingList);
-        }, 1000);
-      }
-    });
-  };
+  //   var endDateFormatted = endDate.toLocaleDateString("en-US", {
+  //     month: "2-digit",
+  //     day: "2-digit",
+  //     year: "numeric",
+  //   });
 
-  useEffect(() => {
-    axiosPrivate
-      .get("/booking/getBookingListByCustomerId", {
-        params: {
-          customerId: 1,
-        },
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          var bookingList = res.data.result.map((booking) => {
-            return {
-              id: booking.bookingId,
-              date: booking.bookingDate,
-              time: `${booking.startTime} - ${booking.endTime}`,
-              status: booking.bookingStatus,
-              venue: booking.fieldName,
-              price: booking.price,
-            };
-          });
+  //   var query = {
+  //     beginDate: startDateFormatted,
+  //     endDate: endDateFormatted,
+  //     customerId: 1,
+  //     fieldId: 2,
+  //   };
 
-          console.log(bookingList);
+  //   setIsLoading(true);
+  //   axiosPrivate.post("/booking/searchBooking", query).then((res) => {
+  //     if (res.status === 200) {
+  //       setTimeout(() => {
+  //         setIsLoading(false);
+  //         var bookingList = res.data.result.map((booking) => {
+  //           return {
+  //             id: booking.bookingId,
+  //             date: booking.bookingDate,
+  //             time: `${booking.startTime} - ${booking.endTime}`,
+  //             status: booking.bookingStatus,
+  //             venue: booking.fieldName,
+  //             price: booking.price,
+  //           };
+  //         });
+  //         setBookingList(bookingList);
+  //       }, 1000);
+  //     }
+  //   });
+  // };
 
-          setBookingList(bookingList);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  // useEffect(() => {
 
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: "ID",
-        accessor: "id",
-      },
-      {
-        Header: "Ngày",
-        accessor: "date",
-      },
-      {
-        Header: "Thời gian",
-        accessor: "time",
-      },
-      {
-        Header: "Trạng thái",
-        accessor: "status",
-      },
-      {
-        Header: "Đia điểm",
-        accessor: "venue",
-      },
-      {
-        Header: "",
-        accessor: "action",
-        Cell: ({ row }) => (
-          <>
-            <Button className="btn btn-danger btn-sm">Hủy</Button>
-            <Button className="btn btn-primary ml-1 btn-sm">Thanh toán</Button>
-          </>
-        ),
-      },
-    ],
-    [bookingList]
-  );
+  //   axiosPrivate
+  //     .get("/booking/getBookingListByCustomerId", {
+  //       params: {
+  //         customerId: 1,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       if (res.status === 200) {
+  //         var bookingList = res.data.result.map((booking) => {
+  //           return {
+  //             id: booking.bookingId,
+  //             date: booking.bookingDate,
+  //             time: `${booking.startTime} - ${booking.endTime}`,
+  //             status: booking.bookingStatus,
+  //             venue: booking.fieldName,
+  //             price: booking.price,
+  //           };
+  //         });
+
+  //         console.log(bookingList);
+
+  //         setBookingList(bookingList);
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
+
+  // const columns = React.useMemo(
+  //   () => [
+  //     {
+  //       Header: "ID",
+  //       accessor: "id",
+  //     },
+  //     {
+  //       Header: "Ngày",
+  //       accessor: "date",
+  //     },
+  //     {
+  //       Header: "Thời gian",
+  //       accessor: "time",
+  //     },
+  //     {
+  //       Header: "Trạng thái",
+  //       accessor: "status",
+  //     },
+  //     {
+  //       Header: "Đia điểm",
+  //       accessor: "venue",
+  //     },
+  //     {
+  //       Header: "",
+  //       accessor: "action",
+  //       Cell: ({ row }) => (
+  //         <>
+  //           <Button className="btn btn-danger btn-sm">Hủy</Button>
+  //           <Button className="btn btn-primary ml-1 btn-sm">Thanh toán</Button>
+  //         </>
+  //       ),
+  //     },
+  //   ],
+  //   [bookingList]
+  // );
+
   return (
     <div className="container profile mx-auto lg:px-5 pt-3 pb-3 border-b px-3 lg:px-0">
       <div className="row justify-content-md-center mt-3 minimum-heigh">
@@ -225,7 +239,7 @@ function Profile() {
         </div>
         <div className="col-md-9 col-lg-9 pl-3 pr-3">
           {/* <Booking /> */}
-          <Account />
+          {content}
         </div>
       </div>
     </div>

@@ -30,8 +30,8 @@ function App() {
           <Route path="/san-bong-thien-tan" element={<Detail />}></Route>
           <Route path="/find-team" element={<FindTeam />}></Route>
           <Route path="/thanh-toan" element={<PaymentBookingPage />}></Route>
-          <Route path="/tai-khoan/dang-nhap" element={<SignIn />}></Route>
-          <Route path="/tai-khoan/quan-ly-lich-dat" element={<Profile />}></Route>
+          {/* <Route path="/tai-khoan/dang-nhap" element={<SignIn />}></Route> */}
+          <Route path="/tai-khoan/:slug" element={<Profile />} />
         </Routes>
       </Layout>
     </BrowserRouter>
