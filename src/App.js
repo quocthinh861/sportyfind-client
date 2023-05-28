@@ -6,7 +6,8 @@ import Layout from './layouts/Layout.tsx'
 import Home from './pages/Home.tsx'
 import List from './pages/List.tsx'
 import SignIn from './pages/SignIn.tsx'
-import FindTeam from './pages/FindTeam.tsx'
+import FindTeam from './pages/FindTeam.tsx';
+import FindGame from './pages/FindGame.jsx'
 import Detail from './pages/Detail'
 import Profile from './pages/Profile'
 import PaymentBookingPage from './pages/Payment'
@@ -29,6 +30,7 @@ function App() {
           <Route path="/danh-sach" element={<List />}></Route>
           <Route path="/san-bong-thien-tan" element={<Detail />}></Route>
           <Route path="/find-team" element={<FindTeam />}></Route>
+          <Route path="/find-game" element={<FindGame />}></Route>
           <Route path="/thanh-toan" element={<PaymentBookingPage />}></Route>
           {/* <Route path="/tai-khoan/dang-nhap" element={<SignIn />}></Route> */}
           <Route path="/tai-khoan/:slug" element={<Profile />} />
