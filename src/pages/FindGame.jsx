@@ -34,7 +34,8 @@ import memberIcon from "../assets/images/icons/member.png";
 import editIcon from "../assets/images/icons/edit-info.png";
 import footballPlayer from "../assets/images/football-player.png";
 import GameMatch from "../components/GameMatch";
-import RankingGame from "../components/RankingMatch";
+import CustomGame from "../components/CustomGame";
+import RankingGame from "../components/RankingGame";
 
 const Wrapper = styled.div`
   background-color: #fff;

@@ -58,7 +58,7 @@ const Tab = styled.div`
     `};
 `;
 
-function RankingGame() {
+function CustomGame() {
   return (
     <div className="px-4">
       <TabWrapper>
@@ -110,4 +110,4 @@ function RankingGame() {
   );
 }
 
-export default RankingGame;
+export default CustomGame;
