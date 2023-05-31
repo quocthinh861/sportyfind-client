@@ -34,6 +34,7 @@ import memberIcon from "../assets/images/icons/member.png";
 import editIcon from "../assets/images/icons/edit-info.png";
 import footballPlayer from "../assets/images/football-player.png";
 import GameMatch from "../components/GameMatch";
+import RankingGame from "../components/RankingMatch";
 
 const Wrapper = styled.div`
   background-color: #fff;
@@ -411,76 +412,103 @@ function FindGame() {
                       <GameMatch></GameMatch>
                     </LeftSide>
                     <RightSide>
-                      <TeamDetail>
-                        <TeamImage src="https://kiwisport.vn/wp-content/uploads/2019/06/in-ao-bong-da-doi-bong-kiss-english-mau-ao-da-banh-khong-logo-hero.jpg" />
-                      </TeamDetail>
-                      <button
-                        name="button"
-                        className="btn btn-orange d-block mx-auto my-4"
-                      >
-                        Tham gia
-                      </button>
-                      <div className="px-5">
-                        <div>
-                          <div className="mb-1 font-bold">Xếp hạng</div>
-                          <p className="text-small d-flex ">
-                            <img src={rankIcon} className="w-5 h-5 mr-2" /> Hạng
-                            7
-                          </p>
-                        </div>
-                        <div>
-                          <div className="mb-1 flex justify-between">
-                            <span className="font-bold">Mô tả</span>
-                            <small
-                              style={{ color: "orange", cursor: "pointer" }}
-                            >
-                              Chỉnh sửa
-                            </small>
+                      {/* <>
+                        <TeamDetail>
+                          <TeamImage src="https://kiwisport.vn/wp-content/uploads/2019/06/in-ao-bong-da-doi-bong-kiss-english-mau-ao-da-banh-khong-logo-hero.jpg" />
+                        </TeamDetail>
+                        <button
+                          name="button"
+                          className="btn btn-orange d-block mx-auto my-4"
+                        >
+                          Tham gia
+                        </button>
+                        <div className="px-5">
+                          <div>
+                            <div className="mb-1 font-bold">Xếp hạng</div>
+                            <p className="text-small d-flex ">
+                              <img src={rankIcon} className="w-5 h-5 mr-2" />{" "}
+                              Hạng 7
+                            </p>
                           </div>
-                          <p>
-                            <div className="d-flex align-item-center">
-                              <div className="d-inline mr-2">
-                                <img src={pitchIcon} className="w-5 h-5" />
-                              </div>
-                              <div className="">Sân bóng đá Hùng Vương</div>
+                          <div>
+                            <div className="mb-1 flex justify-between">
+                              <span className="font-bold">Mô tả</span>
+                              <small
+                                style={{ color: "orange", cursor: "pointer" }}
+                              >
+                                Chỉnh sửa
+                              </small>
                             </div>
-                            <div className="d-flex align-item-center">
-                              <div className="d-inline mr-2">
-                                <img src={memberIcon} className="w-5 h-5" />
+                            <p>
+                              <div className="d-flex align-item-center">
+                                <div className="d-inline mr-2">
+                                  <img src={pitchIcon} className="w-5 h-5" />
+                                </div>
+                                <div className="">Sân bóng đá Hùng Vương</div>
                               </div>
-                              <div className="">10 thành viên</div>
-                            </div>
-                            <div className="d-flex align-item-center">
-                              <div className="d-inline mr-2">
-                                <img src={editIcon} className="w-5 h-5" />
+                              <div className="d-flex align-item-center">
+                                <div className="d-inline mr-2">
+                                  <img src={memberIcon} className="w-5 h-5" />
+                                </div>
+                                <div className="">10 thành viên</div>
                               </div>
-                              <div className="">Không có mô tả</div>
-                            </div>
-                          </p>
-                        </div>
-                        <div>
-                          <div className="mb-1 font-bold">Nhận xét</div>
-                          <p>
-                            Chưa có nhận xét nào. Hãy là người đầu tiên nhận
-                            xét!
-                          </p>
-                        </div>
-                        <div>
-                          <div className="mb-1 font-bold">Lịch sử thi đấu</div>
-                          <p>CLB chưa có lịch sử thi đấu nào</p>
-                        </div>
-                        <div>
-                          <div className="mb-1 font-bold">Hình ảnh</div>
-                          <p>Chưa có hình ảnh nào</p>
-                        </div>
-                      </div>
-                      <div className="px-5">
-                        <div className="mb-3">
-                          <div className="mb-1 font-bold">
-                            Yêu cầu tham gia (1)
+                              <div className="d-flex align-item-center">
+                                <div className="d-inline mr-2">
+                                  <img src={editIcon} className="w-5 h-5" />
+                                </div>
+                                <div className="">Không có mô tả</div>
+                              </div>
+                            </p>
                           </div>
-                          <div className="flex justify-between items-center">
-                            <div>
+                          <div>
+                            <div className="mb-1 font-bold">Nhận xét</div>
+                            <p>
+                              Chưa có nhận xét nào. Hãy là người đầu tiên nhận
+                              xét!
+                            </p>
+                          </div>
+                          <div>
+                            <div className="mb-1 font-bold">
+                              Lịch sử thi đấu
+                            </div>
+                            <p>CLB chưa có lịch sử thi đấu nào</p>
+                          </div>
+                          <div>
+                            <div className="mb-1 font-bold">Hình ảnh</div>
+                            <p>Chưa có hình ảnh nào</p>
+                          </div>
+                        </div>
+                        <div className="px-5">
+                          <div className="mb-3">
+                            <div className="mb-1 font-bold">
+                              Yêu cầu tham gia (1)
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <div>
+                                <img
+                                  id="avatar"
+                                  style={{
+                                    width: "35px",
+                                    borderRadius: "50%",
+                                    textAlign: "center",
+                                  }}
+                                  src={footballPlayer}
+                                />
+                                <span className="ml-2">Thịnh Lang</span>
+                              </div>
+                              <div>
+                                <AcceptButton>
+                                  <FontAwesomeIcon icon={faCheck} />
+                                </AcceptButton>
+                                <DenyButton>
+                                  <FontAwesomeIcon icon={faX} />
+                                </DenyButton>
+                              </div>
+                            </div>
+                          </div>
+                          <div>
+                            <div className="mb-1 font-bold">Thành viên (1)</div>
+                            <div className="flex items-center">
                               <img
                                 id="avatar"
                                 style={{
@@ -490,36 +518,17 @@ function FindGame() {
                                 }}
                                 src={footballPlayer}
                               />
-                              <span className="ml-2">Thịnh Lang</span>
-                            </div>
-                            <div>
-                              <AcceptButton>
-                                <FontAwesomeIcon icon={faCheck} />
-                              </AcceptButton>
-                              <DenyButton>
-                                <FontAwesomeIcon icon={faX} />
-                              </DenyButton>
+                              <span className="ml-2">
+                                Thịnh Lang
+                                <p>0909483537</p>
+                              </span>
                             </div>
                           </div>
                         </div>
-                        <div>
-                          <div className="mb-1 font-bold">Thành viên (1)</div>
-                          <div className="flex items-center">
-                            <img
-                              id="avatar"
-                              style={{
-                                width: "35px",
-                                borderRadius: "50%",
-                                textAlign: "center",
-                              }}
-                              src={footballPlayer}
-                            />
-                            <span className="ml-2">
-                              Thịnh Lang
-                              <p>0909483537</p>
-                            </span>
-                          </div>
-                        </div>
+                      </> */}
+                      <div className="row"></div>
+                      <div>
+                        <RankingGame />
                       </div>
                     </RightSide>
                   </Container>
