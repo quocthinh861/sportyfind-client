@@ -36,6 +36,7 @@ import footballPlayer from "../assets/images/football-player.png";
 import GameMatch from "../components/GameMatch";
 import CustomGame from "../components/CustomGame";
 import RankingGame from "../components/RankingGame";
+import Comment from "../components/Comment";
 
 const Wrapper = styled.div`
   background-color: #fff;
@@ -79,6 +80,7 @@ const RightSide = styled.div`
   overflow: auto;
   height: 100%;
   max-height: 70vh;
+  position: relative;
 `;
 
 const TeamItem = styled.div`
@@ -527,9 +529,9 @@ function FindGame() {
                           </div>
                         </div>
                       </> */}
-                      <div className="row"></div>
                       <div>
-                        <RankingGame />
+                        {/* <RankingGame /> */}
+                        <Comment />
                       </div>
                     </RightSide>
                   </Container>
