@@ -70,8 +70,10 @@ function Profile() {
     content = <Account />;
   } else if (slug === "lich-su-dat-cua-toi") {
     content = <Booking />;
-  } else if(slug === "ho-so-the-thao") {
+  } else if(slug === "") {
     content = <CreateTeam />;
+  } else if(slug === "ho-so-the-thao") {
+    content = <Account />;
   }
 
   // const [bookingList, setBookingList] = React.useState([]);

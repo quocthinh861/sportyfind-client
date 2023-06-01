@@ -530,8 +530,8 @@ function FindGame() {
                         </div>
                       </> */}
                       <div>
-                        {/* <RankingGame /> */}
-                        <Comment />
+                        <RankingGame />
+                        {/* <Comment /> */}
                       </div>
                     </RightSide>
                   </Container>

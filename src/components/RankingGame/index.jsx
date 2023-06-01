@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import teamLogo from "../../assets/images/barrier.png";
 import speaker from "../../assets/images/icons/speaker.png";
 import footballPlayer from "../../assets/images/football-player.png";
+import team2 from "../../assets/images/icons/team-2.png";
 import vsicon from "../../assets/images/icons/versus.png";
 import starIcon from "../../assets/images/icons/star.png";
 import groupIcon from "../../assets/images/icons/group.png";
@@ -10,6 +11,8 @@ import flashIcon from "../../assets/images/icons/flash.png";
 import calendar from "../../assets/images/icons/calendar.png";
 import placeHolder from "../../assets/images/icons/placeholder.png";
 import questionMark from "../../assets/images/icons/question-mark.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faX } from "@fortawesome/free-solid-svg-icons";
 
 const TeamLogo = styled.div`
   display: inline-flex;
@@ -24,6 +27,29 @@ const TeamLogo = styled.div`
   span {
     font-size: 16px;
     margin: 0 7px;
+  }
+`;
+
+const Button = styled.button`
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 50%;
+`;
+
+const AcceptButton = styled(Button)`
+  background: #44cc44;
+
+  &:hover {
+    background: #6fe76f;
+  }
+`;
+
+const DenyButton = styled(Button)`
+  background: tomato;
+  margin-left: 5px;
+
+  &:hover {
+    background: rgb(255, 147, 128);
   }
 `;
 
@@ -56,6 +82,17 @@ const Tab = styled.div`
         rgba(238, 147, 24, 0.9641106442577031) 63%
       );
     `};
+`;
+
+const TeamWrapper = styled.div`
+  span {
+    font-size: 12px;
+  }
+
+   .team-name {
+    font-size: 14px;
+    margin-bottom: -10px;
+   }
 `;
 
 function RankingGame() {
@@ -122,6 +159,53 @@ function RankingGame() {
           <div className="">Giao lưu vui vẻ with love !!!</div>
         </div>
       </InfoWrapper>
+      <TeamWrapper>
+        <b className="font-xl">Cáp đối</b>
+        <div className="mb-3">
+          <div className="flex justify-between items-center">
+            <div className="mt-1 flex items-center">
+              <div>
+                <img
+                  id="avatar"
+                  style={{
+                    width: "35px",
+                    objectFit: "cover",
+                    borderRadius: "50%",
+                    textAlign: "center",
+                  }}
+                  src={team2}
+                />
+              </div>
+              <div>
+                <b className="ml-2 team-name">Hà Nội FC</b>
+                <div style={{marginTop: '-5px'}}>
+                  {" "}
+                  <span>
+                    <img src={flashIcon} className="w-3 h-3" />
+                    369
+                  </span>
+                  <span className="ml-1">
+                    <img src={groupIcon} className="w-3 h-3" />
+                    10
+                  </span>
+                  <span className="ml-1">
+                    <img src={starIcon} className="w-3 h-3" />
+                    100
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <AcceptButton>
+                <FontAwesomeIcon icon={faCheck} />
+              </AcceptButton>
+              <DenyButton>
+                <FontAwesomeIcon icon={faX} />
+              </DenyButton>
+            </div>
+          </div>
+        </div>
+      </TeamWrapper>
       <div>
         <b className="font-xl">Liên hệ</b>
         <div className="flex items-center">

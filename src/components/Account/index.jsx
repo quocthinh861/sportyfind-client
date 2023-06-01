@@ -6,9 +6,15 @@ import starIcon from "../../assets/images/icons/star.png";
 import groupIcon from "../../assets/images/icons/group.png";
 import flashIcon from "../../assets/images/icons/flash.png";
 import crownIcon from "../../assets/images/icons/crown.png";
+import CreateTeam from "../CreateTeam";
+import { useEffect } from "react";
 
 function Account() {
-  return (
+  const [content, setContent] = React.useState(null);
+
+  return content !== null ? (
+    content
+  ) : (
     <div className="user-page-content">
       <section className="border-light">
         <div className="row justify-content-center m-2">
@@ -38,7 +44,9 @@ function Account() {
             <div className="team-list">
               <div className="flex justify-between mb-2">
                 <a>Câu lạc bộ</a>
-                <small>Tạo CLB mới</small>
+                <small className="cursor-pointer" onClick={() => setContent(<CreateTeam></CreateTeam>)}>
+                  Tạo CLB mới
+                </small>
               </div>
               <div className="team-item bg-gray-100">
                 <div className="team-item__logo">

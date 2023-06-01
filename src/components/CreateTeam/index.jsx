@@ -1,7 +1,50 @@
-import React from "react";
+import React, { useState } from "react";
 import "./style.css";
 
 function Account() {
+  const [clubName, setClubName] = useState("");
+  const [description, setDescription] = useState("");
+  const [averageScore, setAverageScore] = useState(50);
+
+  let skillLevel = {};
+  if (averageScore < 10) {
+    skillLevel = {
+      title: "Mới bắt đầu",
+      description:
+        "Bạn mới bắt đầu với thể thao này và đang học các kỹ năng cơ bản.",
+    };
+  } else if (averageScore < 30) {
+    skillLevel = {
+      title: "Người mới",
+      description:
+        "Bạn đã có ít kinh nghiệm và đang phát triển các kỹ năng cơ bản.",
+    };
+  } else if (averageScore < 50) {
+    skillLevel = {
+      title: "Trung bình",
+      description:
+        "Bạn đã có kinh nghiệm và có khả năng thực hiện một số kỹ thuật cơ bản.",
+    };
+  } else if (averageScore < 70) {
+    skillLevel = {
+      title: "Khá",
+      description:
+        "Bạn đã thành thạo một số kỹ thuật nâng cao và có thể áp dụng chúng trong trò chơi.",
+    };
+  } else if (averageScore < 90) {
+    skillLevel = {
+      title: "Giỏi",
+      description:
+        "Bạn là một chuyên gia trong môn thể thao này và có thể xử lý các tình huống phức tạp.",
+    };
+  } else {
+    skillLevel = {
+      title: "Đỉnh cao",
+      description:
+        "Bạn là một vận động viên tài ba và đã đạt đến đỉnh cao của môn thể thao này.",
+    };
+  }
+
   return (
     <div className="user-page-content">
       <section className="border-light">
@@ -36,16 +79,21 @@ function Account() {
                 </div>
                 <div>
                   <div>
-                    Điểm trung bình: <b>35</b>
+                    Điểm trung bình: <b>{averageScore}</b>
                   </div>
-                  <p>Trung bình: biết đỡ bóng, cơ bản.</p>
+                  <p>
+                    <b>{skillLevel.title}:</b> {skillLevel.description}
+                  </p>
                   <input
                     type="range"
                     id="distance"
                     name="distance"
-                    step="10"
-                    min="20"
-                    max="200"
+                    step="1"
+                    value={averageScore}
+                    min="0"
+                    max="100"
+                    onChange={(e) => setAverageScore(e.target.value)}
+                    className="px-0"
                   />
                 </div>
                 <button
