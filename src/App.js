@@ -32,7 +32,7 @@ function App() {
           <Route path="/find-team" element={<FindTeam />}></Route>
           <Route path="/find-game" element={<FindGame />}></Route>
           <Route path="/thanh-toan" element={<PaymentBookingPage />}></Route>
-          {/* <Route path="/tai-khoan/dang-nhap" element={<SignIn />}></Route> */}
+          <Route path="/tai-khoan/dang-nhap" element={<SignIn />}></Route>
           <Route path="/tai-khoan/:slug" element={<Profile />} />
         </Routes>
       </Layout>

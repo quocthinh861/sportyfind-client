@@ -8,9 +8,20 @@ import flashIcon from "../../assets/images/icons/flash.png";
 import crownIcon from "../../assets/images/icons/crown.png";
 import CreateTeam from "../CreateTeam";
 import { useEffect } from "react";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 function Account() {
+  const axiosPrivate = useAxiosPrivate();
   const [content, setContent] = React.useState(null);
+  const [teamList, setTeamList] = React.useState([]);
+
+  useEffect(() => {
+    axiosPrivate.get("/team/getTeamListByCaptainId?captainId=1").then((res) => {
+      if (res.status == 200) {
+        setTeamList(res.data.result);
+      }
+    });
+  }, []);
 
   return content !== null ? (
     content
@@ -44,51 +55,58 @@ function Account() {
             <div className="team-list">
               <div className="flex justify-between mb-2">
                 <a>Câu lạc bộ</a>
-                <small className="cursor-pointer" onClick={() => setContent(<CreateTeam></CreateTeam>)}>
+                <small
+                  className="cursor-pointer"
+                  onClick={() => setContent(<CreateTeam></CreateTeam>)}
+                >
                   Tạo CLB mới
                 </small>
               </div>
-              <div className="team-item bg-gray-100">
-                <div className="team-item__logo">
-                  <img src={teamLogo} />
-                </div>
-                <div className="team-item__info">
-                  <img src={crownIcon} className="w-5 h-5 logo-owner" />
-                  <div className="team-item__name">Chiến thần</div>
-                  <div className="team-item__description">
-                    <span>
-                      <img src={flashIcon} className="w-5 h-5" />
-                      369
-                      <p className="show-info">
-                        <b>Điểm trình độ: </b>
-                        Đây là điểm trình độ của bạn so với các đội khác. Điểm
-                        càng cao thì trình độ càng tốt.
-                      </p>
-                    </span>
-                    <span>
-                      <img src={groupIcon} className="w-5 h-5" />
-                      10
-                      <p className="show-info">
-                        <b>Số lượng: </b> 10 thành viên
-                      </p>
-                    </span>
-                    <span>
-                      <img src={starIcon} className="w-5 h-5" />
-                      100
-                      <p className="show-info">
-                        <b>Điểm uy tín: </b>
-                        <ul>
-                          <li>Điểm uy tín mặc định là 100.</li>
-                          <li>
-                            Đá và nhận xét thành công sẽ nhận được 1 điểm.
-                          </li>
-                          <li>Hủy kèo sát giờ chơi sẽ bị trừ 3 điểm.</li>
-                        </ul>
-                      </p>
-                    </span>
+              {teamList.map((team) => {
+                return (
+                  <div className="team-item bg-gray-100 mb-2">
+                    <div className="team-item__logo">
+                      <img src={teamLogo} />
+                    </div>
+                    <div className="team-item__info">
+                      <img src={crownIcon} className="w-5 h-5 logo-owner" />
+                      <div className="team-item__name">{team.name}</div>
+                      <div className="team-item__description">
+                        <span>
+                          <img src={flashIcon} className="w-5 h-5" />
+                          {team.skilllevel}
+                          <p className="show-info">
+                            <b>Điểm trình độ: </b>
+                            Đây là điểm trình độ của bạn so với các đội khác.
+                            Điểm càng cao thì trình độ càng tốt.
+                          </p>
+                        </span>
+                        <span>
+                          <img src={groupIcon} className="w-5 h-5" />
+                          {team.size}
+                          <p className="show-info">
+                            <b>Số lượng: </b> 10 thành viên
+                          </p>
+                        </span>
+                        <span>
+                          <img src={starIcon} className="w-5 h-5" />
+                          {team.rankingpoint}
+                          <p className="show-info">
+                            <b>Điểm uy tín: </b>
+                            <ul>
+                              <li>Điểm uy tín mặc định là 100.</li>
+                              <li>
+                                Đá và nhận xét thành công sẽ nhận được 1 điểm.
+                              </li>
+                              <li>Hủy kèo sát giờ chơi sẽ bị trừ 3 điểm.</li>
+                            </ul>
+                          </p>
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+                );
+              })}
             </div>
           </div>
           <div className="col col-8">

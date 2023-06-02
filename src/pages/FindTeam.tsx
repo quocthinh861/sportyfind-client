@@ -33,6 +33,10 @@ import pitchIcon from "../assets/images/icons/pitch.png";
 import memberIcon from "../assets/images/icons/member.png";
 import editIcon from "../assets/images/icons/edit-info.png";
 import footballPlayer from "../assets/images/football-player.png";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import TeamRequest from "../components/TeamRequest";
 
 const Wrapper = styled.div`
   background-color: #fff;
@@ -134,16 +138,16 @@ const TeamImage = styled.img`
 `;
 
 const Button = styled.button`
-  color: #FFF;
+  color: #fff;
   padding: 2px 8px;
   border-radius: 50%;
 `;
 
 const AcceptButton = styled(Button)`
-  background: #44CC44;
+  background: #44cc44;
 
   &:hover {
-    background: #6FE76F;
+    background: #6fe76f;
   }
 `;
 
@@ -157,10 +161,37 @@ const DenyButton = styled(Button)`
 `;
 
 function FindTeam() {
+  const axiosPrivate = useAxiosPrivate();
+
   const [showTeam, setShowTeam] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
 
   const handleTeamClick = () => {
     setShowTeam(!showTeam);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmit(true);
+    try {
+      axiosPrivate
+        .post("/team/join", {
+          teamId: "1",
+        })
+        .then((res) => {
+          if (res.status == 200) {
+            toast.success("Gửi yêu cầu gia nhập thành công");
+          }
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCancle = (e) => {
+    e.preventDefault();
+    setIsSubmit(false);
+    toast.warn("Hủy yêu cầu gia nhập thành công");
   };
 
   return (
@@ -650,12 +681,23 @@ function FindTeam() {
                       <TeamDetail>
                         <TeamImage src="https://kiwisport.vn/wp-content/uploads/2019/06/in-ao-bong-da-doi-bong-kiss-english-mau-ao-da-banh-khong-logo-hero.jpg" />
                       </TeamDetail>
-                      <button
-                        name="button"
-                        className="btn btn-orange d-block mx-auto my-4"
-                      >
-                        Tham gia
-                      </button>
+                      {isSubmit ? (
+                        <button
+                          name="button"
+                          className="btn btn-danger d-block mx-auto my-4"
+                          onClick={handleCancle}
+                        >
+                          Hủy tham gia
+                        </button>
+                      ) : (
+                        <button
+                          name="button"
+                          className="btn btn-orange d-block mx-auto my-4"
+                          onClick={handleSubmit}
+                        >
+                          Tham gia
+                        </button>
+                      )}
                       <div className="px-5">
                         <div>
                           <div className="mb-1 font-bold">Xếp hạng</div>
@@ -712,46 +754,28 @@ function FindTeam() {
                       </div>
                       <div className="px-5">
                         <div className="mb-3">
-                          <div className="mb-1 font-bold">Yêu cầu tham gia (1)</div>
-                          <div className="flex justify-between items-center">
-                            <div>
-                              <img
-                                id="avatar"
-                                style={{
-                                  width: "35px",
-                                  borderRadius: "50%",
-                                  textAlign: "center",
-                                }}
-                                src={footballPlayer}
-                              />
-                              <span className="ml-2">Thịnh Lang</span>
-                            </div>
-                            <div>
-                              <AcceptButton>
-                                <FontAwesomeIcon icon={faCheck} />
-                              </AcceptButton>
-                              <DenyButton >
-                                <FontAwesomeIcon icon={faX} />
-                              </DenyButton>
-                            </div>
+                          <div className="mb-1 font-bold">
+                            Yêu cầu tham gia (1)
                           </div>
+                          <TeamRequest />
+                          <TeamRequest />
                         </div>
                         <div>
                           <div className="mb-1 font-bold">Thành viên (1)</div>
                           <div className="flex items-center">
-                              <img
-                                id="avatar"
-                                style={{
-                                  width: "35px",
-                                  borderRadius: "50%",
-                                  textAlign: "center",
-                                }}
-                                src={footballPlayer}
-                              />
-                              <span className="ml-2">
-                                Thịnh Lang
-                                <p>0909483537</p>
-                              </span>
+                            <img
+                              id="avatar"
+                              style={{
+                                width: "35px",
+                                borderRadius: "50%",
+                                textAlign: "center",
+                              }}
+                              src={footballPlayer}
+                            />
+                            <span className="ml-2">
+                              Thịnh Lang
+                              <p>0909483537</p>
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -762,7 +786,8 @@ function FindTeam() {
             </div>
           </div>
         </div>
-      </div>
+      </div>{" "}
+      <ToastContainer hideProgressBar={true} autoClose={1500} theme="colored" />
     </div>
   );
 }

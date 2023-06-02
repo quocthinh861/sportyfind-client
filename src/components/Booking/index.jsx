@@ -80,6 +80,7 @@ function Account() {
       })
       .then((res) => {
         if (res.status === 200) {
+          console.log("thinh", res);
           var bookingList = res.data.result.map((booking) => {
             return {
               id: booking.bookingId,

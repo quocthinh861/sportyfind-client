@@ -1,10 +1,37 @@
 import React, { useState } from "react";
 import "./style.css";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Account() {
   const [clubName, setClubName] = useState("");
   const [description, setDescription] = useState("");
   const [averageScore, setAverageScore] = useState(50);
+
+  const axiosPrivate = useAxiosPrivate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const query = {
+      name: clubName,
+      description: description,
+      skilllevel: averageScore,
+      captainid: 1,
+    };
+
+    console.log(query);
+
+    try {
+      axiosPrivate.post("/team/create", query).then((res) => {
+        console.log("asdasd");
+        toast.success("Tạo đội thành công");
+      });
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
 
   let skillLevel = {};
   if (averageScore < 10) {
@@ -64,7 +91,12 @@ function Account() {
                   <label htmlFor="product-description" className="form-label">
                     Tên
                   </label>
-                  <input type="text" class="form-control" id="inputPassword" />
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="inputPassword"
+                    onChange={(e) => setClubName(e.target.value)}
+                  />
                 </div>
                 <div className="form-group mb-4">
                   <label htmlFor="product-description" className="form-label">
@@ -75,6 +107,7 @@ function Account() {
                     name="product-description"
                     className="form-control"
                     placeholder="Ghi chú"
+                    onChange={(e) => setDescription(e.target.value)}
                   ></textarea>
                 </div>
                 <div>
@@ -98,6 +131,7 @@ function Account() {
                 </div>
                 <button
                   name="button"
+                  onClick={handleSubmit}
                   className="btn btn-orange d-block mx-auto"
                 >
                   Tạo mới
@@ -107,6 +141,7 @@ function Account() {
           </div>
         </div>
       </section>
+      <ToastContainer hideProgressBar={true} autoClose={1500} theme="colored" />
     </div>
   );
 }
