@@ -6,7 +6,7 @@ import Layout from './layouts/Layout.tsx'
 import Home from './pages/Home.tsx'
 import List from './pages/List.tsx'
 import SignIn from './pages/SignIn.tsx'
-import FindTeam from './pages/FindTeam.tsx';
+import FindTeam from './pages/FindTeam';
 import FindGame from './pages/FindGame.jsx'
 import Detail from './pages/Detail'
 import Profile from './pages/Profile'

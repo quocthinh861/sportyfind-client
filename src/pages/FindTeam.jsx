@@ -187,6 +187,20 @@ function FindTeam() {
   }, [teamList]);
 
   useEffect(() => {
+    if (teamInfo) {
+      //Check trạng thái duyệt tham gia
+      axiosPrivate.get(`/team/getTeamRequestInfo?userId=1&teamId=${teamInfo.id}`).then((res) => {
+        console.log("Trạng thái duyệt tham gia", res)
+        if (res.status == 200) {
+          if (res.data.result.status == 1) {
+            setIsSubmit(true);
+          }
+        }
+      });
+    }
+  }, [teamInfo]);
+
+  useEffect(() => {
     axiosPrivate.get("/team/getTeamListByCaptainId?captainId=1").then((res) => {
       if (res.status == 200) {
         setTeamList(res.data.result);
@@ -215,26 +229,44 @@ function FindTeam() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmit(true);
-    try {
-      axiosPrivate
-        .post("/team/join", {
-          teamId: "1",
-        })
-        .then((res) => {
-          if (res.status == 200) {
-            toast.success("Gửi yêu cầu gia nhập thành công");
-          }
-        });
-    } catch (error) {
-      console.log(error);
-    }
+    axiosPrivate
+      .post("/team/updateTeamRequest", {
+        teamId: teamInfo.id,
+        userId: "1",
+        action: "CREATE"
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          toast.success("Gửi yêu cầu gia nhập thành công");
+          setIsSubmit(true);
+        } else {
+          throw new Error("Đã xảy ra lỗi!");
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
 
   const handleCancle = (e) => {
     e.preventDefault();
-    setIsSubmit(false);
-    toast.warn("Hủy yêu cầu gia nhập thành công");
+    axiosPrivate
+      .post("/team/updateTeamRequest", {
+        teamId: teamInfo.id,
+        userId: "1",
+        action: "CANCEL"
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          toast.warn("Hủy yêu cầu gia nhập thành công");
+          setIsSubmit(false);
+        } else {
+          throw new Error("Đã xảy ra lỗi!");
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
 
   return (
@@ -455,8 +487,8 @@ function FindTeam() {
                 <div className="my-4">
                   <Container>
                     <LeftSide>
-                      {teamList.map((team) => (
-                        <TeamItem onClick={(e) => handleTeamPick(team.id)}>
+                      {teamList.map((team, index) => (
+                        <TeamItem onClick={(e) => handleTeamPick(team.id)} key={index}>
                           <TeamLogo>
                             <img src={teamLogo} />
                           </TeamLogo>
@@ -490,7 +522,7 @@ function FindTeam() {
                           className="btn btn-danger d-block mx-auto my-4"
                           onClick={handleCancle}
                         >
-                          Hủy tham gia
+                          Hủy yêu cầu
                         </button>
                       ) : (
                         <button
