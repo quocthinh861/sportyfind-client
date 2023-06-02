@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFacebookF,
@@ -85,6 +85,7 @@ const TeamItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
 `;
 
 const TeamLogo = styled.div`
@@ -165,6 +166,48 @@ function FindTeam() {
 
   const [showTeam, setShowTeam] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
+  const [teamList, setTeamList] = React.useState([]);
+  const [teamInfo, setTeamInfo] = useState(null);
+
+  useEffect(() => {
+    if (teamList.length > 0) {
+      try {
+        axiosPrivate
+          .get(`/team/getTeamInformatioById?teamId=${teamList[0].id}`)
+          .then((res) => {
+            if (res.status == 200) {
+              console.log("teamInfo", res.data.result);
+              setTeamInfo(res.data.result);
+            }
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [teamList]);
+
+  useEffect(() => {
+    axiosPrivate.get("/team/getTeamListByCaptainId?captainId=1").then((res) => {
+      if (res.status == 200) {
+        setTeamList(res.data.result);
+      }
+    });
+  }, []);
+
+  const handleTeamPick = (teamId) => {
+    try {
+      axiosPrivate
+        .get(`/team/getTeamInformatioById?teamId=${teamId}`)
+        .then((res) => {
+          if (res.status == 200) {
+            console.log("teamInfo", res.data.result);
+            setTeamInfo(res.data.result);
+          }
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleTeamClick = () => {
     setShowTeam(!showTeam);
@@ -412,270 +455,30 @@ function FindTeam() {
                 <div className="my-4">
                   <Container>
                     <LeftSide>
-                      <TeamItem>
-                        <TeamLogo>
-                          <img src={teamLogo} />
-                        </TeamLogo>
-                        <TeamInfo>
-                          <TeamName>Chiến thần</TeamName>
-                          <TeamDescription>
-                            <span>
-                              <img src={flashIcon} className="w-5 h-5" />
-                              369
-                            </span>
-                            <span>
-                              <img src={groupIcon} className="w-5 h-5" />
-                              10
-                            </span>
-                            <span>
-                              <img src={starIcon} className="w-5 h-5" />
-                              100
-                            </span>
-                          </TeamDescription>
-                        </TeamInfo>
-                      </TeamItem>
-                      <TeamItem>
-                        <TeamLogo>
-                          <img src={teamLogo} />
-                        </TeamLogo>
-                        <TeamInfo>
-                          <TeamName>Chiến thần</TeamName>
-                          <TeamDescription>
-                            <span>
-                              <img src={flashIcon} className="w-5 h-5" />
-                              369
-                            </span>
-                            <span>
-                              <img src={groupIcon} className="w-5 h-5" />
-                              10
-                            </span>
-                            <span>
-                              <img src={starIcon} className="w-5 h-5" />
-                              100
-                            </span>
-                          </TeamDescription>
-                        </TeamInfo>
-                      </TeamItem>
-                      <TeamItem>
-                        <TeamLogo>
-                          <img src={teamLogo} />
-                        </TeamLogo>
-                        <TeamInfo>
-                          <TeamName>Chiến thần</TeamName>
-                          <TeamDescription>
-                            <span>
-                              <img src={flashIcon} className="w-5 h-5" />
-                              369
-                            </span>
-                            <span>
-                              <img src={groupIcon} className="w-5 h-5" />
-                              10
-                            </span>
-                            <span>
-                              <img src={starIcon} className="w-5 h-5" />
-                              100
-                            </span>
-                          </TeamDescription>
-                        </TeamInfo>
-                      </TeamItem>
-                      <TeamItem>
-                        <TeamLogo>
-                          <img src={teamLogo} />
-                        </TeamLogo>
-                        <TeamInfo>
-                          <TeamName>Chiến thần</TeamName>
-                          <TeamDescription>
-                            <span>
-                              <img src={flashIcon} className="w-5 h-5" />
-                              369
-                            </span>
-                            <span>
-                              <img src={groupIcon} className="w-5 h-5" />
-                              10
-                            </span>
-                            <span>
-                              <img src={starIcon} className="w-5 h-5" />
-                              100
-                            </span>
-                          </TeamDescription>
-                        </TeamInfo>
-                      </TeamItem>
-                      <TeamItem>
-                        <TeamLogo>
-                          <img src={teamLogo} />
-                        </TeamLogo>
-                        <TeamInfo>
-                          <TeamName>Chiến thần</TeamName>
-                          <TeamDescription>
-                            <span>
-                              <img src={flashIcon} className="w-5 h-5" />
-                              369
-                            </span>
-                            <span>
-                              <img src={groupIcon} className="w-5 h-5" />
-                              10
-                            </span>
-                            <span>
-                              <img src={starIcon} className="w-5 h-5" />
-                              100
-                            </span>
-                          </TeamDescription>
-                        </TeamInfo>
-                      </TeamItem>
-                      <TeamItem>
-                        <TeamLogo>
-                          <img src={teamLogo} />
-                        </TeamLogo>
-                        <TeamInfo>
-                          <TeamName>Chiến thần</TeamName>
-                          <TeamDescription>
-                            <span>
-                              <img src={flashIcon} className="w-5 h-5" />
-                              369
-                            </span>
-                            <span>
-                              <img src={groupIcon} className="w-5 h-5" />
-                              10
-                            </span>
-                            <span>
-                              <img src={starIcon} className="w-5 h-5" />
-                              100
-                            </span>
-                          </TeamDescription>
-                        </TeamInfo>
-                      </TeamItem>
-                      <TeamItem>
-                        <TeamLogo>
-                          <img src={teamLogo} />
-                        </TeamLogo>
-                        <TeamInfo>
-                          <TeamName>Chiến thần</TeamName>
-                          <TeamDescription>
-                            <span>
-                              <img src={flashIcon} className="w-5 h-5" />
-                              369
-                            </span>
-                            <span>
-                              <img src={groupIcon} className="w-5 h-5" />
-                              10
-                            </span>
-                            <span>
-                              <img src={starIcon} className="w-5 h-5" />
-                              100
-                            </span>
-                          </TeamDescription>
-                        </TeamInfo>
-                      </TeamItem>
-                      <TeamItem>
-                        <TeamLogo>
-                          <img src={teamLogo} />
-                        </TeamLogo>
-                        <TeamInfo>
-                          <TeamName>Chiến thần</TeamName>
-                          <TeamDescription>
-                            <span>
-                              <img src={flashIcon} className="w-5 h-5" />
-                              369
-                            </span>
-                            <span>
-                              <img src={groupIcon} className="w-5 h-5" />
-                              10
-                            </span>
-                            <span>
-                              <img src={starIcon} className="w-5 h-5" />
-                              100
-                            </span>
-                          </TeamDescription>
-                        </TeamInfo>
-                      </TeamItem>
-                      <TeamItem>
-                        <TeamLogo>
-                          <img src={teamLogo} />
-                        </TeamLogo>
-                        <TeamInfo>
-                          <TeamName>Chiến thần</TeamName>
-                          <TeamDescription>
-                            <span>
-                              <img src={flashIcon} className="w-5 h-5" />
-                              369
-                            </span>
-                            <span>
-                              <img src={groupIcon} className="w-5 h-5" />
-                              10
-                            </span>
-                            <span>
-                              <img src={starIcon} className="w-5 h-5" />
-                              100
-                            </span>
-                          </TeamDescription>
-                        </TeamInfo>
-                      </TeamItem>
-                      <TeamItem>
-                        <TeamLogo>
-                          <img src={teamLogo} />
-                        </TeamLogo>
-                        <TeamInfo>
-                          <TeamName>Chiến thần</TeamName>
-                          <TeamDescription>
-                            <span>
-                              <img src={flashIcon} className="w-5 h-5" />
-                              369
-                            </span>
-                            <span>
-                              <img src={groupIcon} className="w-5 h-5" />
-                              10
-                            </span>
-                            <span>
-                              <img src={starIcon} className="w-5 h-5" />
-                              100
-                            </span>
-                          </TeamDescription>
-                        </TeamInfo>
-                      </TeamItem>
-                      <TeamItem>
-                        <TeamLogo>
-                          <img src={teamLogo} />
-                        </TeamLogo>
-                        <TeamInfo>
-                          <TeamName>Chiến thần</TeamName>
-                          <TeamDescription>
-                            <span>
-                              <img src={flashIcon} className="w-5 h-5" />
-                              369
-                            </span>
-                            <span>
-                              <img src={groupIcon} className="w-5 h-5" />
-                              10
-                            </span>
-                            <span>
-                              <img src={starIcon} className="w-5 h-5" />
-                              100
-                            </span>
-                          </TeamDescription>
-                        </TeamInfo>
-                      </TeamItem>
-                      <TeamItem>
-                        <TeamLogo>
-                          <img src={teamLogo} />
-                        </TeamLogo>
-                        <TeamInfo>
-                          <TeamName>Chiến thần</TeamName>
-                          <TeamDescription>
-                            <span>
-                              <img src={flashIcon} className="w-5 h-5" />
-                              369
-                            </span>
-                            <span>
-                              <img src={groupIcon} className="w-5 h-5" />
-                              10
-                            </span>
-                            <span>
-                              <img src={starIcon} className="w-5 h-5" />
-                              100
-                            </span>
-                          </TeamDescription>
-                        </TeamInfo>
-                      </TeamItem>
+                      {teamList.map((team) => (
+                        <TeamItem onClick={(e) => handleTeamPick(team.id)}>
+                          <TeamLogo>
+                            <img src={teamLogo} />
+                          </TeamLogo>
+                          <TeamInfo>
+                            <TeamName>{team.name}</TeamName>
+                            <TeamDescription>
+                              <span>
+                                <img src={flashIcon} className="w-5 h-5" />
+                                {team.skilllevel}
+                              </span>
+                              <span>
+                                <img src={groupIcon} className="w-5 h-5" />
+                                {team.size}
+                              </span>
+                              <span>
+                                <img src={starIcon} className="w-5 h-5" />
+                                {team.rankingpoint}
+                              </span>
+                            </TeamDescription>
+                          </TeamInfo>
+                        </TeamItem>
+                      ))}
                     </LeftSide>
                     <RightSide>
                       <TeamDetail>
@@ -702,8 +505,11 @@ function FindTeam() {
                         <div>
                           <div className="mb-1 font-bold">Xếp hạng</div>
                           <p className="text-small d-flex ">
-                            <img src={rankIcon} className="w-5 h-5 mr-2" /> Hạng
-                            7
+                            <img src={rankIcon} className="w-5 h-5 mr-2" />
+                            {teamInfo &&
+                              (teamInfo.rankingorder > 0
+                                ? `Hạng ${teamInfo.rankingorder}`
+                                : "Chưa xếp hạng")}
                           </p>
                         </div>
                         <div>
@@ -726,13 +532,17 @@ function FindTeam() {
                               <div className="d-inline mr-2">
                                 <img src={memberIcon} className="w-5 h-5" />
                               </div>
-                              <div className="">10 thành viên</div>
+                              <div className="">
+                                {teamInfo && teamInfo.size} thành viên
+                              </div>
                             </div>
                             <div className="d-flex align-item-center">
                               <div className="d-inline mr-2">
                                 <img src={editIcon} className="w-5 h-5" />
                               </div>
-                              <div className="">Không có mô tả</div>
+                              <div className="">
+                                {teamInfo && teamInfo.description}
+                              </div>
                             </div>
                           </p>
                         </div>
