@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFacebookF,
@@ -22,7 +22,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faLocationArrow } from "@fortawesome/free-solid-svg-icons";
 import bg from "../assets/images/bg.jpg";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import teamLogo from "../assets/images/barrier.png";
 import starIcon from "../assets/images/icons/star.png";
 import groupIcon from "../assets/images/icons/group.png";
@@ -165,12 +165,67 @@ const DenyButton = styled(Button)`
   }
 `;
 
+const TabWrapper = styled.div`
+  background-color: rgb(183 183 183 / 58%);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 65%;
+  margin: 0 auto;
+  padding: 0.2rem;
+  border-radius: 0.8rem;
+  margin-bottom: 1rem;
+`;
+
+const Tab = styled.div`
+  text-align: center;
+  border-radius: 0.8rem;
+  color: gray;
+  cursor: pointer;
+
+  ${({ active }) =>
+    active &&
+    css`
+      color: white;
+      background: linear-gradient(
+        90deg,
+        rgba(36, 20, 0, 1) 0%,
+        rgba(255, 98, 0, 0.7792366946778712) 0%,
+        rgba(238, 147, 24, 0.9641106442577031) 63%
+      );
+    `};
+`;
+
 function FindGame() {
   const [showTeam, setShowTeam] = useState(false);
+  const [gameType, setGameType] = useState(0);
+  const [showComment, setShowComment] = useState(false);
+
+  let content = null;
+  if (gameType === 0) {
+    content = <RankingGame />;
+  } else {
+    content = <CustomGame />;
+  }
+
+  let innerContent = null;
+  if (showComment) {
+    innerContent = <Comment />;
+  } else {
+    innerContent = content;
+  }
+
+  useEffect(() => {
+    setShowComment(false);
+  }, [gameType])
 
   const handleTeamClick = () => {
     setShowTeam(!showTeam);
   };
+
+  const handleGameType = (type) => {
+    setGameType(type);
+  };
+
 
   return (
     <div className="container-fluid px-3 login findteam">
@@ -395,6 +450,7 @@ function FindGame() {
                           <button
                             className="btn btn-orange px-4 text-small"
                             style={{ borderRadius: "30px", fontSize: "14px" }}
+                            onClick={(e) => handleGameType(0)}
                           >
                             Đá kèo
                           </button>
@@ -405,16 +461,31 @@ function FindGame() {
                               fontSize: "14px",
                               marginLeft: "5px",
                             }}
+                            onClick={(e) => handleGameType(1)}
                           >
                             Đá nội bộ
                           </button>
                         </div>
                       </div>
-                      <GameMatch></GameMatch>
-                      <GameMatch></GameMatch>
-                      <GameMatch></GameMatch>
+                      {gameType === 0 ? (
+                        <>
+                          <GameMatch type={gameType}></GameMatch>
+                          <GameMatch type={gameType}></GameMatch>
+                          <GameMatch type={gameType}></GameMatch>
+                        </>
+                      ) : (
+                        <>
+                          <GameMatch type={gameType}></GameMatch>
+                          <GameMatch type={gameType}></GameMatch>
+                          <GameMatch type={gameType}></GameMatch>
+                        </>
+                      )}
                     </LeftSide>
                     <RightSide>
+                      <TabWrapper>
+                        <Tab active={!showComment} onClick={() => setShowComment(false)}>Thông tin</Tab>
+                        <Tab active={showComment} onClick={() => setShowComment(true)}>Bình luận</Tab>
+                      </TabWrapper>
                       {/* <>
                         <TeamDetail>
                           <TeamImage src="https://kiwisport.vn/wp-content/uploads/2019/06/in-ao-bong-da-doi-bong-kiss-english-mau-ao-da-banh-khong-logo-hero.jpg" />
@@ -530,7 +601,7 @@ function FindGame() {
                         </div>
                       </> */}
                       <div>
-                        <RankingGame />
+                        {innerContent}
                         {/* <Comment /> */}
                       </div>
                     </RightSide>

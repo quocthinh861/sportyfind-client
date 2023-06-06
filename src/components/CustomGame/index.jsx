@@ -29,42 +29,10 @@ const InfoWrapper = styled.p`
   margin-top: 2rem;
 `;
 
-const TabWrapper = styled.div`
-  background-color: rgb(183 183 183 / 58%);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  width: 65%;
-  margin: 0 auto;
-  padding: 0.2rem;
-  border-radius: 0.8rem;
-  margin-bottom: 1rem;
-`;
-
-const Tab = styled.div`
-  text-align: center;
-  border-radius: 0.8rem;
-  color: gray;
-
-  ${({ active }) =>
-    active &&
-    css`
-      color: white;
-      background: linear-gradient(
-        90deg,
-        rgba(36, 20, 0, 1) 0%,
-        rgba(255, 98, 0, 0.7792366946778712) 0%,
-        rgba(238, 147, 24, 0.9641106442577031) 63%
-      );
-    `};
-`;
 
 function CustomGame() {
   return (
-    <div className="px-4">
-      <TabWrapper>
-        <Tab active={true}>Thông tin</Tab>
-        <Tab>Bình luận</Tab>
-      </TabWrapper>
+    <div className="px-6">
       <TeamLogo>
         <img src={teamLogo} alt="avatar" />
         <h2 className="font-bold my-2">BKClub</h2>

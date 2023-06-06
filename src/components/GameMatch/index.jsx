@@ -34,7 +34,7 @@ const InfoWrapper = styled.p`
   }
 `;
 
-function index() {
+function index({ type }) {
   return (
     <div className="relative">
       <div className="flex justify-around items-start">
@@ -56,19 +56,23 @@ function index() {
             </span>
           </div>
         </TeamLogo>
-        <img
-          src={vsicon}
-          alt="avatar"
-          width={30}
-          height={30}
-          style={{ position: "absolute" }}
-        />
-        <TeamLogo>
-          <img src={questionMark} alt="avatar" />
-          <div>
-            <span>Đang tìm đối thủ</span>
-          </div>
-        </TeamLogo>
+        {type == 0 && (
+          <>
+            <img
+              src={vsicon}
+              alt="avatar"
+              width={30}
+              height={30}
+              style={{ position: "absolute" }}
+            />
+            <TeamLogo>
+              <img src={questionMark} alt="avatar" />
+              <div>
+                <span>Đang tìm đối thủ</span>
+              </div>
+            </TeamLogo>
+          </>
+        )}
       </div>
       <InfoWrapper>
         <div className="d-flex align-item-center">
