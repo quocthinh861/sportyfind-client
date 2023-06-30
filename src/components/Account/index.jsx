@@ -9,11 +9,23 @@ import crownIcon from "../../assets/images/icons/crown.png";
 import CreateTeam from "../CreateTeam";
 import { useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import supabase from "../../client/Supabase";
+import { uploadImage } from "../../utils/FileUtil";
 
 function Account() {
   const axiosPrivate = useAxiosPrivate();
   const [content, setContent] = React.useState(null);
   const [teamList, setTeamList] = React.useState([]);
+  const [thumbnailImage, setThumbnailImage] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [fullName, setFullName] = React.useState("");
+  const [phoneNumber, setPhoneNumber] = React.useState("");
+  const [address, setAddress] = React.useState("");
+  const [districy, setDistricy] = React.useState("");
+  const [height, setHeight] = React.useState("");
+  const [weight, setWeight] = React.useState("");
+  const [birthDay, setBirthDay] = React.useState("");
+  
 
   useEffect(() => {
     axiosPrivate.get("/team/getTeamListByCaptainId?captainId=1").then((res) => {
@@ -21,7 +33,39 @@ function Account() {
         setTeamList(res.data.result);
       }
     });
+
+    // Lấy thông tin user
+    setEmail("quocthinh861@gmail.com");
+    setFullName("Đặng Quốc Thịnh");
+    setPhoneNumber("0909483537");
+    setAddress("Đường 27 phường 06 quận Gò Vấp TP.HCM");
+    setDistricy("Gò Vấp");
+    setHeight("170");
+    setWeight("60");
+    setBirthDay("01/01/2000");
+  
   }, []);
+
+  const resetThumbnailImage = () => {
+    setThumbnailImage("");
+  };
+
+  const handleUpdateAvatar = async (file) => {
+    try {
+      const thumbnailImageKey = await uploadImage(file);
+      if(thumbnailImageKey == null) {
+        alert("Lỗi upload ảnh, vui lòng thử lại!");
+        return;
+      } else {
+        alert("Cập nhật ảnh đại diện thành công!");
+      }
+    }
+    catch (error) {
+      console.log("Lỗi upload ảnh đại diện: ", error);
+    }
+
+    resetThumbnailImage();
+  };
 
   return content !== null ? (
     content
@@ -40,14 +84,28 @@ function Account() {
           <div className="col-4">
             <div className="profile-picture">
               <div className="avatar">
-                <img
-                  id="avatar"
-                  style={{
-                    width: "100%",
-                    borderRadius: "50%",
-                    textAlign: "center",
+                <label className="w-30" htmlFor="thumbnail-image">
+                  <img
+                    alt="avatar"
+                    id="avatar"
+                    style={{
+                      width: "100%",
+                      borderRadius: "50%",
+                      textAlign: "center",
+                    }}
+                    src={footballPlayer}
+                  />
+                </label>
+                <input
+                  type="file"
+                  id="thumbnail-image"
+                  name="thumbnail-image"
+                  accept="image/*"
+                  className="visually-hidden"
+                  onChange={(event) => {
+                    const file = event.target.files[0];
+                    handleUpdateAvatar(file);
                   }}
-                  src={footballPlayer}
                 />
               </div>
             </div>
@@ -121,7 +179,7 @@ function Account() {
                       className="form-control"
                       placeholder="Email"
                       type="email"
-                      value="quocthinh861@gmail.com"
+                      value={email}
                       name="user[email]"
                       id="user_email"
                     />
@@ -134,7 +192,7 @@ function Account() {
                       className="form-control"
                       placeholder="Họ Tên"
                       type="text"
-                      value="Thịnh Đặng"
+                      value={fullName}
                       name="user[name]"
                       id="user_name"
                     />
@@ -148,7 +206,7 @@ function Account() {
                     className="form-control mb-4"
                     placeholder="Số điện thoại"
                     type="telephone"
-                    value="0909483537"
+                    value={phoneNumber}
                     name="phone"
                     id="user_phone"
                   />
@@ -158,10 +216,12 @@ function Account() {
                     Địa chỉ
                   </label>
                   <input
-                    className="form-control"
+                    className="form-control mb-4"
+                    placeholder="Số điện thoại"
                     type="telephone"
-                    name="address"
-                    id="uuser_address"
+                    value={address}
+                    name="phone"
+                    id="user_phone"
                   />
                 </div>
                 <div className="form-row">

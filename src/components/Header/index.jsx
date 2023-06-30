@@ -11,7 +11,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 const infoList = [
   {
     name: "Tài khoản của tôi",
-    url: "/tai-khoan/thong-tin-tai=khoan",
+    url: "/tai-khoan/thong-tin-tai-khoan",
   },
   {
     name: "Quản lý lịch đặt",
