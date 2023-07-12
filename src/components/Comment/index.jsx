@@ -10,19 +10,21 @@ const CommentContent = styled.div`
   max-height: 48vh;
 `;
 
-  const Time = styled.span`
-    position: absolute;
-    right: 5px;
-    top: 5px;
-    font-size: 0.8rem;
-    font-style: italic;
-  `;
+const Time = styled.span`
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  font-size: 0.8rem;
+  font-style: italic;
+`;
 
 function Comment({ roomId = 1 }) {
-
   const channels = supabase.getChannels();
-  const currentChannel = channels.find(channel => channel.name === `room:${roomId}`);
+  const currentChannel = channels.find(
+    (channel) => channel.name === `room:${roomId}`
+  );
   const [message, setMessage] = React.useState("");
+  const [messages, setMessages] = React.useState([]);
 
   const submitMessage = async () => {
     if (!message) return;
@@ -40,9 +42,9 @@ function Comment({ roomId = 1 }) {
   };
 
   const addMessageToRoom = (message) => {
-    if(!message) return;
-    
-    if(currentChannel != null && currentChannel != undefined) {
+    if (!message) return;
+
+    if (currentChannel != null && currentChannel != undefined) {
       currentChannel.send({
         type: "broadcast",
 
@@ -51,9 +53,12 @@ function Comment({ roomId = 1 }) {
         payload: { message },
       });
     }
-    
   };
 
+  const getMessages = async () => {
+    const response = await supabase.from("message").select("*");
+    if (response) setMessages(response.data);
+  };
 
   const subscribeToRoom = () => {
     const isAlreadyInRealtime = channels.find(
@@ -61,66 +66,43 @@ function Comment({ roomId = 1 }) {
     );
     if (isAlreadyInRealtime) return;
     const channel = supabase.channel(`room:${roomId}`);
-    channel.on("broadcast", "new_message", (message) => {
-      console.log(message);
-    }).subscribe();
+    channel
+      .on("broadcast", "new_message", (message) => {
+        console.log(message);
+      })
+      .subscribe();
   };
 
   useEffect(() => {
     subscribeToRoom();
   }, []);
 
+  useEffect(() => {
+    getMessages();
+  }, []);
+
   return (
     <div className="px-4">
       <CommentContent>
-        <div className="flex items-center relative">
-          <img
-            id="avatar"
-            style={{
-              width: "35px",
-              borderRadius: "50%",
-              textAlign: "center",
-            }}
-            src={footballPlayer}
-          />
-          <span className="ml-2">
-            Thịnh Lang
-            <p>0909483537</p>
-          </span>
-          <Time>7 giờ trước</Time>
-        </div>
-        <div className="flex items-center relative">
-          <img
-            id="avatar"
-            style={{
-              width: "35px",
-              borderRadius: "50%",
-              textAlign: "center",
-            }}
-            src={footballPlayer}
-          />
-          <span className="ml-2">
-            Thịnh Lang
-            <p>0909483537</p>
-          </span>
-          <Time>7 giờ trước</Time>
-        </div>
-        <div className="flex items-center relative">
-          <img
-            id="avatar"
-            style={{
-              width: "35px",
-              borderRadius: "50%",
-              textAlign: "center",
-            }}
-            src={footballPlayer}
-          />
-          <span className="ml-2">
-            Thịnh Lang
-            <p>0909483537</p>
-          </span>
-          <Time>7 giờ trước</Time>
-        </div>
+        {messages &&
+          messages.map((message, index) => (
+            <div className="flex items-center relative" id={index}>
+              <img
+                id="avatar"
+                style={{
+                  width: "35px",
+                  borderRadius: "50%",
+                  textAlign: "center",
+                }}
+                src={footballPlayer}
+              />
+              <span className="ml-2">
+                Thịnh Lang
+                <p>{message.content}</p>
+              </span>
+              <Time>7 giờ trước</Time>
+            </div>
+          ))}
       </CommentContent>
       <div
         style={{
