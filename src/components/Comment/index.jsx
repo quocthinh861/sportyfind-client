@@ -1,13 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useDispatch } from "react";
 import footballPlayer from "../../assets/images/football-player.png";
 import styled from "styled-components";
 import { createMessage } from "../../api/apiCalls.tsx";
 import supabase from "../../client/Supabase";
 import { add } from "date-fns";
+import { useSelector } from "react-redux";
+import { formatTimeDifference } from "../../utils/TimeUtil";
 
 const CommentContent = styled.div`
   overflow-y: auto;
   max-height: 48vh;
+  padding-bottom: 1rem;
 `;
 
 const Time = styled.span`
@@ -25,6 +28,7 @@ function Comment({ roomId = 1 }) {
   );
   const [message, setMessage] = React.useState("");
   const [messages, setMessages] = React.useState([]);
+  const user = useSelector((state) => state.user);
 
   const submitMessage = async () => {
     if (!message) return;
@@ -37,9 +41,13 @@ function Comment({ roomId = 1 }) {
 
     const response = await createMessage(newMessage);
     addMessageToRoom(response);
+    response.userName = user?.data?.user.username;
 
-    console.log(response);
+    setMessages((messages) => [...messages, response]);
+    setMessage("");
   };
+
+
 
   const addMessageToRoom = (message) => {
     if (!message) return;
@@ -56,8 +64,20 @@ function Comment({ roomId = 1 }) {
   };
 
   const getMessages = async () => {
-    const response = await supabase.from("message").select("*");
-    if (response) setMessages(response.data);
+    const response = await supabase
+    .from("message")
+    .select("*")
+    .eq("userid", 1)
+    .eq("roomid", roomId);
+    var messages = response.data;
+    if(messages == null || messages == undefined) return;
+    setMessages(messages.map((message) => {
+      return {
+        ...message,
+        userName: "Thịnh Lang",
+      };
+    }));
+  
   };
 
   const subscribeToRoom = () => {
@@ -81,9 +101,16 @@ function Comment({ roomId = 1 }) {
     getMessages();
   }, []);
 
+  useEffect(() => {
+        // Scroll to bottom
+        const chatContent = document.getElementById("chat-content");
+        chatContent.scrollTop = chatContent.scrollHeight + 1000;
+  }, [messages]);
+
+
   return (
     <div className="px-4">
-      <CommentContent>
+      <CommentContent id="chat-content">
         {messages &&
           messages.map((message, index) => (
             <div className="flex items-center relative" id={index}>
@@ -97,17 +124,19 @@ function Comment({ roomId = 1 }) {
                 src={footballPlayer}
               />
               <span className="ml-2">
-                Thịnh Lang
+                {
+                  message.userName // Author Name
+                }
                 <p>{message.content}</p>
               </span>
-              <Time>7 giờ trước</Time>
+              <Time>{formatTimeDifference(message.created_at)}</Time>
             </div>
           ))}
       </CommentContent>
       <div
         style={{
           position: "absolute",
-          bottom: "1rem",
+          bottom: "0",
           left: "50%",
           transform: "translateX(-50%)",
           width: "90%",
@@ -123,7 +152,7 @@ function Comment({ roomId = 1 }) {
         ></textarea>
         <button
           name="button"
-          class="btn btn-orange d-block ml-auto mr-4 mt-3"
+          className="btn btn-orange d-block ml-auto mr-4 mt-3"
           onClick={submitMessage}
         >
           Đăng

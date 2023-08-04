@@ -60,10 +60,10 @@ const TeamWrapper = styled.div`
     font-size: 12px;
   }
 
-   .team-name {
+  .team-name {
     font-size: 14px;
     margin-bottom: -10px;
-   }
+  }
 `;
 
 function RankingGame() {
@@ -145,7 +145,7 @@ function RankingGame() {
               </div>
               <div>
                 <b className="ml-2 team-name">Hà Nội FC</b>
-                <div style={{marginTop: '-5px'}}>
+                <div style={{ marginTop: "-5px" }}>
                   {" "}
                   <span>
                     <img src={flashIcon} className="w-3 h-3" />
@@ -190,7 +190,7 @@ function RankingGame() {
             <p>0909483537</p>
           </span>
         </div>
-        <button name="button" class="btn btn-orange d-block ml-auto mr-4">
+        <button name="button" className="btn btn-orange d-block ml-auto mr-4">
           Cáp kèo
         </button>
       </div>
