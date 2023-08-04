@@ -168,7 +168,7 @@ function Detail() {
           <div>
             <button
               type="button"
-              class="btn btn-success"
+              className="btn btn-success"
               disabled
               style={{ backgroundColor: "#28a745", border: "none" }}
             >
@@ -341,11 +341,14 @@ function Detail() {
                   <p>
                     Ghi chú: <i>Testing</i>
                   </p>
-                  <p class="note">
+                  <p className="note">
                     Lưu ý: Cần thanh toán trong vòng 24h kể từ khi đặt sân, hệ
                     thống tự động hủy đơn nếu không hoàn tất thanh toán. Theo
                     dõi và hoàn tất thanh toán{" "}
-                    <a class="text-primary" href="/tai-khoan/quan-ly-lich-dat">
+                    <a
+                      className="text-primary"
+                      href="/tai-khoan/quan-ly-lich-dat"
+                    >
                       tại đây
                     </a>
                     .
@@ -432,7 +435,11 @@ function Detail() {
         </div>
       </div>
       <p className="p-0 m-0 my-2 mt-4 nl2br">
-        <b>Cở sở vật chất: </b> Có sân bóng đá, sân bóng chuyền và sân bóng rổ. Bạn có thể chơi trong 90 phút hoặc thậm chí là 120 phút. Các sân được thiết kế với các kỹ thuật hiện đại và được trang bị đầy đủ thiết bị cần thiết. Ngoài ra còn có phòng tắm và nhà vệ sinh để sử dụng. Đặt ngay từ Malaeb Bahrain. 
+        <b>Cở sở vật chất: </b> Có sân bóng đá, sân bóng chuyền và sân bóng rổ.
+        Bạn có thể chơi trong 90 phút hoặc thậm chí là 120 phút. Các sân được
+        thiết kế với các kỹ thuật hiện đại và được trang bị đầy đủ thiết bị cần
+        thiết. Ngoài ra còn có phòng tắm và nhà vệ sinh để sử dụng. Đặt ngay từ
+        Malaeb Bahrain.
       </p>
       <div className="reviews mb-3 pt-4">
         <h5 className="mb-0">Đánh giá</h5>
@@ -460,7 +467,11 @@ function Detail() {
                     </span>
                   </h5>
                   <p className="textVsmall">
-                    <img src="https://malaebapp.com/images/star.png" alt="img" /> 5
+                    <img
+                      src="https://malaebapp.com/images/star.png"
+                      alt="img"
+                    />{" "}
+                    5
                   </p>
                 </div>
               </div>
@@ -485,7 +496,11 @@ function Detail() {
                     </span>
                   </h5>
                   <p className="textVsmall">
-                    <img src="https://malaebapp.com/images/star.png" alt="img" /> 5
+                    <img
+                      src="https://malaebapp.com/images/star.png"
+                      alt="img"
+                    />{" "}
+                    5
                   </p>
                 </div>
               </div>
@@ -510,7 +525,11 @@ function Detail() {
                     </span>
                   </h5>
                   <p className="textVsmall">
-                    <img src="https://malaebapp.com/images/star.png" alt="img" /> 5
+                    <img
+                      src="https://malaebapp.com/images/star.png"
+                      alt="img"
+                    />{" "}
+                    5
                   </p>
                 </div>
               </div>

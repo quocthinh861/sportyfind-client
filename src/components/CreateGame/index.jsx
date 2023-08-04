@@ -18,49 +18,61 @@ function Account() {
             <div className="d-flex justify-content-center">
               <div className="w-75">
                 <div className="form-group row mb-4">
-                  <label for="inputPassword" class="col-sm-2 col-form-label">
+                  <label
+                    for="inputPassword"
+                    className="col-sm-2 col-form-label"
+                  >
                     Chọn đội
                   </label>
-                  <div class="col-sm-10">
+                  <div className="col-sm-10">
                     <input
                       type="password"
-                      class="form-control"
+                      className="form-control"
                       id="inputPassword"
                       placeholder="Password"
                     />
                   </div>
                 </div>
                 <div className="form-group row mb-4">
-                  <label for="inputPassword" class="col-sm-2 col-form-label">
+                  <label
+                    for="inputPassword"
+                    className="col-sm-2 col-form-label"
+                  >
                     Sân bóng
                   </label>
-                  <div class="col-sm-10">
+                  <div className="col-sm-10">
                     <input
                       type="password"
-                      class="form-control"
+                      className="form-control"
                       id="inputPassword"
                       placeholder="Password"
                     />
                   </div>
                 </div>
                 <div className="form-group row mb-4">
-                  <label for="inputPassword" class="col-sm-2 col-form-label">
+                  <label
+                    for="inputPassword"
+                    className="col-sm-2 col-form-label"
+                  >
                     Liên hệ
                   </label>
-                  <div class="col-sm-10">
+                  <div className="col-sm-10">
                     <input
                       type="password"
-                      class="form-control"
+                      className="form-control"
                       id="inputPassword"
                       placeholder="Password"
                     />
                   </div>
                 </div>
                 <div className="form-group row mb-4">
-                  <label for="inputPassword" class="col-sm-2 col-form-label">
+                  <label
+                    for="inputPassword"
+                    className="col-sm-2 col-form-label"
+                  >
                     Ghi chú
                   </label>
-                  <div class="col-sm-10">
+                  <div className="col-sm-10">
                     <textarea
                       id="product-description"
                       name="product-description"

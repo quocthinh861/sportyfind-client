@@ -11,6 +11,7 @@ import FindGame from './pages/FindGame.jsx'
 import Detail from './pages/Detail'
 import Profile from './pages/Profile'
 import PaymentBookingPage from './pages/Payment'
+import SignUp from './pages/SignUp'
 
 function App() {
   const [startDate, setStartDate] = useState(new Date())
@@ -30,9 +31,10 @@ function App() {
           <Route path="/danh-sach" element={<List />}></Route>
           <Route path="/san-bong-thien-tan" element={<Detail />}></Route>
           <Route path="/find-team" element={<FindTeam />}></Route>
-          <Route path="/find-game" element={<FindGame />}></Route>
+          <Route path="/tim-tran" element={<FindGame />}></Route>
           <Route path="/thanh-toan" element={<PaymentBookingPage />}></Route>
           <Route path="/tai-khoan/dang-nhap" element={<SignIn />}></Route>
+          <Route path="/tai-khoan/dang-ki" element={<SignUp />}></Route>
           <Route path="/tai-khoan/:slug" element={<Profile />} />
         </Routes>
       </Layout>
