@@ -39,7 +39,7 @@ function Account() {
           console.log("Response", res);
           if (res && res.status == 200) {
             const userInfo = res.data.result;
-            console.log('userInfo', userInfo);
+            console.log("userInfo", userInfo);
             setEmail(userInfo.email);
             setFullName(userInfo.fullname);
             setPhoneNumber(userInfo.phoneNumber);
@@ -98,15 +98,18 @@ function Account() {
         birthday: birthDay,
       };
 
-      axiosPrivate.post("/account/updateUserInfo", data).then((res) => {
-        if (res.status == 200) {
-          toast.success("Cập nhật thông tin thành công!");
-        }
-      }).catch((error) => {
-        toast.error("Cập nhật thông tin thất bại!");
-      });
+      axiosPrivate
+        .post("/account/updateUserInfo", data)
+        .then((res) => {
+          if (res.status == 200) {
+            toast.success("Cập nhật thông tin thành công!");
+          }
+        })
+        .catch((error) => {
+          toast.error("Cập nhật thông tin thất bại!");
+        });
     }
-  }
+  };
 
   return content !== null ? (
     content
@@ -187,7 +190,7 @@ function Account() {
                           <img src={groupIcon} className="w-5 h-5" />
                           {team.size}
                           <p className="show-info">
-                            <b>Số lượng: </b> 10 thành viên
+                            <b>Số lượng: </b> {team.size} thành viên
                           </p>
                         </span>
                         <span>
@@ -254,6 +257,9 @@ function Account() {
                     placeholder="Số điện thoại"
                     type="telephone"
                     value={phoneNumber}
+                    onChange={(event) => {
+                      setPhoneNumber(event.target.value);
+                    }}
                     name="phone"
                     id="user_phone"
                   />
@@ -331,7 +337,11 @@ function Account() {
                     id="user_date_of_birth"
                   />
                 </div>
-                <button name="button" className="btn btn-green" onClick={handleUpdateUserInfo}>
+                <button
+                  name="button"
+                  className="btn btn-green"
+                  onClick={handleUpdateUserInfo}
+                >
                   Cập nhật
                 </button>
               </div>

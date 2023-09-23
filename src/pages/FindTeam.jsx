@@ -37,6 +37,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import TeamRequest from "../components/TeamRequest";
+import { getImageUrl, uploadImage } from "../utils/FileUtil";
+import { set } from "date-fns";
+import { useParams } from "react-router-dom";
 
 const Wrapper = styled.div`
   background-color: #fff;
@@ -114,7 +117,7 @@ const TeamDescription = styled.div`
   }
 `;
 
-const TeamDetail = styled.div`
+const TeamDetail = styled.label`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -163,6 +166,7 @@ const DenyButton = styled(Button)`
 
 function FindTeam() {
   const axiosPrivate = useAxiosPrivate();
+  const { id } = useParams();
 
   const [showTeam, setShowTeam] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
@@ -172,31 +176,36 @@ function FindTeam() {
   useEffect(() => {
     if (teamList.length > 0) {
       try {
+        const teamId = id ? id : teamList[0].id;
         axiosPrivate
-          .get(`/team/getTeamInformatioById?teamId=${teamList[0].id}`)
-          .then((res) => {
+          .get(`/team/getTeamInformatioById?teamId=${id}`)
+          .then(async (res) => {
             if (res.status == 200) {
-              console.log("teamInfo", res.data.result);
-              setTeamInfo(res.data.result);
+              const path = `/team/${id}/avatar`;
+              const { data } = await getImageUrl(path);
+              const avatarUrl = data === null ? null : data.publicUrl;
+              setTeamInfo({ ...res.data.result, avatarUrl });
             }
           });
       } catch (error) {
         console.log(error);
       }
     }
-  }, [teamList]);
+  }, [teamList, id]);
 
   useEffect(() => {
     if (teamInfo) {
       //Check trạng thái duyệt tham gia
-      axiosPrivate.get(`/team/getTeamRequestInfo?userId=1&teamId=${teamInfo.id}`).then((res) => {
-        console.log("Trạng thái duyệt tham gia", res)
-        if (res.status == 200) {
-          if (res.data.result.status == 1) {
-            setIsSubmit(true);
+      axiosPrivate
+        .get(`/team/getTeamRequestInfo?userId=1&teamId=${teamInfo.id}`)
+        .then((res) => {
+          console.log("Trạng thái duyệt tham gia", res);
+          if (res.status == 200) {
+            if (res.data.result.status == 1) {
+              setIsSubmit(true);
+            }
           }
-        }
-      });
+        });
     }
   }, [teamInfo]);
 
@@ -208,14 +217,32 @@ function FindTeam() {
     });
   }, []);
 
-  const handleTeamPick = (teamId) => {
+  const handleUpdateAvatar = async (file, path = "") => {
+    try {
+      const thumbnailImageKey = await uploadImage(file, path);
+      if (thumbnailImageKey == null) {
+        alert("Lỗi upload ảnh, vui lòng thử lại!");
+        return;
+      } else {
+        alert("Cập nhật ảnh đại diện thành công!");
+      }
+    } catch (error) {
+      alert("Lỗi upload ảnh đại diện");
+    }
+  };
+
+  const handleTeamPick = async (teamId) => {
     try {
       axiosPrivate
         .get(`/team/getTeamInformatioById?teamId=${teamId}`)
-        .then((res) => {
+        .then(async (res) => {
           if (res.status == 200) {
-            console.log("teamInfo", res.data.result);
-            setTeamInfo(res.data.result);
+            const team = res.data.result;
+            const path = `/team/${teamId}/avatar`;
+            const { data } = await getImageUrl(path);
+            console.log("data", data);
+            const avatarUrl = data === null ? null : data.publicUrl;
+            setTeamInfo({ ...team, avatarUrl });
           }
         });
     } catch (error) {
@@ -233,7 +260,7 @@ function FindTeam() {
       .post("/team/updateTeamRequest", {
         teamId: teamInfo.id,
         userId: "1",
-        action: "CREATE"
+        action: "CREATE",
       })
       .then((res) => {
         if (res.status === 200) {
@@ -254,7 +281,7 @@ function FindTeam() {
       .post("/team/updateTeamRequest", {
         teamId: teamInfo.id,
         userId: "1",
-        action: "CANCEL"
+        action: "CANCEL",
       })
       .then((res) => {
         if (res.status === 200) {
@@ -398,81 +425,6 @@ function FindTeam() {
           {/* Image */}
           <div className="pt-5 mt-4 pb-5">
             <img className="bg-image" src={bg} />
-            {/* <div className={`yourteam ${showTeam ? "show" : "hide"}`} >
-              <div className="row justify-content-center">
-                <div className="col-md-10 new-business-info mt-6">
-                  <h3 className="text-white mb-4">Đội của bạn</h3>
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <div className="card">
-                      <div className="card-body">
-                        <FontAwesomeIcon
-                          className="fa-2x mt-4"
-                          color="#ba4ab2"
-                          icon={faUserPlus}
-                          style={{
-                            padding: "5px",
-                            borderRadius: "12px",
-                            backgroundColor: "#f5f5f5",
-                          }}
-                        />
-                        <div className="py-5">
-                          <h5
-                            className="card-title mb-2"
-                            style={{
-                              color: "#ba4ab2",
-                              fontWeight: "700",
-                              fontSize: "1.5rem",
-                            }}
-                          >
-                            Tham gia
-                          </h5>
-                          <p className="card-text text-muted">
-                            Tham gia ngay <br /> để tận hưởng niềm vui
-                          </p>
-                        </div>
-                      </div>
-                      <div className="card-header">
-                        <b>36 đội</b> đang đợi
-                      </div>
-                    </div>
-                    <div className={`card team-card`}>
-                      <div className="card-body">
-                        <FontAwesomeIcon
-                          className="fa-2x mt-4"
-                          color="#50b444"
-                          icon={faHeartCirclePlus}
-                          style={{
-                            padding: "5px",
-                            borderRadius: "12px",
-                            backgroundColor: "#f5f5f5",
-                          }}
-                        />
-                        <div className="py-5">
-                          <h5
-                            className="card-title mb-2"
-                            style={{
-                              color: "#50b444",
-                              fontWeight: "700",
-                              fontSize: "1..5rem",
-                            }}
-                          >
-                            Tạo mới
-                          </h5>
-                          <p className="card-text text-muted">
-                            Mời bạn bè hoặc đợi <br /> người chơi khác tham gia
-                          </p>
-                        </div>
-                      </div>
-                      <div className="card-header">
-                        <b>315 người chơi</b> xung quanh bạn
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> */}
             <div className="d-flex justify-content-center">
               <Wrapper>
                 <div className="d-flex justify-content-center my-4">
@@ -488,7 +440,10 @@ function FindTeam() {
                   <Container>
                     <LeftSide>
                       {teamList.map((team, index) => (
-                        <TeamItem onClick={(e) => handleTeamPick(team.id)} key={index}>
+                        <TeamItem
+                          onClick={(e) => handleTeamPick(team.id)}
+                          key={index}
+                        >
                           <TeamLogo>
                             <img src={teamLogo} />
                           </TeamLogo>
@@ -513,8 +468,20 @@ function FindTeam() {
                       ))}
                     </LeftSide>
                     <RightSide>
-                      <TeamDetail>
-                        <TeamImage src="https://kiwisport.vn/wp-content/uploads/2019/06/in-ao-bong-da-doi-bong-kiss-english-mau-ao-da-banh-khong-logo-hero.jpg" />
+                      <TeamDetail htmlFor="team-image">
+                        <TeamImage src={teamInfo && teamInfo.avatarUrl} />
+                        <input
+                          type="file"
+                          id="team-image"
+                          name="team-image"
+                          accept="image/*"
+                          className="visually-hidden"
+                          onChange={(event) => {
+                            const file = event.target.files[0];
+                            const path = `/team/${teamInfo.id}/avatar`;
+                            handleUpdateAvatar(file, path);
+                          }}
+                        />
                       </TeamDetail>
                       {isSubmit ? (
                         <button

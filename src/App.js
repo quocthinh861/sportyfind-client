@@ -31,7 +31,7 @@ function App() {
           <Route path="/" element={<Home />}></Route>
           <Route path="/danh-sach" element={<List />}></Route>
           <Route path="/san-bong-thien-tan" element={<Detail />}></Route>
-          <Route path="/find-team" element={<FindTeam />}></Route>
+          <Route path="/tim-doi/:id?" element={<FindTeam />}></Route>
           <Route path="/tim-tran" element={<FindGame />}></Route>
           <Route path="/thanh-toan" element={<PaymentBookingPage />}></Route>
           <Route path="/tai-khoan/dang-nhap" element={<SignIn />}></Route>
