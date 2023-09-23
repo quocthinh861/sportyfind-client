@@ -12,6 +12,8 @@ const reducers = combineReducers({
 const persistConfig = {
   key: 'root',
   storage,
+  // Expire in 60 minutes
+  expires: 60 * 60 * 60 * 1000,
 }
 
 const persistedReducer = persistReducer(persistConfig, reducers)

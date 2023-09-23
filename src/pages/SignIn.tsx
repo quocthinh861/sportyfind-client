@@ -8,6 +8,7 @@ import { login } from "../features/user/useSlice";
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getImageUrl } from "../utils/FileUtil";
 
 function SignIn() {
   // States
@@ -32,7 +33,14 @@ function SignIn() {
 
       if (response.status === 200) {
         toast.success("Đăng nhập thành công");
-        dispatch(login(response.data.result));
+
+        const { user } = response.data.result;
+        console.log(user);
+        const path = `/${user.id}/avatar`;
+        const { data } = await getImageUrl(path);
+        const avatarUrl = data === null ? null : data.publicUrl;
+
+        dispatch(login({...response.data.result, avatar: avatarUrl}));
         navigate("/");
       } else {
         toast.error("Đăng nhập thất bại");

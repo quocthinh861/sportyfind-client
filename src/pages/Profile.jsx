@@ -20,6 +20,8 @@ import Booking from "../components/Booking";
 import Account from "../components/Account";
 import CreateTeam from '../components/CreateTeam'
 import footballplayer from "../assets/images/football-player.png";
+import { useSelector } from "react-redux";
+import { ToastContainer } from "react-toastify";
 const menu = [
   {
     id: 1,
@@ -63,6 +65,7 @@ function Profile() {
   // const axiosPrivate = useAxiosPrivate();
   const location = useLocation();
   const {slug} =  useParams();
+  const user = useSelector((state) => state.user);
 
   let content = null;
 
@@ -207,7 +210,7 @@ function Profile() {
                     <div className="sporta-avatar">
                       <img
                         id="avatar"
-                        src={footballplayer}
+                        src={user?.data.avatar || footballplayer}
                       />
                     </div>
                   </a>
@@ -244,6 +247,7 @@ function Profile() {
           {content}
         </div>
       </div>
+      <ToastContainer hideProgressBar={true} autoClose={1500} theme="colored" />
     </div>
   );
 }

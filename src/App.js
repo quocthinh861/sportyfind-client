@@ -12,6 +12,7 @@ import Detail from './pages/Detail'
 import Profile from './pages/Profile'
 import PaymentBookingPage from './pages/Payment'
 import SignUp from './pages/SignUp'
+import SignOut from './pages/SignOut'
 
 function App() {
   const [startDate, setStartDate] = useState(new Date())
@@ -35,6 +36,7 @@ function App() {
           <Route path="/thanh-toan" element={<PaymentBookingPage />}></Route>
           <Route path="/tai-khoan/dang-nhap" element={<SignIn />}></Route>
           <Route path="/tai-khoan/dang-ki" element={<SignUp />}></Route>
+          <Route path="/tai-khoan/dang-xuat" element={<SignOut />}></Route>
           <Route path="/tai-khoan/:slug" element={<Profile />} />
         </Routes>
       </Layout>

@@ -10,7 +10,9 @@ import CreateTeam from "../CreateTeam";
 import { useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import supabase from "../../client/Supabase";
-import { uploadImage } from "../../utils/FileUtil";
+import { uploadImage, getImageUrl } from "../../utils/FileUtil";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 function Account() {
   const axiosPrivate = useAxiosPrivate();
@@ -25,7 +27,34 @@ function Account() {
   const [height, setHeight] = React.useState("");
   const [weight, setWeight] = React.useState("");
   const [birthDay, setBirthDay] = React.useState("");
-  
+  const user = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (user.data?.user) {
+      const userId = user.data.user.id;
+      axiosPrivate
+        .get(`/account/getUserInfo?userId=${userId}`)
+        .then((res) => {
+          // Handle the response here
+          console.log("Response", res);
+          if (res && res.status == 200) {
+            const userInfo = res.data.result;
+            console.log('userInfo', userInfo);
+            setEmail(userInfo.email);
+            setFullName(userInfo.fullname);
+            setPhoneNumber(userInfo.phoneNumber);
+            setAddress(userInfo.address);
+            setHeight(userInfo.height);
+            setWeight(userInfo.weight);
+            setBirthDay(userInfo.birthday);
+          }
+        })
+        .catch((error) => {
+          // Handle errors here, e.g., logging or displaying an error message
+          console.error("Error fetching user info:", error);
+        });
+    }
+  }, [user]);
 
   useEffect(() => {
     axiosPrivate.get("/team/getTeamListByCaptainId?captainId=1").then((res) => {
@@ -33,39 +62,51 @@ function Account() {
         setTeamList(res.data.result);
       }
     });
-
-    // Lấy thông tin user
-    setEmail("quocthinh861@gmail.com");
-    setFullName("Đặng Quốc Thịnh");
-    setPhoneNumber("0909483537");
-    setAddress("Đường 27 phường 06 quận Gò Vấp TP.HCM");
-    setDistricy("Gò Vấp");
-    setHeight("170");
-    setWeight("60");
-    setBirthDay("01/01/2000");
-  
   }, []);
 
   const resetThumbnailImage = () => {
     setThumbnailImage("");
   };
 
-  const handleUpdateAvatar = async (file) => {
+  const handleUpdateAvatar = async (file, path = "") => {
     try {
-      const thumbnailImageKey = await uploadImage(file);
-      if(thumbnailImageKey == null) {
+      const thumbnailImageKey = await uploadImage(file, path);
+      if (thumbnailImageKey == null) {
         alert("Lỗi upload ảnh, vui lòng thử lại!");
         return;
       } else {
         alert("Cập nhật ảnh đại diện thành công!");
       }
-    }
-    catch (error) {
-      console.log("Lỗi upload ảnh đại diện: ", error);
+    } catch (error) {
+      alert("Lỗi upload ảnh đại diện");
     }
 
     resetThumbnailImage();
   };
+
+  const handleUpdateUserInfo = async () => {
+    if (user.data?.user) {
+      const userId = user.data.user.id;
+      const data = {
+        id: userId,
+        email: email,
+        fullname: fullName,
+        phoneNumber: phoneNumber,
+        address: address,
+        height: height,
+        weight: weight,
+        birthday: birthDay,
+      };
+
+      axiosPrivate.post("/account/updateUserInfo", data).then((res) => {
+        if (res.status == 200) {
+          toast.success("Cập nhật thông tin thành công!");
+        }
+      }).catch((error) => {
+        toast.error("Cập nhật thông tin thất bại!");
+      });
+    }
+  }
 
   return content !== null ? (
     content
@@ -83,31 +124,34 @@ function Account() {
         <div className="row justify-content-center m-2">
           <div className="col-4">
             <div className="profile-picture">
-              <div className="avatar">
-                <label className="w-30" htmlFor="thumbnail-image">
+              <label htmlFor="thumbnail-image">
+                <div className="avatar">
                   <img
                     alt="avatar"
                     id="avatar"
                     style={{
-                      width: "100%",
+                      width: "200px",
+                      height: "200px",
+                      objectFit: "cover",
                       borderRadius: "50%",
                       textAlign: "center",
                     }}
-                    src={footballPlayer}
+                    src={user?.data.avatar || footballPlayer}
                   />
-                </label>
-                <input
-                  type="file"
-                  id="thumbnail-image"
-                  name="thumbnail-image"
-                  accept="image/*"
-                  className="visually-hidden"
-                  onChange={(event) => {
-                    const file = event.target.files[0];
-                    handleUpdateAvatar(file);
-                  }}
-                />
-              </div>
+                </div>
+              </label>
+              <input
+                type="file"
+                id="thumbnail-image"
+                name="thumbnail-image"
+                accept="image/*"
+                className="visually-hidden"
+                onChange={(event) => {
+                  const file = event.target.files[0];
+                  const path = `${user?.data?.user.id}/avatar`;
+                  handleUpdateAvatar(file, path);
+                }}
+              />
             </div>
             <p className="text-center mt-4">Ảnh đại diện</p>
             <div className="team-list">
@@ -180,6 +224,9 @@ function Account() {
                       placeholder="Email"
                       type="email"
                       value={email}
+                      onChange={(event) => {
+                        setEmail(event.target.value);
+                      }}
                       name="user[email]"
                       id="user_email"
                     />
@@ -284,7 +331,7 @@ function Account() {
                     id="user_date_of_birth"
                   />
                 </div>
-                <button name="button" className="btn btn-green">
+                <button name="button" className="btn btn-green" onClick={handleUpdateUserInfo}>
                   Cập nhật
                 </button>
               </div>
