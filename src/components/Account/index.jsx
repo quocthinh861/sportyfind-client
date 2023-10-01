@@ -56,13 +56,13 @@ function Account() {
     }
   }, [user]);
 
-  useEffect(() => {
-    axiosPrivate.get("/team/getTeamListByCaptainId?captainId=1").then((res) => {
-      if (res.status == 200 && res.data.result) {
-        setTeamList(res.data.result);
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   axiosPrivate.get("/team/getTeamListByCaptainId?captainId=1").then((res) => {
+  //     if (res.status == 200 && res.data.result) {
+  //       setTeamList(res.data.result);
+  //     }
+  //   });
+  // }, []);
 
   const resetThumbnailImage = () => {
     setThumbnailImage("");

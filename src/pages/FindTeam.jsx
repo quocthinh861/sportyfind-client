@@ -37,7 +37,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import TeamRequest from "../components/TeamRequest";
-import { getImageUrl, uploadImage } from "../utils/FileUtil";
+import {
+  getImageUrl,
+  listImages,
+  uploadImage,
+  uploadImages,
+} from "../utils/FileUtil";
 import { set } from "date-fns";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -178,28 +183,40 @@ function FindTeam() {
   const [teamInfo, setTeamInfo] = useState(null);
   const [teamRequestList, setTeamRequestList] = useState([]);
   const [teamRequestSize, setTeamRequestSize] = useState(0);
-  const [isOpenImageBox, setIsOpenImageBox] = useState(true);
+  const [isOpenImageBox, setIsOpenImageBox] = useState(false);
+  const [teamImages, setTeamImages] = useState([]);
+  const [currentImageIndex, setCurrentIndex] = useState(0);
   const user = useSelector((state) => state.user);
   const userId = user.data.user.id;
 
   useEffect(() => {
-    if (teamList.length > 0) {
-      try {
-        const teamId = id ? id : teamList[0].id;
-        axiosPrivate
-          .get(`/team/getTeamInformatioById?teamId=${teamId}`)
-          .then(async (res) => {
-            if (res.status == 200 && res.data.result != null) {
-              const path = `/team/${teamId}/avatar`;
-              const { data } = await getImageUrl(path);
-              const avatarUrl = data === null ? null : data.publicUrl;
-              setTeamInfo({ ...res.data.result, avatarUrl });
-            }
-          });
-      } catch (error) {
-        console.log(error);
+    const fetchData = async () => {
+      if (teamList.length > 0) {
+        try {
+          const teamId = id ? id : teamList[0].id;
+  
+          // Fetch team information
+          const teamInfoResponse = await axiosPrivate.get(`/team/getTeamInformatioById?teamId=${teamId}`);
+          if (teamInfoResponse.status === 200 && teamInfoResponse.data.result !== null) {
+            const path = `/team/${teamId}/avatar`;
+            const avatarUrlResponse = await getImageUrl(path);
+            const avatarUrl = avatarUrlResponse?.data?.publicUrl || null;
+            setTeamInfo({ ...teamInfoResponse.data.result, avatarUrl });
+          }
+  
+          // Fetch team images
+          const imagesData = await listImages(`team/${teamId}/images`);
+          if (imagesData !== null) {
+            const images = imagesData.map((image) => ({ src: image.data.publicUrl }));
+            setTeamImages(images);
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
       }
-    }
+    };
+  
+    fetchData(); // Call the fetchData function
   }, [teamList, id]);
 
   useEffect(() => {
@@ -217,6 +234,7 @@ function FindTeam() {
           }
         });
 
+      // Lấy danh sách yêu cầu gia nhập
       axiosPrivate
         .get(`/team/getAllTeamRequestsByTeamId?teamId=${teamInfo.id}`)
         .then((res) => {
@@ -251,10 +269,32 @@ function FindTeam() {
     }
   };
 
-  const handleUploadTeamImages = async (files, path = "") => {
-  
+  const handleUploadTeamImages = async (files, basePath = "") => {
+    try {
+      if (files == null || files.length == 0) {
+        alert("Vui lòng chọn ảnh!");
+        return;
+      }
+
+      if (files.length > 5) {
+        alert("Chỉ được upload tối đa 5 ảnh!");
+        return;
+      }
+
+      // Convert FileList to an array for easier manipulation
+      const fileArray = Array.from(files);
+
+      const imagePaths = await uploadImages(fileArray, basePath);
+      if (imagePaths == null) {
+        alert("Lỗi upload ảnh, vui lòng thử lại!");
+        return;
+      } else {
+        alert("Upload ảnh thành công!");
+      }
+    } catch (error) {
+      alert("Lỗi upload ảnh");
+    }
   };
-  
 
   const handleTeamPick = async (teamId) => {
     try {
@@ -265,9 +305,16 @@ function FindTeam() {
             const team = res.data.result;
             const path = `/team/${teamId}/avatar`;
             const { data } = await getImageUrl(path);
-            console.log("data", data);
             const avatarUrl = data === null ? null : data.publicUrl;
             setTeamInfo({ ...team, avatarUrl });
+            // Lấy ảnh đội
+            const imagesData = await listImages(`team/${teamId}/images`);
+            if (imagesData != null) {
+              const images = imagesData.map((image) => {
+                return { src: image.data.publicUrl };
+              });
+              setTeamImages(images);
+            }
           }
         });
     } catch (error) {
@@ -289,7 +336,7 @@ function FindTeam() {
             action: "REMOVE",
           })
           .then((res) => {
-            if (res.status === 200 && res.data.result != null) {
+            if (res.status === 200) {
               toast.warn("Hủy tham gia thành công");
               setIsSubmit(false);
               setHasJoined(false);
@@ -330,7 +377,8 @@ function FindTeam() {
         action: action,
       })
       .then((res) => {
-        if (res.status === 200 && res.data.result != null) {
+        if (res.status === 200) {
+          toast.success("Thực hiện thành công");
           const newTeamRequestList = teamRequestList.filter(
             (team) => team.id !== teamRequest.id
           );
@@ -353,7 +401,7 @@ function FindTeam() {
         action: "CANCEL",
       })
       .then((res) => {
-        if (res.status === 200 && res.data.result != null) {
+        if (res.status === 200) {
           toast.warn("Hủy yêu cầu gia nhập thành công");
           setIsSubmit(false);
         } else {
@@ -630,17 +678,48 @@ function FindTeam() {
                         <div>
                           <div className="mb-1 flex justify-between">
                             <span className="font-bold">Hình ảnh</span>
-                            <small
+                            <label
+                              htmlFor="team-images"
                               style={{ color: "orange", cursor: "pointer" }}
                             >
-                              Thêm ảnh
-                            </small>
+                              <small>Thêm ảnh</small>
+                            </label>
+                            <input
+                              type="file"
+                              id="team-images"
+                              name="team-images"
+                              accept="image/*"
+                              className="visually-hidden"
+                              multiple
+                              onChange={(event) => {
+                                const files = event.target.files;
+                                const basePath = `/team/${teamInfo.id}/images`;
+                                handleUploadTeamImages(files, basePath);
+                              }}
+                            />
                           </div>
-                          <p>Chưa có hình ảnh nào</p>
-                          <ImageBox
-                            isOpen={isOpenImageBox}
-                            onClick={() => setIsOpenImageBox(!isOpenImageBox)}
-                          ></ImageBox>
+                          {teamImages.length > 0 ? (
+                            <ImageBox
+                              isOpen={isOpenImageBox}
+                              images={teamImages}
+                              onShow={() => {
+                                setCurrentIndex(0);
+                                setIsOpenImageBox(true)
+                              }}
+                              currentImageIndex={currentImageIndex}
+                              setCurrentIndex={setCurrentIndex}
+                              onClose={() => {
+                                setIsOpenImageBox(false);
+                                setCurrentIndex(0);
+                              }}
+                              onClick={(index) => {
+                                setIsOpenImageBox(true);
+                                setCurrentIndex(index);
+                              }}
+                            ></ImageBox>
+                          ) : (
+                            <p>Chưa có hình ảnh nào</p>
+                          )}
                         </div>
                       </div>
                       <div className="px-5">

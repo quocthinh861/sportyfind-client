@@ -1,21 +1,23 @@
 import {
-    faBell,
-    faClock,
-    faCode,
-    faFutbol,
-    faSearch,
-    faUnlockAlt,
-    faUserCircle,
-  } from "@fortawesome/free-solid-svg-icons";
-  import DatePicker from "react-datepicker";
-  import "react-datepicker/dist/react-datepicker.css";
-  import Table, { AvatarCell } from "../../components/Table";
-  import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-  import React, { useEffect } from "react";
-  import { Form, Row, Col, InputGroup, Button } from "react-bootstrap";
-  import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-  import { Spinner } from "react-bootstrap";
-  import { useLocation } from "react-router-dom";
+  faBell,
+  faClock,
+  faCode,
+  faFutbol,
+  faSearch,
+  faUnlockAlt,
+  faUserCircle,
+} from "@fortawesome/free-solid-svg-icons";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import Table, { AvatarCell } from "../../components/Table";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useEffect } from "react";
+import { Form, Row, Col, InputGroup, Button } from "react-bootstrap";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { Spinner } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
+import Dropdown from "react-bootstrap/Dropdown";
+import CreateGameMatch from "../CreateGame";
 
 function Account() {
   const axiosPrivate = useAxiosPrivate();
@@ -28,6 +30,7 @@ function Account() {
     new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)
   );
   const [isLoading, setIsLoading] = React.useState(false);
+  const [createGame, setCreateGame] = React.useState(null);
   const handleSearch = (e) => {
     e.preventDefault();
 
@@ -92,8 +95,6 @@ function Account() {
             };
           });
 
-          console.log(bookingList);
-
           setBookingList(bookingList);
         }
       })
@@ -129,8 +130,22 @@ function Account() {
         accessor: "action",
         Cell: ({ row }) => (
           <>
-            <Button className="btn btn-danger btn-sm">Hủy</Button>
-            <Button className="btn btn-primary ml-1 btn-sm">Thanh toán</Button>
+            <Dropdown>
+              <Dropdown.Toggle variant="success" id="dropdown-basic">
+                Action
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item>Hủy</Dropdown.Item>
+                <Dropdown.Item>Thanh toán</Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setCreateGame(<CreateGameMatch bookingInfo={row.values} />);
+                  }}
+                >
+                  Tạo trận đấu
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           </>
         ),
       },
@@ -139,114 +154,118 @@ function Account() {
   );
   return (
     <>
-      <div className="user-page-content">
-        <section className="border-light">
-          <div className="row justify-content-center m-2">
-            <h5
-              className="w-100 text-center d-none d-md-block"
-              style={{ fontWeight: 700 }}
-            >
-              Lịch Đặt
-            </h5>
-          </div>
-          <Form action="/user/booking_requests" autoComplete="off">
-            <Row className="pl-md-2">
-              <Col xl={3} md={3} mb={4}>
-                <Form.Label htmlFor="form_guests">Trạng thái</Form.Label>
-                <Form.Select
-                  id="form_guests"
-                  name="status"
-                  data-style="btn-selectpicker"
-                  title=" "
-                  className="form-control"
+      {createGame ? (
+        createGame
+      ) : (
+        <>
+          <div className="user-page-content">
+            <section className="border-light">
+              <div className="row justify-content-center m-2">
+                <h5
+                  className="w-100 text-center d-none d-md-block"
+                  style={{ fontWeight: 700 }}
                 >
-                  <option value="all" selected="">
-                    Tất cả
-                  </option>
-                  <option value="new">Mới/Đã xác nhận</option>
-                  <option value="pending">Chờ xác nhận</option>
-                  <option value="done">Đã qua/Hoàn thành</option>
-                  <option value="cancelled">Đã hủy</option>
-                </Form.Select>
-              </Col>
-              <Col xl={3} md={3} mb={4}>
-                <Form.Label htmlFor="begin_date">Từ ngày</Form.Label>
-                <DatePicker
-                  selected={beginDate}
-                  onChange={(date) => {
-                    setBeginDate(date);
-                  }}
-                  calendarClassName="custom-calendar" // add a custom CSS class to the calendar container
-                  className="custom-datepicker" // add a custom CSS class to the date-picker container
-                  dayClassName={(date) =>
-                    date.getTime() === beginDate.getTime()
-                      ? "custom-selected"
-                      : undefined
-                  } // add a custom CSS class to the selected date element
-                  showMonthYearPicker={false} // disable month and year picker
-                  dateFormat={"dd/MM/yyyy"}
-                />
-              </Col>
-              <Col xl={3} md={3} mb={4}>
-                <Form.Label htmlFor="end_date">Đến ngày</Form.Label>
-                <DatePicker
-                  selected={endDate}
-                  onChange={(date) => {
-                    setEndDate(date);
-                  }}
-                  calendarClassName="custom-calendar" // add a custom CSS class to the calendar container
-                  className="custom-datepicker" // add a custom CSS class to the date-picker container
-                  dayClassName={(date) =>
-                    date.getTime() === endDate.getTime()
-                      ? "custom-selected"
-                      : undefined
-                  } // add a custom CSS class to the selected date element
-                  showMonthYearPicker={false} // disable month and year picker
-                  dateFormat={"dd/MM/yyyy"}
-                />
-              </Col>
-              <Col
-                sm={3}
-                mb={4}
-                order={{ sm: 1, md: 2 }}
-                className="d-flex flex-column"
-              >
-                <div className="mt-auto">
-                  <Button
-                    type="submit"
-                    className="btn btn-green"
-                    onClick={handleSearch}
-                    style={{
-                      backgroundColor: "#85c240",
-                      borderColor: "#85c240",
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faSearch} />
-                    Tìm kiếm
-                  </Button>
-                </div>
-              </Col>
-            </Row>
-          </Form>
-          {isLoading ? (
-            <>
-              <div className="mt-4 w-full text-center">
-                <Spinner
-                  animation="border"
-                  role="status"
-                  variant="primary"
-                  style={{ width: "1.5rem", height: "1.5rem" }}
-                >
-                  <span className="sr-only">Loading...</span>
-                </Spinner>
+                  Lịch Đặt
+                </h5>
               </div>
-            </>
-          ) : (
-            <>
-              <Table columns={columns} data={bookingList} />
-            </>
-          )}
-          {/* <div className="table-responsive mt-4">
+              <Form action="/user/booking_requests" autoComplete="off">
+                <Row className="pl-md-2">
+                  <Col xl={3} md={3} mb={4}>
+                    <Form.Label htmlFor="form_guests">Trạng thái</Form.Label>
+                    <Form.Select
+                      id="form_guests"
+                      name="status"
+                      data-style="btn-selectpicker"
+                      title=" "
+                      className="form-control"
+                    >
+                      <option value="all" selected="">
+                        Tất cả
+                      </option>
+                      <option value="new">Mới/Đã xác nhận</option>
+                      <option value="pending">Chờ xác nhận</option>
+                      <option value="done">Đã qua/Hoàn thành</option>
+                      <option value="cancelled">Đã hủy</option>
+                    </Form.Select>
+                  </Col>
+                  <Col xl={3} md={3} mb={4}>
+                    <Form.Label htmlFor="begin_date">Từ ngày</Form.Label>
+                    <DatePicker
+                      selected={beginDate}
+                      onChange={(date) => {
+                        setBeginDate(date);
+                      }}
+                      calendarClassName="custom-calendar" // add a custom CSS class to the calendar container
+                      className="custom-datepicker" // add a custom CSS class to the date-picker container
+                      dayClassName={(date) =>
+                        date.getTime() === beginDate.getTime()
+                          ? "custom-selected"
+                          : undefined
+                      } // add a custom CSS class to the selected date element
+                      showMonthYearPicker={false} // disable month and year picker
+                      dateFormat={"dd/MM/yyyy"}
+                    />
+                  </Col>
+                  <Col xl={3} md={3} mb={4}>
+                    <Form.Label htmlFor="end_date">Đến ngày</Form.Label>
+                    <DatePicker
+                      selected={endDate}
+                      onChange={(date) => {
+                        setEndDate(date);
+                      }}
+                      calendarClassName="custom-calendar" // add a custom CSS class to the calendar container
+                      className="custom-datepicker" // add a custom CSS class to the date-picker container
+                      dayClassName={(date) =>
+                        date.getTime() === endDate.getTime()
+                          ? "custom-selected"
+                          : undefined
+                      } // add a custom CSS class to the selected date element
+                      showMonthYearPicker={false} // disable month and year picker
+                      dateFormat={"dd/MM/yyyy"}
+                    />
+                  </Col>
+                  <Col
+                    sm={3}
+                    mb={4}
+                    order={{ sm: 1, md: 2 }}
+                    className="d-flex flex-column"
+                  >
+                    <div className="mt-auto">
+                      <Button
+                        type="submit"
+                        className="btn btn-green"
+                        onClick={handleSearch}
+                        style={{
+                          backgroundColor: "#85c240",
+                          borderColor: "#85c240",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faSearch} />
+                        Tìm kiếm
+                      </Button>
+                    </div>
+                  </Col>
+                </Row>
+              </Form>
+              {isLoading ? (
+                <>
+                  <div className="mt-4 w-full text-center">
+                    <Spinner
+                      animation="border"
+                      role="status"
+                      variant="primary"
+                      style={{ width: "1.5rem", height: "1.5rem" }}
+                    >
+                      <span className="sr-only">Loading...</span>
+                    </Spinner>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Table columns={columns} data={bookingList} />
+                </>
+              )}
+              {/* <div className="table-responsive mt-4">
                 <table className="table">
                   <thead>
                     <tr>
@@ -283,8 +302,10 @@ function Account() {
                   <p style={{ textAlign: "center" }}>Không có dữ liệu. </p>
                 </div>
               )} */}
-        </section>
-      </div>
+            </section>
+          </div>
+        </>
+      )}
     </>
   );
 }
