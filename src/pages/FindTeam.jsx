@@ -40,6 +40,9 @@ import TeamRequest from "../components/TeamRequest";
 import { getImageUrl, uploadImage } from "../utils/FileUtil";
 import { set } from "date-fns";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import Lightbox, { ImagesListType } from "react-spring-lightbox";
+import ImageBox from "../components/ImageBox";
 
 const Wrapper = styled.div`
   background-color: #fff;
@@ -170,18 +173,24 @@ function FindTeam() {
 
   const [showTeam, setShowTeam] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
+  const [hasJoined, setHasJoined] = useState(false);
   const [teamList, setTeamList] = React.useState([]);
   const [teamInfo, setTeamInfo] = useState(null);
+  const [teamRequestList, setTeamRequestList] = useState([]);
+  const [teamRequestSize, setTeamRequestSize] = useState(0);
+  const [isOpenImageBox, setIsOpenImageBox] = useState(true);
+  const user = useSelector((state) => state.user);
+  const userId = user.data.user.id;
 
   useEffect(() => {
     if (teamList.length > 0) {
       try {
         const teamId = id ? id : teamList[0].id;
         axiosPrivate
-          .get(`/team/getTeamInformatioById?teamId=${id}`)
+          .get(`/team/getTeamInformatioById?teamId=${teamId}`)
           .then(async (res) => {
-            if (res.status == 200) {
-              const path = `/team/${id}/avatar`;
+            if (res.status == 200 && res.data.result != null) {
+              const path = `/team/${teamId}/avatar`;
               const { data } = await getImageUrl(path);
               const avatarUrl = data === null ? null : data.publicUrl;
               setTeamInfo({ ...res.data.result, avatarUrl });
@@ -199,19 +208,30 @@ function FindTeam() {
       axiosPrivate
         .get(`/team/getTeamRequestInfo?userId=1&teamId=${teamInfo.id}`)
         .then((res) => {
-          console.log("Trạng thái duyệt tham gia", res);
-          if (res.status == 200) {
+          if (res.status == 200 && res.data.result != null) {
             if (res.data.result.status == 1) {
               setIsSubmit(true);
+            } else if (res.data.result.status == 2) {
+              setHasJoined(true);
             }
+          }
+        });
+
+      axiosPrivate
+        .get(`/team/getAllTeamRequestsByTeamId?teamId=${teamInfo.id}`)
+        .then((res) => {
+          if (res.status == 200) {
+            console.log("team", res.data.result);
+            setTeamRequestList(res.data.result);
+            setTeamRequestSize(res.data.result.length);
           }
         });
     }
   }, [teamInfo]);
 
   useEffect(() => {
-    axiosPrivate.get("/team/getTeamListByCaptainId?captainId=1").then((res) => {
-      if (res.status == 200) {
+    axiosPrivate.get("/team/getTeamList").then((res) => {
+      if (res.status == 200 && res.data.result != null) {
         setTeamList(res.data.result);
       }
     });
@@ -231,12 +251,17 @@ function FindTeam() {
     }
   };
 
+  const handleUploadTeamImages = async (files, path = "") => {
+  
+  };
+  
+
   const handleTeamPick = async (teamId) => {
     try {
       axiosPrivate
         .get(`/team/getTeamInformatioById?teamId=${teamId}`)
         .then(async (res) => {
-          if (res.status == 200) {
+          if (res.status == 200 && res.data.result != null) {
             const team = res.data.result;
             const path = `/team/${teamId}/avatar`;
             const { data } = await getImageUrl(path);
@@ -254,18 +279,62 @@ function FindTeam() {
     setShowTeam(!showTeam);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (action) => {
+    if (action == true) {
+      if (window.confirm("Bạn có chắc chắn muốn rời khỏi đội bóng?")) {
+        axiosPrivate
+          .post("/team/updateTeamRequest", {
+            teamId: teamInfo.id,
+            userId: userId,
+            action: "REMOVE",
+          })
+          .then((res) => {
+            if (res.status === 200 && res.data.result != null) {
+              toast.warn("Hủy tham gia thành công");
+              setIsSubmit(false);
+              setHasJoined(false);
+            } else {
+              throw new Error("Đã xảy ra lỗi!");
+            }
+          })
+          .catch((error) => {
+            toast.error(error.message);
+          });
+      }
+      return;
+    }
     axiosPrivate
       .post("/team/updateTeamRequest", {
         teamId: teamInfo.id,
-        userId: "1",
+        userId: userId,
         action: "CREATE",
       })
       .then((res) => {
-        if (res.status === 200) {
+        if (res.status === 200 && res.data.result != null) {
           toast.success("Gửi yêu cầu gia nhập thành công");
           setIsSubmit(true);
+        } else {
+          throw new Error("Đã xảy ra lỗi!");
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
+  };
+
+  const handleTeamRequest = (action, teamRequest) => {
+    axiosPrivate
+      .post("/team/updateTeamRequest", {
+        teamId: teamInfo.id,
+        userId: teamRequest.userId,
+        action: action,
+      })
+      .then((res) => {
+        if (res.status === 200 && res.data.result != null) {
+          const newTeamRequestList = teamRequestList.filter(
+            (team) => team.id !== teamRequest.id
+          );
+          setTeamRequestSize(newTeamRequestList.length);
         } else {
           throw new Error("Đã xảy ra lỗi!");
         }
@@ -280,11 +349,11 @@ function FindTeam() {
     axiosPrivate
       .post("/team/updateTeamRequest", {
         teamId: teamInfo.id,
-        userId: "1",
+        userId: userId,
         action: "CANCEL",
       })
       .then((res) => {
-        if (res.status === 200) {
+        if (res.status === 200 && res.data.result != null) {
           toast.warn("Hủy yêu cầu gia nhập thành công");
           setIsSubmit(false);
         } else {
@@ -494,10 +563,12 @@ function FindTeam() {
                       ) : (
                         <button
                           name="button"
-                          className="btn btn-orange d-block mx-auto my-4"
-                          onClick={handleSubmit}
+                          className={`btn ${
+                            hasJoined ? "btn-warning text-white" : "btn-orange"
+                          } d-block mx-auto my-4`}
+                          onClick={() => handleSubmit(hasJoined)}
                         >
-                          Tham gia
+                          {hasJoined ? "Đã tham gia" : "Tham gia"}
                         </button>
                       )}
                       <div className="px-5">
@@ -557,35 +628,65 @@ function FindTeam() {
                           <p>CLB chưa có lịch sử thi đấu nào</p>
                         </div>
                         <div>
-                          <div className="mb-1 font-bold">Hình ảnh</div>
+                          <div className="mb-1 flex justify-between">
+                            <span className="font-bold">Hình ảnh</span>
+                            <small
+                              style={{ color: "orange", cursor: "pointer" }}
+                            >
+                              Thêm ảnh
+                            </small>
+                          </div>
                           <p>Chưa có hình ảnh nào</p>
+                          <ImageBox
+                            isOpen={isOpenImageBox}
+                            onClick={() => setIsOpenImageBox(!isOpenImageBox)}
+                          ></ImageBox>
                         </div>
                       </div>
                       <div className="px-5">
                         <div className="mb-3">
                           <div className="mb-1 font-bold">
-                            Yêu cầu tham gia (1)
+                            Yêu cầu tham gia ({teamRequestSize})
                           </div>
-                          <TeamRequest />
-                          <TeamRequest />
+                          {teamRequestList.map((teamRequest, index) => (
+                            <TeamRequest
+                              key={index}
+                              teamRequest={teamRequest}
+                              handleTeamRequest={handleTeamRequest}
+                            />
+                          ))}
                         </div>
                         <div>
-                          <div className="mb-1 font-bold">Thành viên (1)</div>
-                          <div className="flex items-center">
-                            <img
-                              id="avatar"
-                              style={{
-                                width: "35px",
-                                borderRadius: "50%",
-                                textAlign: "center",
-                              }}
-                              src={footballPlayer}
-                            />
-                            <span className="ml-2">
-                              Thịnh Lang
-                              <p>0909483537</p>
-                            </span>
+                          <div className="mb-1 font-bold">
+                            Thành viên (
+                            {teamInfo &&
+                              teamInfo.users &&
+                              teamInfo.users.length}
+                            )
                           </div>
+                          {teamInfo &&
+                            teamInfo.users &&
+                            teamInfo.users.map((user, index) => (
+                              <div className="flex items-center">
+                                <img
+                                  id="avatar"
+                                  style={{
+                                    width: "35px",
+                                    borderRadius: "50%",
+                                    textAlign: "center",
+                                  }}
+                                  src={footballPlayer}
+                                />
+                                <span
+                                  key={index}
+                                  className="ml-2"
+                                  style={{ color: "#000" }}
+                                >
+                                  {user.fullName}
+                                  <p>{user.phoneNumber}</p>
+                                </span>
+                              </div>
+                            ))}
                         </div>
                       </div>
                     </RightSide>

@@ -13,6 +13,15 @@ export const uploadImage = async (file, path = "") => {
   return data.path;
 };
 
+export const uploadImages = async (files, basePath = "") => {
+  const uploadPromises = files.map((file) => {
+    const path = `${basePath}/${file.name}`;
+    return uploadImage(file, path);
+  });
+  const imagePaths = await Promise.all(uploadPromises);
+  return imagePaths;
+};
+
 export const getImageUrl = async (path) => {
   return await supabase.storage.from("images").getPublicUrl(path);
 }

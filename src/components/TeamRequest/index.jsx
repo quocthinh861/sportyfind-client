@@ -28,9 +28,11 @@ const DenyButton = styled(Button)`
   }
 `;
 
-function TeamRequest(action) {
+function TeamRequest(props) {
+  const { teamRequest } = props;
   const [isAnimating, setIsAnimating] = useState(false);
-  const handleAnimate = () => {
+  const handleAnimate = (action) => {
+    props.handleTeamRequest(action, teamRequest);
     setIsAnimating(true);
   };
 
@@ -49,13 +51,13 @@ function TeamRequest(action) {
               src={footballPlayer}
               alt="Football Player"
             />
-            <span className="ml-2">Thịnh Lang</span>
+            <span className="ml-2">{teamRequest && teamRequest.userName}</span>
           </div>
           <div>
-            <AcceptButton onClick={handleAnimate}>
+            <AcceptButton onClick={() => handleAnimate("ACCEPT")}>
               <FontAwesomeIcon icon={faCheck} />
             </AcceptButton>
-            <DenyButton onClick={handleAnimate}>
+            <DenyButton onClick={() => handleAnimate("CANCLE")}>
               <FontAwesomeIcon icon={faTimes} />
             </DenyButton>
           </div>

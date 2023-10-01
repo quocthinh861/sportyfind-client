@@ -41,7 +41,7 @@ function Account() {
             const userInfo = res.data.result;
             console.log("userInfo", userInfo);
             setEmail(userInfo.email);
-            setFullName(userInfo.fullname);
+            setFullName(userInfo.fullName);
             setPhoneNumber(userInfo.phoneNumber);
             setAddress(userInfo.address);
             setHeight(userInfo.height);
@@ -58,7 +58,7 @@ function Account() {
 
   useEffect(() => {
     axiosPrivate.get("/team/getTeamListByCaptainId?captainId=1").then((res) => {
-      if (res.status == 200) {
+      if (res.status == 200 && res.data.result) {
         setTeamList(res.data.result);
       }
     });
@@ -90,7 +90,7 @@ function Account() {
       const data = {
         id: userId,
         email: email,
-        fullname: fullName,
+        fullName: fullName,
         phoneNumber: phoneNumber,
         address: address,
         height: height,
@@ -243,6 +243,9 @@ function Account() {
                       placeholder="Họ Tên"
                       type="text"
                       value={fullName}
+                      onChange={(event) => {
+                        setFullName(event.target.value);
+                      }}
                       name="user[name]"
                       id="user_name"
                     />
@@ -270,9 +273,12 @@ function Account() {
                   </label>
                   <input
                     className="form-control mb-4"
-                    placeholder="Số điện thoại"
-                    type="telephone"
+                    placeholder="Điạ chỉ"
+                    type="address"
                     value={address}
+                    onChange={(event) => {
+                      setAddress(event.target.value);
+                    }}
                     name="phone"
                     id="user_phone"
                   />
@@ -311,6 +317,9 @@ function Account() {
                     <input
                       className="form-control"
                       placeholder="cm"
+                      onChange={(event) => {
+                        setHeight(event.target.value);
+                      }}
                       type="text"
                     />
                   </div>
@@ -322,6 +331,9 @@ function Account() {
                       className="form-control"
                       placeholder="kg"
                       type="text"
+                      onChange={(event) => {
+                        setWeight(event.target.value);
+                      }}
                     />
                   </div>
                 </div>
@@ -333,6 +345,9 @@ function Account() {
                     className="form-control"
                     placeholder="Ngày sinh"
                     type="date"
+                    onChange={(event) => {
+                      setBirthDay(event.target.value);
+                    }}
                     name="user[date_of_birth]"
                     id="user_date_of_birth"
                   />
