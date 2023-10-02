@@ -3,7 +3,7 @@ import "./style.css";
 import { Form, Col } from "react-bootstrap"; // Import Form and Col from react-bootstrap
 import { useSelector } from "react-redux";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-
+import { toast } from "react-toastify";
 
 function CreateGameMatch(props) {
   console.log(props)
@@ -27,10 +27,14 @@ function CreateGameMatch(props) {
     };
 
     axiosPrivate.post("/game/createMatch", data).then((res) => {
-      if (res.status === 200) {
-        alert("Tạo trận đấu thành công");
-      } else {
-        alert("Tạo trận đấu thất bại");
+      try {
+        if (res.status === 200) {
+          toast.success("Tạo trận đấu thành công!");
+        } else {
+          toast.error("Đã có lỗi xảy ra");
+        }
+      } catch(err) {
+        toast.error("Đã có lỗi xảy ra");
       }
     });
   };

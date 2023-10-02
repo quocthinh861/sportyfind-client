@@ -218,6 +218,9 @@ function FindGame() {
     setShowComment(false);
   }, [gameType])
 
+  useEffect(() => {
+  });
+
   const handleTeamClick = () => {
     setShowTeam(!showTeam);
   };
@@ -356,81 +359,6 @@ function FindGame() {
           {/* Image */}
           <div className="pt-5 mt-4 pb-5">
             <img className="bg-image" src={bg} />
-            {/* <div className={`yourteam ${showTeam ? "show" : "hide"}`} >
-              <div className="row justify-content-center">
-                <div className="col-md-10 new-business-info mt-6">
-                  <h3 className="text-white mb-4">Đội của bạn</h3>
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <div className="card">
-                      <div className="card-body">
-                        <FontAwesomeIcon
-                          className="fa-2x mt-4"
-                          color="#ba4ab2"
-                          icon={faUserPlus}
-                          style={{
-                            padding: "5px",
-                            borderRadius: "12px",
-                            backgroundColor: "#f5f5f5",
-                          }}
-                        />
-                        <div className="py-5">
-                          <h5
-                            className="card-title mb-2"
-                            style={{
-                              color: "#ba4ab2",
-                              fontWeight: "700",
-                              fontSize: "1.5rem",
-                            }}
-                          >
-                            Tham gia
-                          </h5>
-                          <p className="card-text text-muted">
-                            Tham gia ngay <br /> để tận hưởng niềm vui
-                          </p>
-                        </div>
-                      </div>
-                      <div className="card-header">
-                        <b>36 đội</b> đang đợi
-                      </div>
-                    </div>
-                    <div className={`card team-card`}>
-                      <div className="card-body">
-                        <FontAwesomeIcon
-                          className="fa-2x mt-4"
-                          color="#50b444"
-                          icon={faHeartCirclePlus}
-                          style={{
-                            padding: "5px",
-                            borderRadius: "12px",
-                            backgroundColor: "#f5f5f5",
-                          }}
-                        />
-                        <div className="py-5">
-                          <h5
-                            className="card-title mb-2"
-                            style={{
-                              color: "#50b444",
-                              fontWeight: "700",
-                              fontSize: "1..5rem",
-                            }}
-                          >
-                            Tạo mới
-                          </h5>
-                          <p className="card-text text-muted">
-                            Mời bạn bè hoặc đợi <br /> người chơi khác tham gia
-                          </p>
-                        </div>
-                      </div>
-                      <div className="card-header">
-                        <b>315 người chơi</b> xung quanh bạn
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> */}
             <div className="d-flex justify-content-center">
               <Wrapper>
                 <div className="d-flex justify-content-center my-4">
