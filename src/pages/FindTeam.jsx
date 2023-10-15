@@ -32,6 +32,7 @@ import rankIcon from "../assets/images/icons/ranking.png";
 import pitchIcon from "../assets/images/icons/pitch.png";
 import memberIcon from "../assets/images/icons/member.png";
 import editIcon from "../assets/images/icons/edit-info.png";
+import teamAvatar from "../assets/images/teamwork.png";
 import footballPlayer from "../assets/images/football-player.png";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -91,8 +92,8 @@ const RightSide = styled.div`
 
 const TeamItem = styled.div`
   padding: 20px 0;
-  padding=left: 0;
-  font-size: 0.8rem;
+  padding-left: 0;
+  font-size: 0.9rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -100,11 +101,11 @@ const TeamItem = styled.div`
 `;
 
 const TeamLogo = styled.div`
-  width: 70px;
+  width: 90px;
 `;
 
 const TeamInfo = styled.div`
-  margin-left: 10px;
+  margin-left: 20px;
   width: 100%;
   position: relative;
 `;
@@ -188,6 +189,10 @@ function FindTeam() {
   const [currentImageIndex, setCurrentIndex] = useState(0);
   const user = useSelector((state) => state.user);
   const userId = user.data.user.id;
+  
+  // random field name
+  const fieldNames = ["Hùng Vương", "Thiện Nhân", "Bình Minh"]
+  const [fieldName, setFieldName] = useState(fieldNames[0]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -223,7 +228,7 @@ function FindTeam() {
     if (teamInfo) {
       //Check trạng thái duyệt tham gia
       axiosPrivate
-        .get(`/team/getTeamRequestInfo?userId=1&teamId=${teamInfo.id}`)
+        .get(`/team/getTeamRequestInfo?userId=${userId}&teamId=${teamInfo.id}`)
         .then((res) => {
           if (res.status == 200 && res.data.result != null) {
             if (res.data.result.status == 1) {
@@ -296,19 +301,35 @@ function FindTeam() {
     }
   };
 
-  const handleTeamPick = async (teamId) => {
+  const handleTeamPick = async (teamId, index) => {
     try {
+      // Scroll to top
+      window.scrollTo(0, 0);
+      // Right side scroll to top
+      document.querySelector(".right-side").scrollTop = 0;
+
+      
+      setFieldName(fieldNames[index % fieldNames.length]);
+
       axiosPrivate
         .get(`/team/getTeamInformatioById?teamId=${teamId}`)
         .then(async (res) => {
           if (res.status == 200 && res.data.result != null) {
             const team = res.data.result;
             const path = `/team/${teamId}/avatar`;
-            const { data } = await getImageUrl(path);
-            const avatarUrl = data === null ? null : data.publicUrl;
+            const imgRes = await getImageUrl(path);
+            let url;
+            if(imgRes == null) {
+              url = null;
+            } else{
+              url = imgRes.data.publicUrl;
+            }
+            const avatarUrl = url;
+            console.log("avatarUrl", avatarUrl);
             setTeamInfo({ ...team, avatarUrl });
             // Lấy ảnh đội
             const imagesData = await listImages(`team/${teamId}/images`);
+            console.log("imagesData", imagesData);
             if (imagesData != null) {
               const images = imagesData.map((image) => {
                 return { src: image.data.publicUrl };
@@ -558,7 +579,7 @@ function FindTeam() {
                     <LeftSide>
                       {teamList.map((team, index) => (
                         <TeamItem
-                          onClick={(e) => handleTeamPick(team.id)}
+                          onClick={(e) => handleTeamPick(team.id, index)}
                           key={index}
                         >
                           <TeamLogo>
@@ -584,9 +605,9 @@ function FindTeam() {
                         </TeamItem>
                       ))}
                     </LeftSide>
-                    <RightSide>
+                    <RightSide className="right-side">
                       <TeamDetail htmlFor="team-image">
-                        <TeamImage src={teamInfo && teamInfo.avatarUrl} />
+                      <TeamImage src={(teamInfo && teamInfo.avatarUrl) || teamAvatar} />
                         <input
                           type="file"
                           id="team-image"
@@ -644,7 +665,7 @@ function FindTeam() {
                               <div className="d-inline mr-2">
                                 <img src={pitchIcon} className="w-5 h-5" />
                               </div>
-                              <div className="">Sân bóng đá Hùng Vương</div>
+                              <a className="cursor-pointer" href="/san-bong-thien-nhan">Sân bóng đá {fieldName}</a>
                             </div>
                             <div className="d-flex align-item-center">
                               <div className="d-inline mr-2">

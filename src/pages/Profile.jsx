@@ -6,6 +6,7 @@ import {
   faSearch,
   faUnlockAlt,
   faUserCircle,
+  faRankingStar
 } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -15,7 +16,7 @@ import React, { useEffect } from "react";
 import { Form, Row, Col, InputGroup, Button } from "react-bootstrap";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { Spinner } from "react-bootstrap";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Booking from "../components/Booking";
 import Account from "../components/Account";
 import CreateTeam from '../components/CreateTeam'
@@ -31,27 +32,27 @@ const menu = [
   },
   {
     id: 2,
-    name: "Hồ sơ thể thao",
-    icon: faFutbol,
-    link: "/tai-khoan/ho-so-the-thao",
-  },
-  {
-    id: 3,
     name: "Lịch đặt của tôi",
     icon: faClock,
     link: "/tai-khoan/lich-su-dat-cua-toi",
   },
   {
+    id: 3,
+    name: "Tham gia đội bóng",
+    icon: faFutbol,
+    link: "/tim-doi",
+  },
+  {
     id: 4,
-    name: "Thông báo",
-    icon: faBell,
-    link: "/tai-khoan/thong-bao",
+    name: "Lập kèo",
+    icon: faRankingStar,
+    link: "/tim-tran",
   },
   {
     id: 5,
-    name: "Mã giới thiệu",
-    icon: faCode,
-    link: "/tai-khoan/ma-gioi-thieu",
+    name: "Sự kiện sắp tới",
+    icon: faBell,
+    link: "/su-kien-cua-toi",
   },
   {
     id: 6,
@@ -66,6 +67,7 @@ function Profile() {
   const location = useLocation();
   const {slug} =  useParams();
   const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
   let content = null;
 
@@ -75,8 +77,8 @@ function Profile() {
     content = <Booking />;
   } else if(slug === "") {
     content = <CreateTeam />;
-  } else if(slug === "ho-so-the-thao") {
-    content = <Account />;
+  } else if(slug === "tham-gia-doi-bong") {
+    navigate("/tim-doi");
   }
 
   // const [bookingList, setBookingList] = React.useState([]);

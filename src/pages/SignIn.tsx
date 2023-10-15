@@ -185,7 +185,7 @@ function SignIn() {
                 </div>
                 <div className="col-6">
                   <a
-                    href="/users/sign_up"
+                    href="/tai-khoan/dang-ky"
                     className="float-right form-text small"
                   >
                     Đăng ký
@@ -194,7 +194,7 @@ function SignIn() {
               </div>
             </form>
             <p className="login-form__footer">
-              Đồ án chuyên ngành hướng Công nghệ phần mềm - Đại học Bách Khoa
+              Đồ án tốt nghiệp hướng Công nghệ phần mềm - Đại học Bách Khoa
               HCM
             </p>
           </div>

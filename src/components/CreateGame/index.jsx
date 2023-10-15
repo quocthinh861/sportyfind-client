@@ -103,6 +103,20 @@ function CreateGameMatch(props) {
                     for="inputPassword"
                     className="col-sm-2 col-form-label"
                   >
+                    Loại
+                  </label>
+                  <div className="col-sm-10">
+                    <Form.Select>
+                      <option>Đá nội bộ</option>
+                      <option>Đá kèo</option>
+                    </Form.Select>
+                  </div>
+                </div>
+                <div className="form-group row mb-4">
+                  <label
+                    for="inputPassword"
+                    className="col-sm-2 col-form-label"
+                  >
                     Sân bóng
                   </label>
                   <div className="col-sm-10">

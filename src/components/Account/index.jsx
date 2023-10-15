@@ -11,9 +11,9 @@ import { useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import supabase from "../../client/Supabase";
 import { uploadImage, getImageUrl } from "../../utils/FileUtil";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-
+import {updateAvatar} from "../../features/user/useSlice";
 function Account() {
   const axiosPrivate = useAxiosPrivate();
   const [content, setContent] = React.useState(null);
@@ -28,10 +28,11 @@ function Account() {
   const [weight, setWeight] = React.useState("");
   const [birthDay, setBirthDay] = React.useState("");
   const user = useSelector((state) => state.user);
+  const userId = user.data?.user?.id;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (user.data?.user) {
-      const userId = user.data.user.id;
       axiosPrivate
         .get(`/account/getUserInfo?userId=${userId}`)
         .then((res) => {
@@ -56,13 +57,13 @@ function Account() {
     }
   }, [user]);
 
-  // useEffect(() => {
-  //   axiosPrivate.get("/team/getTeamListByCaptainId?captainId=1").then((res) => {
-  //     if (res.status == 200 && res.data.result) {
-  //       setTeamList(res.data.result);
-  //     }
-  //   });
-  // }, []);
+  useEffect(() => {
+    axiosPrivate.get(`/team/getTeamListByUserId?userId=${userId}`).then((res) => {
+      if (res.status == 200 && res.data.result) {
+        setTeamList(res.data.result);
+      }
+    });
+  }, []);
 
   const resetThumbnailImage = () => {
     setThumbnailImage("");
@@ -75,6 +76,14 @@ function Account() {
         alert("Lỗi upload ảnh, vui lòng thử lại!");
         return;
       } else {
+        const { data } = await getImageUrl(path);
+        const avatarUrl = data === null ? null : data.publicUrl;
+        console.log("avatarUrl", avatarUrl);
+        //clear cache browser
+        const timestamp = new Date().getTime();
+        const newAvatarUrl = avatarUrl + "?t=" + timestamp;
+        dispatch(updateAvatar(newAvatarUrl));
+        setThumbnailImage(avatarUrl);
         alert("Cập nhật ảnh đại diện thành công!");
       }
     } catch (error) {

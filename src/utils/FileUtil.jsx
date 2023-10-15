@@ -4,7 +4,6 @@ export const uploadImage = async (file, path = "") => {
   const { data, error } = await supabase.storage
     .from("images")
     .upload(path, file, {
-      cacheControl: "3600",
       upsert: true,
     });
   if (error) {

@@ -31,13 +31,13 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/danh-sach" element={<List />}></Route>
-          <Route path="/san-bong-thien-tan" element={<Detail />}></Route>
+          <Route path="/san-bong-thien-nhan" element={<Detail />}></Route>
           <Route path="/tim-doi/:id?" element={<FindTeam />}></Route>
           <Route path="/tim-tran" element={<FindGame />}></Route>
           <Route path="/thanh-toan" element={<PaymentBookingPage />}></Route>
           <Route path="/su-kien-cua-toi" element={<Event />} />
           <Route path="/tai-khoan/dang-nhap" element={<SignIn />}></Route>
-          <Route path="/tai-khoan/dang-ki" element={<SignUp />}></Route>
+          <Route path="/tai-khoan/dang-ky" element={<SignUp />}></Route>
           <Route path="/tai-khoan/dang-xuat" element={<SignOut />}></Route>
           <Route path="/tai-khoan/:slug" element={<Profile />} />
         </Routes>

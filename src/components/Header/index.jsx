@@ -28,7 +28,7 @@ function Header() {
     e.preventDefault();
 
     dispatch(logout());
-    navigate("/users/sign-in");
+    navigate("/tai-khoan/dang-nhap");
   };
 
   return (
