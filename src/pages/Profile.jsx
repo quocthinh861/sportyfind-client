@@ -212,7 +212,7 @@ function Profile() {
                     <div className="sporta-avatar">
                       <img
                         id="avatar"
-                        src={user?.data.avatar || footballplayer}
+                        src={user?.data?.user?.thumbnail || footballplayer}
                       />
                     </div>
                   </a>

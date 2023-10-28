@@ -8,12 +8,12 @@ import { useState } from "react";
 function Event() {
   const [currenMonth, setCurrentMonth] = useState(getMonth());
   return (
-    <div className="h-screen flex flex-col">
+    <div className="flex flex-col">
       <CalendarHeader />
       <div className="flex flex-1">
           <Sidebar />
           <Month month={currenMonth}/>
-        </div>
+        </div>  
     </div>
   );
 }

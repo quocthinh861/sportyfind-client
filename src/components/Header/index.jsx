@@ -14,9 +14,9 @@ const infoList = [
     url: "/tai-khoan/thong-tin-tai-khoan",
   },
   {
-    name: "Quản lý lịch đặt",
-    url: "/tai-khoan/quan-ly-lich-dat",
-  }
+    name: "Sự kiện của tôi",
+    url: "/su-kien-cua-toi",
+  },
 ];
 
 function Header() {

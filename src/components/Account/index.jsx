@@ -13,7 +13,7 @@ import supabase from "../../client/Supabase";
 import { uploadImage, getImageUrl } from "../../utils/FileUtil";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import {updateAvatar} from "../../features/user/useSlice";
+import { updateAvatar } from "../../features/user/useSlice";
 function Account() {
   const axiosPrivate = useAxiosPrivate();
   const [content, setContent] = React.useState(null);
@@ -58,11 +58,13 @@ function Account() {
   }, [user]);
 
   useEffect(() => {
-    axiosPrivate.get(`/team/getTeamListByUserId?userId=${userId}`).then((res) => {
-      if (res.status == 200 && res.data.result) {
-        setTeamList(res.data.result);
-      }
-    });
+    axiosPrivate
+      .get(`/team/getTeamListByUserId?userId=${userId}`)
+      .then((res) => {
+        if (res.status == 200 && res.data.result) {
+          setTeamList(res.data.result);
+        }
+      });
   }, []);
 
   const resetThumbnailImage = () => {
@@ -78,13 +80,23 @@ function Account() {
       } else {
         const { data } = await getImageUrl(path);
         const avatarUrl = data === null ? null : data.publicUrl;
+
         console.log("avatarUrl", avatarUrl);
-        //clear cache browser
-        const timestamp = new Date().getTime();
-        const newAvatarUrl = avatarUrl + "?t=" + timestamp;
-        dispatch(updateAvatar(newAvatarUrl));
-        setThumbnailImage(avatarUrl);
-        alert("Cập nhật ảnh đại diện thành công!");
+        axiosPrivate
+          .post("/account/updateThumbnail", {
+            id: userId,
+            thumbnail: avatarUrl,
+          })
+          .then((res) => {
+            if (res.status == 200) {
+              //clear cache browser
+              const timestamp = new Date().getTime();
+              const newAvatarUrl = avatarUrl + "?t=" + timestamp;
+              dispatch(updateAvatar(newAvatarUrl));
+              setThumbnailImage(avatarUrl);
+              toast.success("Cập nhật ảnh đại diện thành công!");
+            }
+          });
       }
     } catch (error) {
       alert("Lỗi upload ảnh đại diện");
@@ -148,7 +160,7 @@ function Account() {
                       borderRadius: "50%",
                       textAlign: "center",
                     }}
-                    src={user?.data.avatar || footballPlayer}
+                    src={user?.data?.user?.thumbnail || footballPlayer}
                   />
                 </div>
               </label>

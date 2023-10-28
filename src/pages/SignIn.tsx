@@ -33,14 +33,7 @@ function SignIn() {
 
       if (response.status === 200) {
         toast.success("Đăng nhập thành công");
-
-        const { user } = response.data.result;
-        console.log(user);
-        const path = `/${user.id}/avatar`;
-        const { data } = await getImageUrl(path);
-        const avatarUrl = data === null ? null : data.publicUrl;
-
-        dispatch(login({...response.data.result, avatar: avatarUrl}));
+        dispatch(login({...response.data.result}));
         navigate("/");
       } else {
         toast.error("Đăng nhập thất bại");
@@ -225,7 +218,6 @@ function SignIn() {
           </div>
         </div>
       </div>
-      <ToastContainer hideProgressBar={true} autoClose={1500} theme="colored" />
     </div>
   );
 }

@@ -37,6 +37,7 @@ import GameMatch from "../components/GameMatch";
 import CustomGame from "../components/CustomGame";
 import RankingGame from "../components/RankingGame";
 import Comment from "../components/Comment";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 const Wrapper = styled.div`
   background-color: #fff;
@@ -68,7 +69,7 @@ const Container = styled.div`
 const LeftSide = styled.div`
   overflow: auto;
   height: 100%;
-  max-height: 70vh;
+  height: 70vh;
   padding: 0 2rem;
 
   > div {
@@ -79,7 +80,7 @@ const LeftSide = styled.div`
 const RightSide = styled.div`
   overflow: auto;
   height: 100%;
-  max-height: 70vh;
+  height: 70vh;
   position: relative;
 `;
 
@@ -196,16 +197,52 @@ const Tab = styled.div`
 `;
 
 function FindGame() {
+  const axiosPrivate = useAxiosPrivate();
   const [showTeam, setShowTeam] = useState(false);
   const [gameType, setGameType] = useState(0);
   const [showComment, setShowComment] = useState(false);
+  const [gameMatchList, setGameMatchList] = useState([]);
+  const [selectedGameMatch, setSelectedGameMatch] = useState(null);
+  const [content, setContent] = useState(null);
 
-  let content = null;
-  if (gameType === 0) {
-    content = <RankingGame />;
-  } else {
-    content = <CustomGame />;
-  }
+  useEffect(() => {
+    setShowComment(false);
+    try {
+      axiosPrivate
+        .get(`/game/getListGameMatch?gameType=${gameType}`)
+        .then((res) => {
+          if (res.status == 200) {
+            if (res.data.result.length == 0) {
+              setGameMatchList([]);
+              setSelectedGameMatch(null);
+              return;
+            }
+            setGameMatchList(res.data.result);
+            setSelectedGameMatch(res.data.result[0]);
+            const content =
+              gameType == 1 ? (
+                <CustomGame gameMatch={res.data.result[0]} />
+              ) : (
+                <RankingGame gameMatch={res.data.result[0]} />
+              );
+            setContent(content);
+          }
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }, [gameType]);
+
+  useEffect(() => {
+    if(selectedGameMatch == null) return;
+    const content =
+      gameType == 1 ? (
+        <CustomGame gameMatch={selectedGameMatch} />
+      ) : (
+        <RankingGame gameMatch={selectedGameMatch} />
+      );
+    setContent(content);
+  }, [selectedGameMatch]);
 
   let innerContent = null;
   if (showComment) {
@@ -214,12 +251,7 @@ function FindGame() {
     innerContent = content;
   }
 
-  useEffect(() => {
-    setShowComment(false);
-  }, [gameType])
-
-  useEffect(() => {
-  });
+  useEffect(() => {});
 
   const handleTeamClick = () => {
     setShowTeam(!showTeam);
@@ -229,6 +261,10 @@ function FindGame() {
     setGameType(type);
   };
 
+  const handleGamePick = async (gameId, index) => {
+    console.log(gameId, index);
+    setSelectedGameMatch(gameMatchList[index]);
+  };
 
   return (
     <div className="container-fluid px-3 login findteam">
@@ -395,24 +431,31 @@ function FindGame() {
                           </button>
                         </div>
                       </div>
-                      {gameType === 0 ? (
-                        <>
-                          <GameMatch type={gameType}></GameMatch>
-                          <GameMatch type={gameType}></GameMatch>
-                          <GameMatch type={gameType}></GameMatch>
-                        </>
-                      ) : (
-                        <>
-                          <GameMatch type={gameType}></GameMatch>
-                          <GameMatch type={gameType}></GameMatch>
-                          <GameMatch type={gameType}></GameMatch>
-                        </>
-                      )}
+                      {gameMatchList.map((gameMatch, index) => {
+                        return (
+                          <GameMatch
+                            onClick={(e) => handleGamePick(gameMatch.id, index)}
+                            id={index}
+                            type={gameType}
+                            gameMatch={gameMatch}
+                          ></GameMatch>
+                        );
+                      })}
                     </LeftSide>
                     <RightSide>
                       <TabWrapper>
-                        <Tab active={!showComment} onClick={() => setShowComment(false)}>Thông tin</Tab>
-                        <Tab active={showComment} onClick={() => setShowComment(true)}>Bình luận</Tab>
+                        <Tab
+                          active={!showComment}
+                          onClick={() => setShowComment(false)}
+                        >
+                          Thông tin
+                        </Tab>
+                        <Tab
+                          active={showComment}
+                          onClick={() => setShowComment(true)}
+                        >
+                          Bình luận
+                        </Tab>
                       </TabWrapper>
                       <div>
                         {innerContent}

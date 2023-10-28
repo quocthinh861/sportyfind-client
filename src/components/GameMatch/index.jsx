@@ -8,6 +8,7 @@ import flashIcon from "../../assets/images/icons/flash.png";
 import calendar from "../../assets/images/icons/calendar.png";
 import placeHolder from "../../assets/images/icons/placeholder.png";
 import questionMark from "../../assets/images/icons/question-mark.png";
+import { formatDateAndTime } from "../../utils/TimeUtil";
 
 const TeamLogo = styled.div`
   width: 150px;
@@ -34,25 +35,26 @@ const InfoWrapper = styled.p`
   }
 `;
 
-function index({ type }) {
+function index({ type, gameMatch, onClick }) {
+  const { teamA, teamB, booking, description } = gameMatch;
   return (
-    <div className="relative">
+    <div className="relative" onClick={onClick}>
       <div className="flex justify-around items-start">
         <TeamLogo>
           <img src={teamLogo} alt="avatar" />
-          <span className="font-bold my-1">BKClub</span>
+          <span className="font-bold my-1">{teamA.name}</span>
           <div>
             <span>
               <img src={flashIcon} className="w-5 h-5" />
-              369
+              {teamA.skilllevel}
             </span>
             <span className="ml-1">
               <img src={groupIcon} className="w-5 h-5" />
-              10
+              {teamA.size}
             </span>
             <span className="ml-1">
               <img src={starIcon} className="w-5 h-5" />
-              100
+              {teamA.rankingpoint}
             </span>
           </div>
         </TeamLogo>
@@ -65,12 +67,35 @@ function index({ type }) {
               height={30}
               style={{ position: "absolute" }}
             />
-            <TeamLogo>
-              <img src={questionMark} alt="avatar" />
-              <div>
-                <span>Đang tìm đối thủ</span>
-              </div>
-            </TeamLogo>
+            {teamB ? (
+              <>
+                <TeamLogo>
+                  <img src={teamLogo} alt="avatar" />
+                  <span className="font-bold my-1">{teamB.name}</span>
+                  <div>
+                    <span>
+                      <img src={flashIcon} className="w-5 h-5" />
+                      {teamB.skilllevel}
+                    </span>
+                    <span className="ml-1">
+                      <img src={groupIcon} className="w-5 h-5" />
+                      {teamB.size}
+                    </span>
+                    <span className="ml-1">
+                      <img src={starIcon} className="w-5 h-5" />
+                      {teamB.rankingpoint}
+                    </span>
+                  </div>
+                </TeamLogo>
+              </>
+            ) : (
+              <TeamLogo>
+                <img src={questionMark} alt="avatar" />
+                <div>
+                  <span>Đang tìm đối thủ</span>
+                </div>
+              </TeamLogo>
+            )}
           </>
         )}
       </div>
@@ -79,13 +104,18 @@ function index({ type }) {
           <div className="d-inline mr-2">
             <img src={calendar} className="w-5 h-5" />
           </div>
-          <div className="">Chủ nhật, 07/05 18h30</div>
+          <div className="">
+            {formatDateAndTime(booking.bookingDate + " " + booking.startTime)}
+          </div>
         </div>
         <div className="d-flex align-item-center">
           <div className="d-inline mr-2">
             <img src={placeHolder} className="w-5 h-5" />
           </div>
-          <div className="">Sân bóng đá Bình Minh, Quận Bình Thạnh - 8km</div>
+          <div className="">
+            Sân bóng {booking?.field?.fieldName},{" "}
+            {booking?.field?.venue.address}
+          </div>
         </div>
       </InfoWrapper>
     </div>

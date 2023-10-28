@@ -12,10 +12,15 @@ function CreateGameMatch(props) {
   const [teamList, setTeamList] = useState([]);
   const [description, setDescription] = useState("");
   const [selectedTeamId, setSelectedTeamId] = useState(null);
+  const [gameType, setGameType] = useState(0);
 
   const handleTeamChange = (e) => {
     const selectedValue = e.target.value;
     setSelectedTeamId(selectedValue);
+  };
+
+  const handleGameTypeChange = (event) => {
+    setGameType(parseInt(event.target.value, 10));
   };
 
   const handleSubmit = (e) => {
@@ -23,6 +28,7 @@ function CreateGameMatch(props) {
     const data = {
       teamAId: selectedTeamId,
       description: description,
+      gameType: gameType,
       bookingId: props.bookingInfo?.id,
     };
 
@@ -106,9 +112,9 @@ function CreateGameMatch(props) {
                     Loại
                   </label>
                   <div className="col-sm-10">
-                    <Form.Select>
-                      <option>Đá nội bộ</option>
-                      <option>Đá kèo</option>
+                    <Form.Select value={gameType} onChange={handleGameTypeChange}>
+                      <option value={1}>Đá nội bộ</option>
+                      <option value={0}>Đá kèo</option>
                     </Form.Select>
                   </div>
                 </div>

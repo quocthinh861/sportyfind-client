@@ -70,7 +70,6 @@ function Detail() {
     var data = {
       startTime: selectedStartTime.format("HH:mm"),
       endTime: selectedEndTime.format("HH:mm"),
-      bookingStatus: "pending",
       fieldId: fieldType,
       customerId: "1",
       bookingDate: formattedDate,

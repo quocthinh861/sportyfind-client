@@ -9,7 +9,8 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     updateAvatar: (state, action) => {
-      state.data.avatar = action.payload
+      if(!state.data.user) state.data.user = {};
+      state.data.user.thumbnail = action.payload
     },
     login: (state, action) => {
       state.data = action.payload

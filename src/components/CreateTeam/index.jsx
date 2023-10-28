@@ -3,11 +3,14 @@ import "./style.css";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
 
 function Account() {
   const [clubName, setClubName] = useState("");
   const [description, setDescription] = useState("");
   const [averageScore, setAverageScore] = useState(50);
+  const user = useSelector((state) => state.user);
+  const userId = user.data?.user?.id;
 
   const axiosPrivate = useAxiosPrivate();
 
@@ -18,10 +21,8 @@ function Account() {
       name: clubName,
       description: description,
       skilllevel: averageScore,
-      captainid: 1,
+      captainid: userId,
     };
-
-    console.log(query);
 
     try {
       axiosPrivate.post("/team/create", query).then((res) => {

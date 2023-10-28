@@ -80,14 +80,14 @@ const Container = styled.div`
 const LeftSide = styled.div`
   overflow: auto;
   height: 100%;
-  max-height: 70vh;
+  height: 70vh;
   padding: 0 4rem;
 `;
 
 const RightSide = styled.div`
   overflow: auto;
   height: 100%;
-  max-height: 70vh;
+  height: 70vh;
 `;
 
 const TeamItem = styled.div`
@@ -203,10 +203,7 @@ function FindTeam() {
           // Fetch team information
           const teamInfoResponse = await axiosPrivate.get(`/team/getTeamInformatioById?teamId=${teamId}`);
           if (teamInfoResponse.status === 200 && teamInfoResponse.data.result !== null) {
-            const path = `/team/${teamId}/avatar`;
-            const avatarUrlResponse = await getImageUrl(path);
-            const avatarUrl = avatarUrlResponse?.data?.publicUrl || null;
-            setTeamInfo({ ...teamInfoResponse.data.result, avatarUrl });
+            setTeamInfo({ ...teamInfoResponse.data.result });
           }
   
           // Fetch team images
@@ -264,13 +261,24 @@ function FindTeam() {
     try {
       const thumbnailImageKey = await uploadImage(file, path);
       if (thumbnailImageKey == null) {
-        alert("Lỗi upload ảnh, vui lòng thử lại!");
+        toast.error("Lỗi upload ảnh, vui lòng thử lại!");
         return;
       } else {
-        alert("Cập nhật ảnh đại diện thành công!");
+        const { data } = await getImageUrl(path);
+        const avatarUrl = data === null ? null : data.publicUrl;
+        axiosPrivate.post("/team/updateTeamThumbnail", {
+          id: teamInfo.id,
+          thumbnail: avatarUrl,
+        }).then((res) => {
+          if(res.status == 200) {
+            toast.success("Cập nhật ảnh đại diện thành công!");
+          } else {
+            toast.error("Lỗi cập nhật ảnh đại diện!");
+          }
+        });
       }
     } catch (error) {
-      alert("Lỗi upload ảnh đại diện");
+      toast.error("Lỗi cập nhật ảnh đại diện!");
     }
   };
 
@@ -291,10 +299,10 @@ function FindTeam() {
 
       const imagePaths = await uploadImages(fileArray, basePath);
       if (imagePaths == null) {
-        alert("Lỗi upload ảnh, vui lòng thử lại!");
+        toast.error("Lỗi upload ảnh, vui lòng thử lại!");
         return;
       } else {
-        alert("Upload ảnh thành công!");
+        toast.success("Upload ảnh thành công!");
       }
     } catch (error) {
       alert("Lỗi upload ảnh");
@@ -316,17 +324,8 @@ function FindTeam() {
         .then(async (res) => {
           if (res.status == 200 && res.data.result != null) {
             const team = res.data.result;
-            const path = `/team/${teamId}/avatar`;
-            const imgRes = await getImageUrl(path);
-            let url;
-            if(imgRes == null) {
-              url = null;
-            } else{
-              url = imgRes.data.publicUrl;
-            }
-            const avatarUrl = url;
-            console.log("avatarUrl", avatarUrl);
-            setTeamInfo({ ...team, avatarUrl });
+            setTeamInfo(team);
+            console.log("team", team);
             // Lấy ảnh đội
             const imagesData = await listImages(`team/${teamId}/images`);
             console.log("imagesData", imagesData);
@@ -579,6 +578,7 @@ function FindTeam() {
                     <LeftSide>
                       {teamList.map((team, index) => (
                         <TeamItem
+                          id={team.id}
                           onClick={(e) => handleTeamPick(team.id, index)}
                           key={index}
                         >
@@ -607,7 +607,7 @@ function FindTeam() {
                     </LeftSide>
                     <RightSide className="right-side">
                       <TeamDetail htmlFor="team-image">
-                      <TeamImage src={(teamInfo && teamInfo.avatarUrl) || teamAvatar} />
+                      <TeamImage src={(teamInfo && teamInfo.thumbnail) || teamAvatar} />
                         <input
                           type="file"
                           id="team-image"

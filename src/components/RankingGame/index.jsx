@@ -13,6 +13,10 @@ import placeHolder from "../../assets/images/icons/placeholder.png";
 import questionMark from "../../assets/images/icons/question-mark.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faX } from "@fortawesome/free-solid-svg-icons";
+import { useEffect } from "react";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { formatDateAndTime } from "../../utils/TimeUtil";
+import { useSelector } from "react-redux";
 
 const TeamLogo = styled.div`
   display: inline-flex;
@@ -66,7 +70,124 @@ const TeamWrapper = styled.div`
   }
 `;
 
-function RankingGame() {
+function RankingGame({ gameMatch }) {
+  const axiosPrivate = useAxiosPrivate();
+  const { teamA, booking, description, host, id, teamB, status } = gameMatch;
+  const user = useSelector((state) => state.user);
+  const userId = user.data?.user?.id;
+  const [teamHost, setteamHost] = useState(null);
+  const [gameRequest, setGameRequest] = useState(null);
+  const [gameRequestList, setGameRequestList] = useState([]);
+  const checkIsHost = host.id === userId;
+  const [isAnimating, setIsAnimating] = useState(false);
+  const handleAnimate = (action, teamId) => {
+    setIsAnimating(true);
+    handleGameRequest(action, teamId);
+  };
+
+  useEffect(() => {
+    // Function to fetch teamHost
+    const getteamHost = async () => {
+      if (checkIsHost) return null;
+
+      try {
+        const res = await axiosPrivate.get(
+          `/team/getTeamListByUserId?userId=${userId}`
+        );
+        return res?.data?.result;
+      } catch (error) {
+        console.error("Error while getting team B:", error);
+        return null;
+      }
+    };
+
+    // Function to check game request status
+    const checkGameRequestStatus = async (teamHostId) => {
+      try {
+        const res = await axiosPrivate.get(
+          `/game/getGameRequestInfo?gameId=${id}&teamId=${teamHostId}`
+        );
+        setGameRequest(res?.data?.result);
+        console.log("game request: ", res?.data?.result);
+      } catch (error) {
+        console.error("Error while checking game request status:", error);
+      }
+    };
+
+    // Use a Promise to ensure that getteamHost is completed before calling checkGameRequestStatus
+    getteamHost().then((teamList) => {
+      if(teamList == null || teamList.length === 0) return;
+      setteamHost(teamList[0]);
+      checkGameRequestStatus(teamList[0].id);
+    });
+  }, [userId, id]);
+
+  useEffect(() => {
+    // Get game request list
+    const getGameRequestList = async () => {
+      try {
+        const res = await axiosPrivate.get(
+          `/game/getGameRequestList?gameId=${id}`
+        );
+        setGameRequestList(res?.data?.result);
+        console.log("game request list: ", res?.data?.result);
+      } catch (error) {
+        console.error("Error while getting game request list:", error);
+      }
+    };
+
+    getGameRequestList();
+  }, [id]);
+
+  const handleGameRequest = async (action, teamId) => {
+    const query = {
+      teamId: teamId,
+      gameId: id,
+      action: action,
+    };
+
+    try {
+      const res = await axiosPrivate.post("/game/updateGameRequest", query);
+      if (res.status !== 200) {
+        alert("Cập nhật thất bại");
+        return;
+      }
+      alert("Cập nhật thành công");
+      // refresh page
+      window.location.reload();
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
+
+  const handleSubmit = async (action) => {
+    // validate only other team captain can submit
+
+    if (teamHost === null || teamHost === undefined || teamHost == "") {
+      alert("Bạn chưa có đội bóng");
+      return;
+    }
+
+    const query = {
+      teamId: teamHost.id,
+      gameId: id,
+      action: action,
+    };
+
+    try {
+      const res = await axiosPrivate.post("/game/updateGameRequest", query);
+      if (res.status !== 200) {
+        alert("Cập nhật thất bại");
+        return;
+      }
+      alert("Cập nhật thành công");
+      // refresh page
+      window.location.reload();
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
+
   return (
     <div className="px-4">
       <div>
@@ -74,19 +195,19 @@ function RankingGame() {
           <div className="flex justify-around items-start">
             <TeamLogo>
               <img src={teamLogo} alt="avatar" />
-              <span className="font-bold my-1">BKClub</span>
+              <span className="font-bold my-1">{teamA.name}</span>
               <div>
                 <span>
                   <img src={flashIcon} className="w-5 h-5" />
-                  369
+                  {teamA.skilllevel}
                 </span>
                 <span className="ml-1">
                   <img src={groupIcon} className="w-5 h-5" />
-                  10
+                  {teamA.size}
                 </span>
                 <span className="ml-1">
                   <img src={starIcon} className="w-5 h-5" />
-                  100
+                  {teamA.rankingpoint}
                 </span>
               </div>
             </TeamLogo>
@@ -97,12 +218,37 @@ function RankingGame() {
               height={50}
               style={{ position: "absolute" }}
             />
-            <TeamLogo>
-              <img src={questionMark} alt="avatar" />
-              <div>
-                <span>Đang tìm đối thủ</span>
-              </div>
-            </TeamLogo>
+            {teamB != null ? (
+              <>
+                <TeamLogo>
+                  <img src={teamLogo} alt="avatar" />
+                  <span className="font-bold my-1">{teamB.name}</span>
+                  <div>
+                    <span>
+                      <img src={flashIcon} className="w-5 h-5" />
+                      {teamB.skilllevel}
+                    </span>
+                    <span className="ml-1">
+                      <img src={groupIcon} className="w-5 h-5" />
+                      {teamB.size}
+                    </span>
+                    <span className="ml-1">
+                      <img src={starIcon} className="w-5 h-5" />
+                      {teamB.rankingpoint}
+                    </span>
+                  </div>
+                </TeamLogo>
+              </>
+            ) : (
+              <>
+                <TeamLogo>
+                  <img src={questionMark} alt="avatar" />
+                  <div>
+                    <span>Đang tìm đối thủ</span>
+                  </div>
+                </TeamLogo>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -111,88 +257,143 @@ function RankingGame() {
           <div className="d-inline mr-2">
             <img src={calendar} className="w-5 h-5" />
           </div>
-          <div className="">Chủ nhật, 07/05 18h30</div>
+          <div className="">
+            {formatDateAndTime(booking.bookingDate + " " + booking.startTime)}
+          </div>
         </div>
         <div className="d-flex align-item-center">
           <div className="d-inline mr-2">
             <img src={placeHolder} className="w-5 h-5" />
           </div>
-          <div className="">Sân bóng đá Bình Minh, Quận Bình Thạnh - 8km</div>
+          <div className="">{booking.fieldName}</div>
         </div>
         <div className="d-flex align-item-center">
           <div className="d-inline mr-2">
             <img src={speaker} className="w-5 h-5" />
           </div>
-          <div className="">Giao lưu vui vẻ with love !!!</div>
+          <div className="">{description}</div>
         </div>
       </InfoWrapper>
-      <TeamWrapper>
-        <b className="font-xl">Cáp đối</b>
-        <div className="mb-3">
-          <div className="flex justify-between items-center">
-            <div className="mt-1 flex items-center">
-              <div>
-                <img
-                  id="avatar"
-                  style={{
-                    width: "35px",
-                    objectFit: "cover",
-                    borderRadius: "50%",
-                    textAlign: "center",
-                  }}
-                  src={team2}
-                />
-              </div>
-              <div>
-                <b className="ml-2 team-name">Hà Nội FC</b>
-                <div style={{ marginTop: "-5px" }}>
-                  {" "}
-                  <span>
-                    <img src={flashIcon} className="w-3 h-3" />
-                    369
-                  </span>
-                  <span className="ml-1">
-                    <img src={groupIcon} className="w-3 h-3" />
-                    10
-                  </span>
-                  <span className="ml-1">
-                    <img src={starIcon} className="w-3 h-3" />
-                    100
-                  </span>
+      {checkIsHost && status == 0 && (
+        <TeamWrapper>
+          <b className="font-xl">Cáp đối</b>
+          <div className="mb-3">
+            {gameRequestList.map((item, index) => {
+              return (
+                <div
+                  className={`${
+                    isAnimating ? "slide-right" : ""
+                  } flex justify-between items-center`}
+                  id={index}
+                >
+                  <div className="mt-1 flex items-center">
+                    <div>
+                      <img
+                        id="avatar"
+                        style={{
+                          width: "35px",
+                          objectFit: "cover",
+                          borderRadius: "50%",
+                          textAlign: "center",
+                        }}
+                        src={team2}
+                      />
+                    </div>
+                    <div>
+                      <b className="ml-2 team-name">{item.name}</b>
+                      <div style={{ marginTop: "-5px" }}>
+                        {" "}
+                        <span>
+                          <img src={flashIcon} className="w-3 h-3" />
+                          {item.skilllevel}
+                        </span>
+                        <span className="ml-1">
+                          <img src={groupIcon} className="w-3 h-3" />
+                          {item.size}
+                        </span>
+                        <span className="ml-1">
+                          <img src={starIcon} className="w-3 h-3" />
+                          {item.rankingpoint}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <AcceptButton
+                      onClick={() => handleAnimate("ACCEPT", item.id)}
+                    >
+                      <FontAwesomeIcon icon={faCheck} />
+                    </AcceptButton>
+                    <DenyButton
+                      onClick={() => handleAnimate("REMOVE", item.id)}
+                    >
+                      <FontAwesomeIcon icon={faX} />
+                    </DenyButton>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div>
-              <AcceptButton>
-                <FontAwesomeIcon icon={faCheck} />
-              </AcceptButton>
-              <DenyButton>
-                <FontAwesomeIcon icon={faX} />
-              </DenyButton>
-            </div>
+              );
+            })}
           </div>
-        </div>
-      </TeamWrapper>
+        </TeamWrapper>
+      )}
       <div>
-        <b className="font-xl">Liên hệ</b>
-        <div className="flex items-center">
-          <img
-            id="avatar"
-            style={{
-              width: "35px",
-              borderRadius: "50%",
-              textAlign: "center",
-            }}
-            src={footballPlayer}
-          />
-          <span className="ml-2">
-            Thịnh Lang
-            <p>0909483537</p>
-          </span>
-        </div>
-        <button name="button" className="btn btn-orange d-block ml-auto mr-4">
-          Cáp kèo
-        </button>
+        {checkIsHost ?? (
+          <>
+            <b className="font-xl">Liên hệ</b>
+            <div className="flex items-center">
+              <img
+                id="avatar"
+                style={{
+                  width: "35px",
+                  borderRadius: "50%",
+                  textAlign: "center",
+                }}
+                src={footballPlayer}
+              />
+              <span className="ml-2">
+                {host.fullName}
+                <p>{host.phoneNumber}</p>
+              </span>
+            </div>
+          </>
+        )}
+        {checkIsHost ? (
+          <div className="mt-3">
+            <button
+              name="button"
+              className="btn btn-danger d-block ml-auto mr-4"
+            >
+              Hủy trận
+            </button>
+          </div>
+        ) : status != 0 ? (
+          <>
+            <button
+              name="button"
+              className="btn btn-secondary disabled d-block ml-auto mr-4"
+            >
+              Đã cáp
+            </button>
+          </>
+        ) : gameRequest?.status !== 1 ? (
+          <button
+            name="button"
+            className="btn btn-orange d-block ml-auto mr-4"
+            onClick={() => handleSubmit("CREATE")}
+          >
+            Cáp kèo
+          </button>
+        ) : (
+          <div className="mt-3">
+            <button
+              name="button"
+              className="btn btn-danger d-block ml-auto mr-4"
+              onClick={() => handleSubmit("REMOVE")}
+            >
+              Hủy cáp
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

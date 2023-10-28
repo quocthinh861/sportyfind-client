@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import dayjs from "dayjs";
 
+export function formatDateAndTime(dateTime) {
+  const options = {
+    weekday: 'long', // Display the full day name
+    day: '2-digit',  // Display the day as two digits
+    month: '2-digit', // Display the month as two digits
+    hour: '2-digit',  // Display the hour as two digits
+    minute: '2-digit', // Display the minute as two digits
+  };
+
+  const date = new Date(dateTime);
+  const formattedDateAndTime = date.toLocaleString('vi-VN', options);
+  return `${formattedDateAndTime}`;
+}
+
 export function getMonth(month = dayjs().month()) {
   month = Math.floor(month);
   const year = dayjs().year();
