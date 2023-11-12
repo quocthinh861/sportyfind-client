@@ -15,6 +15,7 @@ import PaymentBookingPage from "./pages/Payment";
 import SignUp from "./pages/SignUp";
 import SignOut from "./pages/SignOut";
 import { ToastContainer } from "react-toastify";
+import Board from "./pages/Board";
 
 function App() {
   const [startDate, setStartDate] = useState(new Date());
@@ -42,6 +43,7 @@ function App() {
             <Route path="/tai-khoan/dang-ky" element={<SignUp />}></Route>
             <Route path="/tai-khoan/dang-xuat" element={<SignOut />}></Route>
             <Route path="/tai-khoan/:slug" element={<Profile />} />
+            <Route path="/bang-xep-hang" element={<Board />} />
           </Routes>
         </Layout>
       </BrowserRouter>

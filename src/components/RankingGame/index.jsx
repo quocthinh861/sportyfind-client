@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { formatDateAndTime } from "../../utils/TimeUtil";
 import { useSelector } from "react-redux";
+import Popup from "../Popup";
 
 const TeamLogo = styled.div`
   display: inline-flex;
@@ -25,7 +26,7 @@ const TeamLogo = styled.div`
   justify-content: center;
 
   > img {
-    width: 30%;
+    width: 40%;
   }
 
   span {
@@ -69,6 +70,37 @@ const TeamWrapper = styled.div`
     margin-bottom: -10px;
   }
 `;
+
+function GameResult({ gameMatch }) {
+  return (
+    <>
+      <div className="form-group mb-4">
+        <label htmlFor="product-description" className="form-label">
+          Kết quả đội 1 ({gameMatch.teamA.name})
+        </label>
+        <input
+          type="number"
+          className="form-control"
+          id="numberInput"
+          name="numberInput"
+          placeholder="Nhập số điểm"
+        />
+      </div>
+      <div className="form-group mb-4">
+        <label htmlFor="product-description" className="form-label">
+          Kết quả đội 2 ({gameMatch.teamB.name})
+        </label>
+        <input
+          type="number"
+          className="form-control"
+          id="numberInput"
+          name="numberInput"
+          placeholder="Nhập số điểm"
+        />
+      </div>
+    </>
+  );
+}
 
 function RankingGame({ gameMatch }) {
   const axiosPrivate = useAxiosPrivate();
@@ -116,7 +148,7 @@ function RankingGame({ gameMatch }) {
 
     // Use a Promise to ensure that getteamHost is completed before calling checkGameRequestStatus
     getteamHost().then((teamList) => {
-      if(teamList == null || teamList.length === 0) return;
+      if (teamList == null || teamList.length === 0) return;
       setteamHost(teamList[0]);
       checkGameRequestStatus(teamList[0].id);
     });
@@ -211,13 +243,18 @@ function RankingGame({ gameMatch }) {
                 </span>
               </div>
             </TeamLogo>
-            <img
-              src={vsicon}
-              alt="avatar"
-              width={50}
-              height={50}
-              style={{ position: "absolute" }}
-            />
+            <div style={{ minWidth: "200px" }} className="text-center">
+              <img
+                src={vsicon}
+                alt="avatar"
+                width={50}
+                height={50}
+
+                // style={{ position: "absolute" }}
+              />
+              <div className="mt-2">Đang cập nhật</div>
+              {/* <div className="mt-2">Tỉ số 3-1</div> */}
+            </div>
             {teamB != null ? (
               <>
                 <TeamLogo>
@@ -358,14 +395,13 @@ function RankingGame({ gameMatch }) {
           </>
         )}
         {checkIsHost ? (
-          <div className="mt-3">
-            <button
-              name="button"
-              className="btn btn-danger d-block ml-auto mr-4"
-            >
-              Hủy trận
-            </button>
-          </div>
+          <Popup
+            buttonText="Cập nhật kết quả"
+            title="Cập nhật kết quả"
+            disabled={false}
+            className="btn btn-orange d-block ml-auto mr-4"
+            content={<GameResult gameMatch={gameMatch} />}
+          />
         ) : status != 0 ? (
           <>
             <button

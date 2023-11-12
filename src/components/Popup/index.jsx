@@ -20,7 +20,7 @@ function Popup(props) {
   return (
     <div>
       <Button variant="primary" onClick={() => setShowModal(true)}
-      disabled={props.disabled}>
+      disabled={props.disabled} className={props.className}>
         {props.buttonText}
       </Button>
 
