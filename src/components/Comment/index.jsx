@@ -6,6 +6,7 @@ import supabase from "../../client/Supabase";
 import { add } from "date-fns";
 import { useSelector } from "react-redux";
 import { formatTimeDifference } from "../../utils/TimeUtil";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate.jsx";
 
 const CommentContent = styled.div`
   overflow-y: auto;
@@ -22,13 +23,15 @@ const Time = styled.span`
 `;
 
 function Comment({ roomId = 1 }) {
+  const axiosPrivate = useAxiosPrivate();
   const channels = supabase.getChannels();
   const currentChannel = channels.find(
-    (channel) => channel.name === `room:${roomId}`
+    (channel) => channel.topic === `realtime:room:${roomId}`
   );
   const [message, setMessage] = React.useState("");
   const [messages, setMessages] = React.useState([]);
   const user = useSelector((state) => state.user);
+  const userId = user.data?.user?.id;
 
   const submitMessage = async () => {
     if (!message) return;
@@ -36,7 +39,7 @@ function Comment({ roomId = 1 }) {
     const newMessage = {
       content: message,
       roomid: roomId,
-      userid: 1,
+      userid: userId,
     };
 
     const response = await createMessage(newMessage);
@@ -67,14 +70,19 @@ function Comment({ roomId = 1 }) {
     const response = await supabase
     .from("message")
     .select("*")
-    .eq("userid", 1)
     .eq("roomid", roomId);
     var messages = response.data;
     if(messages == null || messages == undefined) return;
+    // get user info bulk
+    const userIds = messages.map((message) => message.userid);
+    const res = await axiosPrivate.post('/account/getUserInfoByUserIds', userIds);
+    const users = res?.data?.result;
+    console.log(users);
+
     setMessages(messages.map((message) => {
       return {
         ...message,
-        userName: "Thịnh Lang",
+        userName: users.find(user => user.id == message.userid)?.username
       };
     }));
   
@@ -82,12 +90,12 @@ function Comment({ roomId = 1 }) {
 
   const subscribeToRoom = () => {
     const isAlreadyInRealtime = channels.find(
-      (channel) => channel.name === `room:${roomId}`
+      (channel) => channel.topic === `realtime:room:${roomId}`
     );
     if (isAlreadyInRealtime) return;
     const channel = supabase.channel(`room:${roomId}`);
     channel
-      .on("broadcast", "new_message", (message) => {
+      .on("broadcast", { event: 'new_message' }, (message) => {
         console.log(message);
       })
       .subscribe();
@@ -95,7 +103,7 @@ function Comment({ roomId = 1 }) {
 
   useEffect(() => {
     subscribeToRoom();
-  }, []);
+  }, [roomId]);
 
   useEffect(() => {
     getMessages();
