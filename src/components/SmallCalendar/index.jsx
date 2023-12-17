@@ -1,11 +1,9 @@
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { getMonth } from "../../utils/TimeUtil";
+import GlobalContext from "../../context/GlobalContext";
 
 export default function SmallCalendar() {
-const [monthIndex, setMonthIndex] = useState(dayjs().month());
-const [daySelected, setDaySelected] = useState(dayjs());
-
   const [currentMonthIdx, setCurrentMonthIdx] = useState(
     dayjs().month()
   );
@@ -13,6 +11,13 @@ const [daySelected, setDaySelected] = useState(dayjs());
   useEffect(() => {
     setCurrentMonth(getMonth(currentMonthIdx));
   }, [currentMonthIdx]);
+
+  const {
+    monthIndex,
+    setSmallCalendarMonth,
+    setDaySelected,
+    daySelected,
+  } = useContext(GlobalContext);
 
   useEffect(() => {
     setCurrentMonthIdx(monthIndex);
@@ -70,8 +75,8 @@ const [daySelected, setDaySelected] = useState(dayjs());
               <button
                 key={idx}
                 onClick={() => {
-                //   setSmallCalendarMonth(currentMonthIdx);
-                //   setDaySelected(day);
+                  setSmallCalendarMonth(currentMonthIdx);
+                  setDaySelected(day);
                 }}
                 className={`py-1 w-full ${getDayClass(day)}`}
               >

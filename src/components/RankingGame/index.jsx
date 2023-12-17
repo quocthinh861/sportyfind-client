@@ -18,6 +18,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { formatDateAndTime } from "../../utils/TimeUtil";
 import { useSelector } from "react-redux";
 import Popup from "../Popup";
+import { toast } from "react-toastify";
 
 const TeamLogo = styled.div`
   display: inline-flex;
@@ -239,7 +240,7 @@ function RankingGame({ gameMatch }) {
                 </span>
                 <span className="ml-1">
                   <img src={starIcon} className="w-5 h-5" />
-                  {teamA.rankingpoint}
+                  {teamA.legitpoint}
                 </span>
               </div>
             </TeamLogo>
@@ -271,7 +272,7 @@ function RankingGame({ gameMatch }) {
                     </span>
                     <span className="ml-1">
                       <img src={starIcon} className="w-5 h-5" />
-                      {teamB.rankingpoint}
+                      {teamB.legitpoint}
                     </span>
                   </div>
                 </TeamLogo>
@@ -350,7 +351,7 @@ function RankingGame({ gameMatch }) {
                         </span>
                         <span className="ml-1">
                           <img src={starIcon} className="w-3 h-3" />
-                          {item.rankingpoint}
+                          {item.legitpoint}
                         </span>
                       </div>
                     </div>
@@ -399,6 +400,9 @@ function RankingGame({ gameMatch }) {
             buttonText="Cập nhật kết quả"
             title="Cập nhật kết quả"
             disabled={false}
+            onConfirm={() => {
+              toast.success("Cập nhật kết quả thành công");
+            }}
             className="btn btn-orange d-block ml-auto mr-4"
             content={<GameResult gameMatch={gameMatch} />}
           />

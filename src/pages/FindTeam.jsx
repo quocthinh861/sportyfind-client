@@ -185,13 +185,15 @@ function FindTeam() {
   const [teamRequestList, setTeamRequestList] = useState([]);
   const [teamRequestSize, setTeamRequestSize] = useState(0);
   const [isOpenImageBox, setIsOpenImageBox] = useState(false);
+  const [isCaptain, setIsCaptain] = useState(false);
   const [teamImages, setTeamImages] = useState([]);
   const [currentImageIndex, setCurrentIndex] = useState(0);
   const user = useSelector((state) => state.user);
   const userId = user.data.user.id;
-  
+  const [searchKey, setSearchKey] = useState("");
+
   // random field name
-  const fieldNames = ["Hùng Vương", "Thiện Nhân", "Bình Minh"]
+  const fieldNames = ["Hùng Vương", "Thiện Nhân", "Bình Minh"];
   const [fieldName, setFieldName] = useState(fieldNames[0]);
 
   useEffect(() => {
@@ -199,17 +201,24 @@ function FindTeam() {
       if (teamList.length > 0) {
         try {
           const teamId = id ? id : teamList[0].id;
-  
+
           // Fetch team information
-          const teamInfoResponse = await axiosPrivate.get(`/team/getTeamInformatioById?teamId=${teamId}`);
-          if (teamInfoResponse.status === 200 && teamInfoResponse.data.result !== null) {
+          const teamInfoResponse = await axiosPrivate.get(
+            `/team/getTeamInformatioById?teamId=${teamId}`
+          );
+          if (
+            teamInfoResponse.status === 200 &&
+            teamInfoResponse.data.result !== null
+          ) {
             setTeamInfo({ ...teamInfoResponse.data.result });
           }
-  
+
           // Fetch team images
           const imagesData = await listImages(`team/${teamId}/images`);
           if (imagesData !== null) {
-            const images = imagesData.map((image) => ({ src: image.data.publicUrl }));
+            const images = imagesData.map((image) => ({
+              src: image.data.publicUrl,
+            }));
             setTeamImages(images);
           }
         } catch (error) {
@@ -217,12 +226,14 @@ function FindTeam() {
         }
       }
     };
-  
+
     fetchData(); // Call the fetchData function
   }, [teamList, id]);
 
   useEffect(() => {
     if (teamInfo) {
+      setIsCaptain(teamInfo.captainId == userId);
+
       //Check trạng thái duyệt tham gia
       axiosPrivate
         .get(`/team/getTeamRequestInfo?userId=${userId}&teamId=${teamInfo.id}`)
@@ -233,6 +244,9 @@ function FindTeam() {
             } else if (res.data.result.status == 2) {
               setHasJoined(true);
             }
+          } else {
+            setIsSubmit(false);
+            setHasJoined(false);
           }
         });
 
@@ -252,10 +266,17 @@ function FindTeam() {
   useEffect(() => {
     axiosPrivate.get("/team/getTeamList").then((res) => {
       if (res.status == 200 && res.data.result != null) {
-        setTeamList(res.data.result);
+        if (searchKey != "") {
+          const teamList = res.data.result.filter((team) =>
+            team.name.toLowerCase().includes(searchKey.toLowerCase())
+          );
+          setTeamList(teamList);
+        } else {
+          setTeamList(res.data.result);
+        }
       }
     });
-  }, []);
+  }, [searchKey]);
 
   const handleUpdateAvatar = async (file, path = "") => {
     try {
@@ -266,16 +287,18 @@ function FindTeam() {
       } else {
         const { data } = await getImageUrl(path);
         const avatarUrl = data === null ? null : data.publicUrl;
-        axiosPrivate.post("/team/updateTeamThumbnail", {
-          id: teamInfo.id,
-          thumbnail: avatarUrl,
-        }).then((res) => {
-          if(res.status == 200) {
-            toast.success("Cập nhật ảnh đại diện thành công!");
-          } else {
-            toast.error("Lỗi cập nhật ảnh đại diện!");
-          }
-        });
+        axiosPrivate
+          .post("/team/updateTeamThumbnail", {
+            id: teamInfo.id,
+            thumbnail: avatarUrl,
+          })
+          .then((res) => {
+            if (res.status == 200) {
+              toast.success("Cập nhật ảnh đại diện thành công!");
+            } else {
+              toast.error("Lỗi cập nhật ảnh đại diện!");
+            }
+          });
       }
     } catch (error) {
       toast.error("Lỗi cập nhật ảnh đại diện!");
@@ -303,6 +326,8 @@ function FindTeam() {
         return;
       } else {
         toast.success("Upload ảnh thành công!");
+        // reload page
+        window.location.reload();
       }
     } catch (error) {
       alert("Lỗi upload ảnh");
@@ -312,11 +337,10 @@ function FindTeam() {
   const handleTeamPick = async (teamId, index) => {
     try {
       // Scroll to top
-      window.scrollTo(0, 0);
+      window.scrollTo(0, 50);
       // Right side scroll to top
       document.querySelector(".right-side").scrollTop = 0;
 
-      
       setFieldName(fieldNames[index % fieldNames.length]);
 
       axiosPrivate
@@ -568,7 +592,12 @@ function FindTeam() {
                   <div>
                     <span className="relative">
                       <SeachIcon icon={faMagnifyingGlass} />
-                      <SearchBar placeholder="Tìm kiếm câu lạc bộ"></SearchBar>
+                      <SearchBar
+                        placeholder="Tìm kiếm câu lạc bộ"
+                        type="text"
+                        value={searchKey}
+                        onChange={(e) => setSearchKey(e.target.value)}
+                      ></SearchBar>
                     </span>
                     <span>Hủy</span>
                   </div>
@@ -598,7 +627,7 @@ function FindTeam() {
                               </span>
                               <span>
                                 <img src={starIcon} className="w-5 h-5" />
-                                {team.rankingpoint}
+                                {team.legitpoint}
                               </span>
                             </TeamDescription>
                           </TeamInfo>
@@ -607,7 +636,9 @@ function FindTeam() {
                     </LeftSide>
                     <RightSide className="right-side">
                       <TeamDetail htmlFor="team-image">
-                      <TeamImage src={(teamInfo && teamInfo.thumbnail) || teamAvatar} />
+                        <TeamImage
+                          src={(teamInfo && teamInfo.thumbnail) || teamAvatar}
+                        />
                         <input
                           type="file"
                           id="team-image"
@@ -665,7 +696,12 @@ function FindTeam() {
                               <div className="d-inline mr-2">
                                 <img src={pitchIcon} className="w-5 h-5" />
                               </div>
-                              <a className="cursor-pointer" href="/san-bong-thien-nhan">Sân bóng đá {fieldName}</a>
+                              <a
+                                className="cursor-pointer"
+                                href="/san-bong-thien-nhan"
+                              >
+                                Sân bóng đá {fieldName}
+                              </a>
                             </div>
                             <div className="d-flex align-item-center">
                               <div className="d-inline mr-2">
@@ -713,6 +749,11 @@ function FindTeam() {
                               className="visually-hidden"
                               multiple
                               onChange={(event) => {
+                                window.scrollTo(0, 50);
+                                // Right side scroll to top
+                                document.querySelector(
+                                  ".right-side"
+                                ).scrollTop = 0;
                                 const files = event.target.files;
                                 const basePath = `/team/${teamInfo.id}/images`;
                                 handleUploadTeamImages(files, basePath);
@@ -725,7 +766,7 @@ function FindTeam() {
                               images={teamImages}
                               onShow={() => {
                                 setCurrentIndex(0);
-                                setIsOpenImageBox(true)
+                                setIsOpenImageBox(true);
                               }}
                               currentImageIndex={currentImageIndex}
                               setCurrentIndex={setCurrentIndex}
@@ -743,52 +784,54 @@ function FindTeam() {
                           )}
                         </div>
                       </div>
-                      <div className="px-5">
-                        <div className="mb-3">
-                          <div className="mb-1 font-bold">
-                            Yêu cầu tham gia ({teamRequestSize})
+                      {isCaptain && (
+                        <div className="px-5">
+                          <div className="mb-3">
+                            <div className="mb-1 font-bold">
+                              Yêu cầu tham gia ({teamRequestSize})
+                            </div>
+                            {teamRequestList.map((teamRequest, index) => (
+                              <TeamRequest
+                                key={index}
+                                teamRequest={teamRequest}
+                                handleTeamRequest={handleTeamRequest}
+                              />
+                            ))}
                           </div>
-                          {teamRequestList.map((teamRequest, index) => (
-                            <TeamRequest
-                              key={index}
-                              teamRequest={teamRequest}
-                              handleTeamRequest={handleTeamRequest}
-                            />
-                          ))}
-                        </div>
-                        <div>
-                          <div className="mb-1 font-bold">
-                            Thành viên (
+                          <div>
+                            <div className="mb-1 font-bold">
+                              Thành viên (
+                              {teamInfo &&
+                                teamInfo.users &&
+                                teamInfo.users.length}
+                              )
+                            </div>
                             {teamInfo &&
                               teamInfo.users &&
-                              teamInfo.users.length}
-                            )
+                              teamInfo.users.map((user, index) => (
+                                <div className="flex items-center">
+                                  <img
+                                    id="avatar"
+                                    style={{
+                                      width: "35px",
+                                      borderRadius: "50%",
+                                      textAlign: "center",
+                                    }}
+                                    src={footballPlayer}
+                                  />
+                                  <span
+                                    key={index}
+                                    className="ml-2"
+                                    style={{ color: "#000" }}
+                                  >
+                                    {user.fullName}
+                                    <p>{user.phoneNumber}</p>
+                                  </span>
+                                </div>
+                              ))}
                           </div>
-                          {teamInfo &&
-                            teamInfo.users &&
-                            teamInfo.users.map((user, index) => (
-                              <div className="flex items-center">
-                                <img
-                                  id="avatar"
-                                  style={{
-                                    width: "35px",
-                                    borderRadius: "50%",
-                                    textAlign: "center",
-                                  }}
-                                  src={footballPlayer}
-                                />
-                                <span
-                                  key={index}
-                                  className="ml-2"
-                                  style={{ color: "#000" }}
-                                >
-                                  {user.fullName}
-                                  <p>{user.phoneNumber}</p>
-                                </span>
-                              </div>
-                            ))}
                         </div>
-                      </div>
+                      )}
                     </RightSide>
                   </Container>
                 </div>

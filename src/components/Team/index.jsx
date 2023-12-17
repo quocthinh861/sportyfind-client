@@ -1,6 +1,8 @@
 import React from "react";
 import "./style.css";
+import { useSelector } from "react-redux";
 function Account() {
+
   return (
     <div className="user-page-content">
       <section className="border-light">

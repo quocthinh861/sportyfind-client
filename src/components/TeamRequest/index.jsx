@@ -57,7 +57,7 @@ function TeamRequest(props) {
             <AcceptButton onClick={() => handleAnimate("ACCEPT")}>
               <FontAwesomeIcon icon={faCheck} />
             </AcceptButton>
-            <DenyButton onClick={() => handleAnimate("CANCLE")}>
+            <DenyButton onClick={() => handleAnimate("CANCEL")}>
               <FontAwesomeIcon icon={faTimes} />
             </DenyButton>
           </div>

@@ -14,9 +14,40 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import Modal from "../components/Popup";
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { formatDateAndTime, formatTimeDifference } from "../utils/TimeUtil";
+import Map from "../components/Map";
 
 function Detail() {
   const axiosPrivate = useAxiosPrivate();
+  const { url } = useParams();
+  const [field, setField] = useState({});
+  const user = useSelector((state) => state.user);
+  const fullname = user.data?.user?.fullName;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      document.title = "Chi tiết sân bóng";
+
+      try {
+        // Get all teams from API
+        const res = await axiosPrivate.get(
+          "/field/getFieldDetailByURL?url=" + url
+        );
+        if (res.status === 200) {
+          setField(res.data.result);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData(); // Call the async function
+
+    // If you have any cleanup logic, you can return a function
+    // For example: return () => { /* cleanup logic */ };
+  }, []);
 
   // States
   const [fieldType, setFieldType] = useState("");
@@ -25,6 +56,25 @@ function Detail() {
   const [selectedEndTime, setSelectedEndTime] = useState(null);
   const [isAvailable, setIsAvailable] = useState(false);
   const [isCheckLoading, setIsCheckLoading] = useState(false);
+  const [note, setNote] = useState("");
+
+  const totalPrice = () => {
+    if (selectedStartTime && selectedEndTime) {
+      const start = selectedStartTime.format("HH:mm");
+      const end = selectedEndTime.format("HH:mm");
+      const startTime = start.split(":");
+      const endTime = end.split(":");
+      const startHour = parseInt(startTime[0]);
+      const startMinute = parseInt(startTime[1]);
+      const endHour = parseInt(endTime[0]);
+      const endMinute = parseInt(endTime[1]);
+      const totalHour = endHour - startHour;
+      const totalMinute = endMinute - startMinute;
+      const total = totalHour + totalMinute / 60;
+      return total * field.hourlyRate;
+    }
+    return 0;
+  };
 
   // Refs
   const containerRef = useRef(null);
@@ -41,6 +91,9 @@ function Detail() {
     }
     if (!selectedStartTime || !selectedEndTime) {
       errors.startTime = "Thời gian đặt sân không được để trống";
+    }
+    if(selectedStartTime && selectedEndTime && selectedStartTime >= selectedEndTime) {
+      errors.startTime = "Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc";
     }
 
     setErrors(errors);
@@ -96,8 +149,32 @@ function Detail() {
     setIsAvailable(false); // Reset state
 
     setTimeout(() => {
-      setIsCheckLoading(false); // Hide loading spinner
-      setIsAvailable(true); // Update state based on availability
+
+      const formattedDate = startDate.toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      });
+  
+
+      axiosPrivate.post("/booking/checkAvailability", {
+        fieldId: field && field.fieldId,
+        bookingDate: formattedDate,
+        startTime: selectedStartTime.format("HH:mm"),
+        endTime: selectedEndTime.format("HH:mm"),
+      }).then((res) => {
+        if (res.status === 200) {
+          const isAvailable = res.data.result;
+          setIsAvailable(isAvailable); // Update state based on availability
+        }
+        else {
+          setIsAvailable(false); 
+        }
+        setIsCheckLoading(false); // Hide loading spinner
+      }).catch((err) => {
+        alert("Đã có lỗi xảy ra");
+        setIsCheckLoading(false); // Hide loading spinner
+      });
     }, 1500);
   };
 
@@ -109,26 +186,54 @@ function Detail() {
 
   return (
     <div className="container pt-4" ref={containerRef}>
-      <Breadcrumb>
-        <Breadcrumb.Item href="/">Trang chủ</Breadcrumb.Item>
-        <Breadcrumb.Item href="/san-bong">Sân bóng đá</Breadcrumb.Item>
-        <Breadcrumb.Item>Hồ Chí Minh</Breadcrumb.Item>
-        <Breadcrumb.Item>Quận 12</Breadcrumb.Item>
-        <Breadcrumb.Item active>Sân bóng Thiện Nhân</Breadcrumb.Item>
-      </Breadcrumb>
+      {field && field.venue && (
+        <Breadcrumb>
+          <Breadcrumb.Item href="/">Trang chủ</Breadcrumb.Item>
+          <Breadcrumb.Item href="/san-bong">Sân bóng đá</Breadcrumb.Item>
+          <Breadcrumb.Item>Hồ Chí Minh</Breadcrumb.Item>
+          <Breadcrumb.Item>Quận {field.venue.district}</Breadcrumb.Item>
+          <Breadcrumb.Item active>{field.fieldName}</Breadcrumb.Item>
+        </Breadcrumb>
+      )}
       <div className="row">
         <div className="col-lg-8 col-md-7">
-          <h3 className="pb-2">Sân bóng Thiện Nhân</h3>
+          <h3 className="pb-2">{field.fieldName}</h3>
           <p>
             <FontAwesomeIcon icon={faStar} color="#f0803c" />
-            <span className="stars fw-bold">4.3</span> (3 Reviews)
+            <span className="stars fw-bold">
+              {
+                // show average rating here only 1 decimal place
+                field &&
+                  field.venue &&
+                  field.venue.reviews &&
+                  field.venue.reviews.length > 0 &&
+                  (
+                    field.venue.reviews.reduce(
+                      (accumulator, currentValue) =>
+                        accumulator + currentValue.rating,
+                      0
+                    ) / field.venue.reviews.length
+                  ).toFixed(1)
+              }
+            </span>{" "}
+            (
+            {field &&
+              field.venue &&
+              field.venue.reviews &&
+              field.venue.reviews.length}{" "}
+            Reviews)
             <span className="ps-lg-2">
               <FontAwesomeIcon
                 icon={faLocationDot}
                 color="#85c240"
                 className="mr-1"
               />
-              206 Vườn Lài, An Phú Đông, Quận 12
+              {field.venue &&
+                field.venue.address +
+                  ", Phường " +
+                  field.venue.ward +
+                  ", Quận " +
+                  field.venue.district}
             </span>
           </p>
         </div>
@@ -143,8 +248,8 @@ function Detail() {
       <div className="row">
         <div className="col-lg-7 col-md-7 mb-3">
           <img
-            src="https://cdn.malaebapp.com/images/stadium/74/large"
-            style={{ width: "100%", borderRadius: "20px" }}
+            src={field && field.venue && field.venue.thumbnail}
+            style={{ width: "100%", borderRadius: "20px", maxHeight: "600px" }}
           />
           <h5 className="mb-0 pt-4 pb-0">Địa điểm</h5>
           <img
@@ -153,14 +258,22 @@ function Detail() {
             alt="img"
           ></img>
           <div>
-            <iframe
-              title="Google Map"
-              width="100%"
-              height="450"
-              loading="lazy"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.794455546505!2d106.691472!3d10.843459799999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3175285b5ba680cd%3A0x57e89123fa14bd3e!2s206%20V%C6%B0%E1%BB%9Dn%20L%C3%A0i%2C%20Ph%C6%B0%E1%BB%9Dng%208%2C%20Qu%E1%BA%ADn%204%2C%20Th%C3%A0nh%20ph%E1%BB%91%20H%E1%BB%93%20Ch%C3%AD%20Minh%2C%20Vietnam!5e0!3m2!1sen!2sus!4v1653039044912!5m2!1sen!2sus"
-              allowFullScreen=""
-            ></iframe>
+            {/* <Map
+              lat={field.venue && parseFloat(field.venue.latitude)}
+              lng={field.venue && parseFloat(field.venue.longitude)}
+              googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${'AIzaSyAB_ahjB8F275QK0oE3zJ2B4G958mUTXIg'}&callback=initMap`}
+              loadingElement={<div style={{ height: `100%` }} />}
+              containerElement={
+                <div
+                  style={{
+                    height: `90vh`,
+                    margin: `auto`,
+                    border: "2px solid black",
+                  }}
+                />
+              }
+              mapElement={<div style={{ height: `100%` }} />}
+            /> */}
           </div>
         </div>
         <div className="col-lg-5 col-md-5">
@@ -178,12 +291,13 @@ function Detail() {
               <b>
                 <FontAwesomeIcon icon={faPhone} />
               </b>{" "}
-              09090483537
+              {field.venue && field.venue.phone}
               <br />
               <b>
                 <FontAwesomeIcon icon={faClock} />
               </b>{" "}
-              04:00 PM - 11:59 PM
+              {field.venue && field.venue.openTime} -{" "}
+              {field.venue && field.venue.closeTime}
             </p>
             {
               // Display error here
@@ -300,11 +414,16 @@ function Detail() {
                       Kiểm tra
                     </button>
                   )}
-                  {isAvailable && (
+                  {isAvailable ? (
                     <div className="mt-2 text-success">
                       Thời gian đã chọn có sẵn
                     </div>
-                  )}
+                  ) : (
+                    <div className="mt-2 text-danger">
+                      Thời gian đã chọn không có sẵn
+                    </div>
+                  )
+                  }
                 </div>
               </div>
             </div>
@@ -317,6 +436,8 @@ function Detail() {
                 name="product-description"
                 className="form-control"
                 placeholder="Ghi chú"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
               ></textarea>
             </div>
             <Modal
@@ -326,19 +447,29 @@ function Detail() {
               content={
                 <div className="model-content">
                   <p>
-                    Người đặt: <i>Đặng Quốc Thịnh</i>
+                    Người đặt: <i>{fullname}</i>
                   </p>
                   <p>
-                    Địa điểm: <i>Nhà thi đấu Bình Minh (sân 1)</i>
+                    Địa điểm: <i>{field.fieldName}</i>
                   </p>
                   <p>
-                    thời gian: <i>21/3/2023 (18:30 - 19:30)</i>
+                    thời gian:{" "}
+                    <i>
+                      {startDate &&
+                        startDate.toLocaleDateString("en-US", {
+                          month: "2-digit",
+                          day: "2-digit",
+                          year: "numeric",
+                        })}{" "}
+                      ({selectedStartTime && selectedStartTime.format("HH:mm")}{" "}
+                      - {selectedEndTime && selectedEndTime.format("HH:mm")})
+                    </i>
                   </p>
                   <p>
-                    Tổng tiền: <i>350.000đ</i>
+                    Tổng tiền: <i>{totalPrice()}</i>
                   </p>
                   <p>
-                    Ghi chú: <i>Testing</i>
+                    Ghi chú: <i>{note}</i>
                   </p>
                   <p className="note">
                     Lưu ý: Cần thanh toán trong vòng 24h kể từ khi đặt sân, hệ
@@ -433,13 +564,9 @@ function Detail() {
           </div>
         </div>
       </div>
-      <p className="p-0 m-0 my-2 mt-4 nl2br">
-        <b>Cở sở vật chất: </b> Có sân bóng đá, sân bóng chuyền và sân bóng rổ.
-        Bạn có thể chơi trong 90 phút hoặc thậm chí là 120 phút. Các sân được
-        thiết kế với các kỹ thuật hiện đại và được trang bị đầy đủ thiết bị cần
-        thiết. Ngoài ra còn có phòng tắm và nhà vệ sinh để sử dụng. Đặt ngay từ
-        Malaeb Bahrain.
-      </p>
+      <div
+        dangerouslySetInnerHTML={{ __html: field?.venue?.additionalInfo || "" }}
+      />
       <div className="reviews mb-3 pt-4">
         <h5 className="mb-0">Đánh giá</h5>
         <img
@@ -448,93 +575,47 @@ function Detail() {
           alt="img"
         ></img>
         <div className="reviews-list">
-          <div className="card mb-3">
-            <div className="card-body">
-              <div className="d-flex">
-                <div className="flex-shrink-0">
-                  <img
-                    src="https://cdn.malaebapp.com/images/user/151097/large"
-                    className="imgCircle"
-                    alt="img"
-                  />
+          {
+            // Display reviews here
+            field &&
+              field.venue &&
+              field.venue.reviews &&
+              field.venue.reviews.map((review) => (
+                <div className="card mb-3">
+                  <div className="card-body">
+                    <div className="d-flex">
+                      <div className="flex-shrink-0">
+                        <img
+                          src="https://cdn.malaebapp.com/images/user/151097/large"
+                          className="imgCircle"
+                          alt="img"
+                        />
+                      </div>
+                      <div className="flex-grow-1 mx-3 pt-1">
+                        <h5 className="fw-bold mb-1 d-flex justify-content-between">
+                          {review.username}{" "}
+                          <span className="float-end fw-normal textSmall">
+                            {formatTimeDifference(review.createdDate)}
+                          </span>
+                        </h5>
+                        <p className="textVsmall">
+                          {Array(review.rating)
+                            .fill()
+                            .map(() => (
+                              <img
+                                src="https://malaebapp.com/images/star.png"
+                                width="15"
+                                alt="img"
+                              />
+                            ))}
+                        </p>
+                      </div>
+                    </div>
+                    <p>{review.content}</p>
+                  </div>
                 </div>
-                <div className="flex-grow-1 mx-3 pt-1">
-                  <h5 className="fw-bold mb-1 d-flex justify-content-between">
-                    Nguyễn Phúc Khang{" "}
-                    <span className="float-end fw-normal textSmall">
-                      3 ngày trước
-                    </span>
-                  </h5>
-                  <p className="textVsmall">
-                    <img
-                      src="https://malaebapp.com/images/star.png"
-                      alt="img"
-                    />{" "}
-                    5
-                  </p>
-                </div>
-              </div>
-              <p>Mình thấy rất hài lòng với chất lượng và dịch vụ ở sân bóng</p>
-            </div>
-          </div>
-          <div className="card mb-3">
-            <div className="card-body">
-              <div className="d-flex">
-                <div className="flex-shrink-0">
-                  <img
-                    src="https://cdn.malaebapp.com/images/user/151097/large"
-                    className="imgCircle"
-                    alt="img"
-                  />
-                </div>
-                <div className="flex-grow-1 mx-3 pt-1">
-                  <h5 className="fw-bold mb-1 d-flex justify-content-between">
-                    Bình Minh{" "}
-                    <span className="float-end fw-normal textSmall">
-                      3 ngày trước
-                    </span>
-                  </h5>
-                  <p className="textVsmall">
-                    <img
-                      src="https://malaebapp.com/images/star.png"
-                      alt="img"
-                    />{" "}
-                    5
-                  </p>
-                </div>
-              </div>
-              <p>Sân sạch sẽ, thoáng mát, ông chủ dễ thương. Rate 5 sao</p>
-            </div>
-          </div>
-          <div className="card mb-3">
-            <div className="card-body">
-              <div className="d-flex">
-                <div className="flex-shrink-0">
-                  <img
-                    src="https://cdn.malaebapp.com/images/user/151097/large"
-                    className="imgCircle"
-                    alt="img"
-                  />
-                </div>
-                <div className="flex-grow-1 mx-3 pt-1">
-                  <h5 className="fw-bold mb-1 d-flex justify-content-between">
-                    abdulla aqeel janahi{" "}
-                    <span className="float-end fw-normal textSmall">
-                      3 ngày trước
-                    </span>
-                  </h5>
-                  <p className="textVsmall">
-                    <img
-                      src="https://malaebapp.com/images/star.png"
-                      alt="img"
-                    />{" "}
-                    5
-                  </p>
-                </div>
-              </div>
-              <p>Thật tuyệt vời !!!</p>
-            </div>
-          </div>
+              ))
+          }
         </div>
       </div>
     </div>

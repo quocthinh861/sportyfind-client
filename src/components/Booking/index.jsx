@@ -19,10 +19,22 @@ import { useLocation } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import CreateGameMatch from "../CreateGame";
 
+const BookingStatus = {
+  NEWLY_CREATED: 'Mới',
+  PAID: 'Hoàn thành',
+  // Add other status values as needed
+};
+
+const mapBookingStatus = (status) => {
+  return BookingStatus[status] || status; // Use the mapped value or the original status
+};
+
+
 function Account() {
   const axiosPrivate = useAxiosPrivate();
   const location = useLocation();
   const [bookingList, setBookingList] = React.useState([]);
+  const [bookingStatus, setBookingStatus] = React.useState("");
   const [beginDate, setBeginDate] = React.useState(
     new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
   );
@@ -49,6 +61,7 @@ function Account() {
     var query = {
       beginDate: startDateFormatted,
       endDate: endDateFormatted,
+      status: bookingStatus === "" ? null : mapBookingStatus(bookingStatus),
       customerId: 1,
       fieldId: 2,
     };
@@ -63,7 +76,7 @@ function Account() {
               id: booking.bookingId,
               date: booking.bookingDate,
               time: `${booking.startTime} - ${booking.endTime}`,
-              status: booking.bookingStatus,
+              status: mapBookingStatus(booking.bookingStatus),
               venue: booking.fieldName,
               price: booking.price,
             };
@@ -89,7 +102,7 @@ function Account() {
               id: booking.bookingId,
               date: booking.bookingDate,
               time: `${booking.startTime} - ${booking.endTime}`,
-              status: booking.bookingStatus,
+              status: mapBookingStatus(booking.bookingStatus),
               venue: booking.fieldName,
               price: booking.price,
             };
@@ -178,14 +191,18 @@ function Account() {
                       data-style="btn-selectpicker"
                       title=" "
                       className="form-control"
+                      onChange={(e) => {
+                        setBookingStatus(e.target.value);
+                      }}
+                      value={bookingStatus}
                     >
-                      <option value="all" selected="">
+                      <option value="">
                         Tất cả
                       </option>
-                      <option value="new">Mới/Đã xác nhận</option>
-                      <option value="pending">Chờ xác nhận</option>
-                      <option value="done">Đã qua/Hoàn thành</option>
-                      <option value="cancelled">Đã hủy</option>
+                      <option value="NEWLY_CREATED">Mới/Đã xác nhận</option>
+                      <option value="PENDING">Chờ xác nhận</option>
+                      <option value="DONE">Đã qua/Hoàn thành</option>
+                      <option value="CANCELLED">Đã hủy</option>
                     </Form.Select>
                   </Col>
                   <Col xl={3} md={3} mb={4}>

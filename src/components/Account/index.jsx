@@ -216,7 +216,7 @@ function Account() {
                         </span>
                         <span>
                           <img src={starIcon} className="w-5 h-5" />
-                          {team.rankingpoint}
+                          {team.legitpoint}
                           <p className="show-info">
                             <b>Điểm uy tín: </b>
                             <ul>
@@ -338,6 +338,7 @@ function Account() {
                     <input
                       className="form-control"
                       placeholder="cm"
+                      value={height}
                       onChange={(event) => {
                         setHeight(event.target.value);
                       }}
@@ -351,6 +352,7 @@ function Account() {
                     <input
                       className="form-control"
                       placeholder="kg"
+                      value={weight}
                       type="text"
                       onChange={(event) => {
                         setWeight(event.target.value);
@@ -366,6 +368,7 @@ function Account() {
                     className="form-control"
                     placeholder="Ngày sinh"
                     type="date"
+                    value={birthDay}
                     onChange={(event) => {
                       setBirthDay(event.target.value);
                     }}

@@ -10,6 +10,7 @@ function SignUp() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const dispatch = useDispatch();
+  const useNavigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +29,7 @@ function SignUp() {
         toast.success("Đăng ký thành công");
         console.log(response);
         dispatch(logout());
-        useNavigate().navigate('/tai-khoan/dang-nhap');
+        useNavigate.navigate('/tai-khoan/dang-nhap');
       } else {
         toast.error("Đăng ký thất bại");
       }

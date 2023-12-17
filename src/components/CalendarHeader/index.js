@@ -1,8 +1,9 @@
 import dayjs from "dayjs";
-import React from "react";
+import React, { useContext } from "react";
 import scheduleLogo from "../../assets/images/icons/schedule.png";
+import GlobalContext from "../../context/GlobalContext";
 export default function CalendarHeader() {
-  const [monthIndex, setMonthIndex] = React.useState(12);
+  const { monthIndex, setMonthIndex } = useContext(GlobalContext);
   function handlePrevMonth() {
     setMonthIndex(monthIndex - 1);
   }

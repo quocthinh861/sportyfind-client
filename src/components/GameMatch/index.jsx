@@ -54,7 +54,7 @@ function index({ type, gameMatch, onClick }) {
             </span>
             <span className="ml-1">
               <img src={starIcon} className="w-5 h-5" />
-              {teamA.rankingpoint}
+              {teamA.legitpoint}
             </span>
           </div>
         </TeamLogo>
@@ -83,7 +83,7 @@ function index({ type, gameMatch, onClick }) {
                     </span>
                     <span className="ml-1">
                       <img src={starIcon} className="w-5 h-5" />
-                      {teamB.rankingpoint}
+                      {teamB.legitpoint}
                     </span>
                   </div>
                 </TeamLogo>

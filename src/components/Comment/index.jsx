@@ -50,42 +50,44 @@ function Comment({ roomId = 1 }) {
     setMessage("");
   };
 
-
-
   const addMessageToRoom = (message) => {
     if (!message) return;
 
     if (currentChannel != null && currentChannel != undefined) {
-      currentChannel.send({
-        type: "broadcast",
+      // currentChannel.send({
+      //   type: "broadcast",
 
-        event: "new_message",
+      //   event: "new_message",
 
-        payload: { message },
-      });
+      //   payload: { message },
+      // });
     }
   };
 
   const getMessages = async () => {
     const response = await supabase
-    .from("message")
-    .select("*")
-    .eq("roomid", roomId);
+      .from("message")
+      .select("*")
+      .eq("roomid", roomId);
     var messages = response.data;
-    if(messages == null || messages == undefined) return;
+    if (messages == null || messages == undefined) return;
     // get user info bulk
     const userIds = messages.map((message) => message.userid);
-    const res = await axiosPrivate.post('/account/getUserInfoByUserIds', userIds);
+    const res = await axiosPrivate.post(
+      "/account/getUserInfoByUserIds",
+      userIds
+    );
     const users = res?.data?.result;
     console.log(users);
 
-    setMessages(messages.map((message) => {
-      return {
-        ...message,
-        userName: users.find(user => user.id == message.userid)?.username
-      };
-    }));
-  
+    setMessages(
+      messages.map((message) => {
+        return {
+          ...message,
+          userName: users.find((user) => user.id == message.userid)?.username,
+        };
+      })
+    );
   };
 
   const subscribeToRoom = () => {
@@ -95,9 +97,13 @@ function Comment({ roomId = 1 }) {
     if (isAlreadyInRealtime) return;
     const channel = supabase.channel(`room:${roomId}`);
     channel
-      .on("broadcast", { event: 'new_message' }, (message) => {
-        console.log(message);
-      })
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "message" },
+        () => {
+          getMessages();
+        }
+      )
       .subscribe();
   };
 
@@ -110,11 +116,10 @@ function Comment({ roomId = 1 }) {
   }, []);
 
   useEffect(() => {
-        // Scroll to bottom
-        const chatContent = document.getElementById("chat-content");
-        chatContent.scrollTop = chatContent.scrollHeight + 1000;
+    // Scroll to bottom
+    const chatContent = document.getElementById("chat-content");
+    chatContent.scrollTop = chatContent.scrollHeight + 1000;
   }, [messages]);
-
 
   return (
     <div className="px-4">

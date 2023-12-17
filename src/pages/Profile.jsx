@@ -68,7 +68,7 @@ function Profile() {
   const {slug} =  useParams();
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
-
+  const name = user.data?.user?.username;
   let content = null;
 
   if (slug === "thong-tin-tai-khoan") {
@@ -217,7 +217,7 @@ function Profile() {
                     </div>
                   </a>
                   <div className="d-flex flex-column align-self-center user-brief_right m-md-1">
-                    <div className="user-brief-name text-muted">Thịnh Đặng</div>
+                    <div className="user-brief-name text-muted">{name}</div>
                     <div className="text-muted text-sm d-none d-md-flex">
                       <a className="text-decoration-none" href="/user/profile">
                         <i className="far fa-edit"></i> Sửa hồ sơ
