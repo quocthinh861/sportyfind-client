@@ -9,6 +9,7 @@ function CreateGameMatch(props) {
   console.log(props)
   const axiosPrivate = useAxiosPrivate();
   const user = useSelector((state) => state.user);
+  const userId = user.data?.user?.id;
   const [teamList, setTeamList] = useState([]);
   const [description, setDescription] = useState("");
   const [selectedTeamId, setSelectedTeamId] = useState(null);

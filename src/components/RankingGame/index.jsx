@@ -72,7 +72,7 @@ const TeamWrapper = styled.div`
   }
 `;
 
-function GameResult({ gameMatch }) {
+function GameResult({ gameMatch, setTeamAScore, setTeamBScore }) {
   return (
     <>
       <div className="form-group mb-4">
@@ -85,6 +85,7 @@ function GameResult({ gameMatch }) {
           id="numberInput"
           name="numberInput"
           placeholder="Nhập số điểm"
+          onInput={(e) => setTeamAScore(e.target.value)}
         />
       </div>
       <div className="form-group mb-4">
@@ -97,6 +98,7 @@ function GameResult({ gameMatch }) {
           id="numberInput"
           name="numberInput"
           placeholder="Nhập số điểm"
+          onInput={(e) => setTeamBScore(e.target.value)}
         />
       </div>
     </>
@@ -111,12 +113,16 @@ function RankingGame({ gameMatch }) {
   const [teamHost, setteamHost] = useState(null);
   const [gameRequest, setGameRequest] = useState(null);
   const [gameRequestList, setGameRequestList] = useState([]);
-  const checkIsHost = host.id === userId;
+  const checkIsHost = host ? host.id === userId : false;
   const [isAnimating, setIsAnimating] = useState(false);
+  const [teamAScore, setTeamAScore] = useState(0);
+  const [teamBScore, setTeamBScore] = useState(0);
   const handleAnimate = (action, teamId) => {
     setIsAnimating(true);
     handleGameRequest(action, teamId);
   };
+
+  console.log("gameMatch", gameMatch);
 
   useEffect(() => {
     // Function to fetch teamHost
@@ -196,6 +202,28 @@ function RankingGame({ gameMatch }) {
   const handleSubmit = async (action) => {
     // validate only other team captain can submit
 
+    if(checkIsHost && action === "CANCEL") {
+      const query = {
+        teamId: gameMatch.id,
+        gameId: id,
+        action: action,
+      };
+  
+      try {
+        const res = await axiosPrivate.post("/game/updateGameRequest", query);
+        if (res.status !== 200) {
+          alert("Cập nhật thất bại");
+          return;
+        }
+        alert("Cập nhật thành công");
+        // refresh page
+        window.location.reload();
+      } catch (error) {
+        console.log("error: ", error);
+      }
+      return;
+    }
+
     if (teamHost === null || teamHost === undefined || teamHost == "") {
       alert("Bạn chưa có đội bóng");
       return;
@@ -253,7 +281,15 @@ function RankingGame({ gameMatch }) {
 
                 // style={{ position: "absolute" }}
               />
-              <div className="mt-2">Đang cập nhật</div>
+              {status == 3 ? (
+                <>
+                  <div className="mt-2">
+                    {gameMatch.teamAScore} : {gameMatch.teamBScore}
+                  </div>
+                </>
+              ) : (
+                <div className="mt-2">Đang cập nhật</div>
+              )}
               {/* <div className="mt-2">Tỉ số 3-1</div> */}
             </div>
             {teamB != null ? (
@@ -296,7 +332,11 @@ function RankingGame({ gameMatch }) {
             <img src={calendar} className="w-5 h-5" />
           </div>
           <div className="">
-            {formatDateAndTime(booking.bookingDate + " " + booking.startTime)}
+            {booking.bookingDate +
+              " " +
+              booking.startTime +
+              " - " +
+              booking.endTime}
           </div>
         </div>
         <div className="d-flex align-item-center">
@@ -395,45 +435,78 @@ function RankingGame({ gameMatch }) {
             </div>
           </>
         )}
-        {checkIsHost ? (
-          <Popup
-            buttonText="Cập nhật kết quả"
-            title="Cập nhật kết quả"
-            disabled={false}
-            onConfirm={() => {
-              toast.success("Cập nhật kết quả thành công");
-            }}
-            className="btn btn-orange d-block ml-auto mr-4"
-            content={<GameResult gameMatch={gameMatch} />}
-          />
-        ) : status != 0 ? (
-          <>
-            <button
-              name="button"
-              className="btn btn-secondary disabled d-block ml-auto mr-4"
-            >
-              Đã cáp
-            </button>
-          </>
-        ) : gameRequest?.status !== 1 ? (
-          <button
-            name="button"
-            className="btn btn-orange d-block ml-auto mr-4"
-            onClick={() => handleSubmit("CREATE")}
-          >
-            Cáp kèo
-          </button>
-        ) : (
-          <div className="mt-3">
-            <button
-              name="button"
-              className="btn btn-danger d-block ml-auto mr-4"
-              onClick={() => handleSubmit("REMOVE")}
-            >
-              Hủy cáp
-            </button>
-          </div>
-        )}
+        {checkIsHost &&
+          (status == 1 ? (
+            <Popup
+              buttonText="Cập nhật kết quả"
+              title="Cập nhật kết quả"
+              disabled={false}
+              onConfirm={() => {
+                axiosPrivate
+                  .post("/game/updateGameResult", {
+                    id: id,
+                    teamAScore: teamAScore,
+                    teamBScore: teamBScore,
+                  })
+                  .then((res) => {
+                    if (res.status === 200) {
+                      toast.success("Cập nhật kết quả thành công");
+                    }
+                  });
+              }}
+              className="btn btn-orange d-block ml-auto mr-4"
+              content={
+                <GameResult
+                  gameMatch={gameMatch}
+                  setTeamAScore={setTeamAScore}
+                  setTeamBScore={setTeamBScore}
+                />
+              }
+            />
+          ) : (
+            status == 0 && <>
+                  <button
+                    name="button"
+                    className="btn btn-danger d-block ml-auto mr-4"
+                    onClick={() => handleSubmit("CANCEL")}
+                  >
+                    Hủy trận
+                  </button>
+            </>
+          ))}
+        {!checkIsHost &&
+          (status == 0 ? (
+            <>
+              {gameRequest?.status !== 1 ? (
+                <button
+                  name="button"
+                  className="btn btn-orange d-block ml-auto mr-4"
+                  onClick={() => handleSubmit("CREATE")}
+                >
+                  Cáp kèo
+                </button>
+              ) : (
+                <div className="mt-3">
+                  <button
+                    name="button"
+                    className="btn btn-danger d-block ml-auto mr-4"
+                    onClick={() => handleSubmit("REMOVE")}
+                  >
+                    Hủy cáp
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <button
+                name="button"
+                className="btn btn-secondary disabled d-block ml-auto mr-4"
+              >
+                Đã cáp
+              </button>
+            </>
+          ))}
       </div>
     </div>
   );

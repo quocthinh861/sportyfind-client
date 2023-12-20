@@ -22,7 +22,10 @@ const Time = styled.span`
   font-style: italic;
 `;
 
-function Comment({ roomId = 1 }) {
+function Comment({ roomId }) {
+
+  console.log("roomId", roomId);
+  
   const axiosPrivate = useAxiosPrivate();
   const channels = supabase.getChannels();
   const currentChannel = channels.find(

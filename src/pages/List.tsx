@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import DistanceSlider from "../components/DistanceSlider.tsx";
 import { animateScroll as scroll } from "react-scroll";
-import { Spinner } from "react-bootstrap";
+import { Pagination, Spinner } from "react-bootstrap";
 
 function List() {
   const [startDate, setStartDate] = useState(new Date());
@@ -15,7 +15,7 @@ function List() {
   const mockData = [
     {
       id: 1,
-      link: "/san-bong-thien-tan",
+      link: "/san-bong-thien-nhan",
       name: "Sân bóng Thiện Nhân",
       address: "206 Vườn Lài, An Phú Đông, Quận 12",
       distance: 13,
@@ -28,7 +28,21 @@ function List() {
     },
     {
       id: 2,
-      link: "/san-bong-thien-tan",
+      link: "/san-bong-my-dinh",
+      name: "Sân bóng đá Mỹ Đình",
+      address: "20/93 Tổ 10, Khu phố 6, Phường Linh Trung, Quận Thủ Đức",
+      distance: 13,
+      totalField: 2,
+      comment: 3,
+      rating: 4.3,
+      minPrice: 200000,
+      maxPrice: 400000,
+      image:
+        "https://datsantructuyen.vn/images/products/2022/08/22/large/san-bong-tung-lam-6-_1661181374.jpeg",
+    },
+    {
+      id: 2,
+      link: "/san-bong-minh-tri",
       name: "Sân bóng đá Minh Trí",
       address: "Đông Hưng Thuận 11, Đông Hưng Thuận, Quận 12, TPHCM",
       distance: 13,
@@ -42,7 +56,7 @@ function List() {
     },
     {
       id: 3,
-      link: "/san-bong-thien-tan",
+      link: "/san-bong-nguyen-gia",
       name: "Sân bóng Nguyễn Gia",
       address: "961, Nguyễn Ảnh Thủ, Phường Tân Chánh Hiệp, Quận 12, TPHCM",
       distance: 6,
@@ -56,7 +70,7 @@ function List() {
     },
     {
       id: 4,
-      link: "/san-bong-thien-tan",
+      link: "/san-bong-lan-anh",
       name: "Sân bóng đá Lan Anh",
       address: "70 Đường Tân Thới Nhất 02, Tân Thới Nhất, Quận 12, TPHCM",
       distance: 15,
@@ -403,7 +417,7 @@ function List() {
                     ? listOfStadiums.map((stadium, index) => (
                         <a
                           className="card mb-4 cardList d-none d-md-flex"
-                          href="/san-bong-thien-tan"
+                          href={stadium.link}
                         >
                           <div className="row g-0">
                             <div className="col-md-4 position-relative">
@@ -473,7 +487,19 @@ function List() {
                       ))
                     : "Trống"}
                 </>
+                
               )}
+              {
+                <>
+                  <div className="d-flex justify-content-center">
+                    <Pagination>
+                      <Pagination.Prev />
+                      <Pagination.Item>{1}</Pagination.Item>
+                      <Pagination.Next />
+                    </Pagination>
+                  </div>
+                </>
+              }
             </div>
           </div>
         </div>

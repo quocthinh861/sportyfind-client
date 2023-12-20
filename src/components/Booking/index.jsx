@@ -18,6 +18,7 @@ import { Spinner } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import CreateGameMatch from "../CreateGame";
+import { useSelector } from "react-redux";
 
 const BookingStatus = {
   NEWLY_CREATED: 'Mới',
@@ -43,6 +44,8 @@ function Account() {
   );
   const [isLoading, setIsLoading] = React.useState(false);
   const [createGame, setCreateGame] = React.useState(null);
+  const user = useSelector((state) => state.user);
+  const userId = user.data?.user?.id;
   const handleSearch = (e) => {
     e.preventDefault();
 
@@ -91,7 +94,7 @@ function Account() {
     axiosPrivate
       .get("/booking/getBookingListByCustomerId", {
         params: {
-          customerId: 1,
+          customerId: userId,
         },
       })
       .then((res) => {

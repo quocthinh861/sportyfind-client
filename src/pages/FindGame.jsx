@@ -203,6 +203,7 @@ function FindGame() {
   const [showComment, setShowComment] = useState(false);
   const [gameMatchList, setGameMatchList] = useState([]);
   const [selectedGameMatch, setSelectedGameMatch] = useState(null);
+  const [innerContent, setInnerContent] = useState(null); 
   const [content, setContent] = useState(null);
 
   useEffect(() => {
@@ -244,14 +245,16 @@ function FindGame() {
     setContent(content);
   }, [selectedGameMatch]);
 
-  let innerContent = null;
-  if (showComment) {
-    innerContent = <Comment />;
-  } else {
-    innerContent = content;
-  }
 
-  useEffect(() => {});
+
+  useEffect(() => {
+    if(showComment) {
+      console.log("selectedGameMatch.id", selectedGameMatch?.id);
+      setInnerContent(<Comment roomId={selectedGameMatch && selectedGameMatch.id} />);
+    } else {
+      setInnerContent(content);
+    }
+  }, [showComment, content]);
 
   const handleTeamClick = () => {
     setShowTeam(!showTeam);
@@ -262,7 +265,11 @@ function FindGame() {
   };
 
   const handleGamePick = async (gameId, index) => {
+    window.scrollTo(0, 50);
+    // Right side scroll to top
+    document.querySelector(".right-side").scrollTop = 0;
     console.log(gameId, index);
+    setShowComment(false);
     setSelectedGameMatch(gameMatchList[index]);
   };
 
@@ -442,7 +449,7 @@ function FindGame() {
                         );
                       })}
                     </LeftSide>
-                    <RightSide>
+                    <RightSide className="right-side">
                       <TabWrapper>
                         <Tab
                           active={!showComment}

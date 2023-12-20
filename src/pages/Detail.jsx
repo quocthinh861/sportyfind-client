@@ -16,15 +16,40 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import Modal from "../components/Popup";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { formatDateAndTime, formatTimeDifference } from "../utils/TimeUtil";
+import { compareTimes, formatDateAndTime, formatTimeDifference } from "../utils/TimeUtil";
 import Map from "../components/Map";
+
+const StarRating = ({ rating, onStarClick }) => {
+  const stars = [1, 2, 3, 4, 5];
+
+  return (
+    <div>
+      {stars.map((star) => (
+        <img
+          key={star}
+          src={
+            star <= rating
+              ? "https://malaebapp.com/images/star-filled.png"
+              : "https://malaebapp.com/images/star.png"
+          }
+          width="20"
+          alt="star"
+          className="cursor-pointer"
+          onClick={() => onStarClick(star)}
+        />
+      ))}
+    </div>
+  );
+};
 
 function Detail() {
   const axiosPrivate = useAxiosPrivate();
   const { url } = useParams();
   const [field, setField] = useState({});
   const user = useSelector((state) => state.user);
+  const userId = user.data?.user?.id;
   const fullname = user.data?.user?.fullName;
+  const username = user.data?.user?.username;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,6 +62,7 @@ function Detail() {
         );
         if (res.status === 200) {
           setField(res.data.result);
+          setFieldReviews(res.data.result.venue.reviews);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -55,8 +81,12 @@ function Detail() {
   const [selectedStartTime, setSelectedStartTime] = useState(null);
   const [selectedEndTime, setSelectedEndTime] = useState(null);
   const [isAvailable, setIsAvailable] = useState(false);
+  const [isCheck, setIsCheck] = useState(false); // [TODO
   const [isCheckLoading, setIsCheckLoading] = useState(false);
   const [note, setNote] = useState("");
+  const [review, setReview] = useState("");
+  const [selectedRating, setSelectedRating] = useState(0);
+  const [fieldReviews, setFieldReviews] = useState([]); // [TODO
 
   const totalPrice = () => {
     if (selectedStartTime && selectedEndTime) {
@@ -92,8 +122,20 @@ function Detail() {
     if (!selectedStartTime || !selectedEndTime) {
       errors.startTime = "Thời gian đặt sân không được để trống";
     }
-    if(selectedStartTime && selectedEndTime && selectedStartTime >= selectedEndTime) {
+    if (
+      selectedStartTime &&
+      selectedEndTime &&
+      selectedStartTime >= selectedEndTime
+    ) {
       errors.startTime = "Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc";
+    }
+    // check open time and close time
+    if(compareTimes(selectedStartTime.format("HH:mm:ss"), field.venue.openTime) === -1) {
+      errors.startTime = "Thời gian bắt đầu phải sau thời gian mở cửa";
+    }
+
+    if(compareTimes(selectedEndTime.format("HH:mm:ss"), field.venue.closeTime) === 1) {
+      errors.startTime = "Thời gian kết thúc phải trước thời gian đóng cửa";
     }
 
     setErrors(errors);
@@ -107,6 +149,81 @@ function Detail() {
 
   const handleEndTimeChange = (value) => {
     setSelectedEndTime(value);
+  };
+
+  const checkReviewSubmitAllready = () => {
+    if (fieldReviews.length > 0) {
+      for (let i = 0; i < fieldReviews.length; i++) {
+        if (fieldReviews[i].username === username) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  const handleReviewSubmit = () => {
+    if (checkReviewSubmitAllready()) {
+      if (
+        window.confirm(
+          "Bạn đã đánh giá sân này rồi, bạn có muốn đánh giá lại không?"
+        )
+      ) {
+        var data = {
+          userId: userId,
+          venueId: field?.venue?.venueId,
+          content: review,
+          rating: selectedRating,
+        };
+
+        axiosPrivate.post("/field/submitReview", data).then((res) => {
+          if (res.status === 200) {
+            alert("Đánh giá thành công");
+
+            // remove old review
+            var newFieldReviews = fieldReviews.filter(
+              (review) => review.username !== username
+            );
+            setFieldReviews([...newFieldReviews, res.data.result]);
+
+            // Reset review form
+            setReview("");
+            setSelectedRating(0);
+          } else {
+            alert("Đánh giá thất bại");
+          }
+        });
+      }
+    } else {
+      var data = {
+        userId: userId,
+        venueId: field?.venue?.venueId,
+        content: review,
+        rating: selectedRating,
+      };
+
+      axiosPrivate.post("/field/submitReview", data).then((res) => {
+        if (res.status === 200) {
+          alert("Đánh giá thành công");
+
+          // remove old review
+          var newFieldReviews = fieldReviews.filter(
+            (review) => review.username !== username
+          );
+          setFieldReviews([...newFieldReviews, res.data.result]);
+
+          // Reset review form
+          setReview("");
+          setSelectedRating(0);
+        } else {
+          alert("Đánh giá thất bại");
+        }
+      });
+    }
+  };
+
+  const handleStarClick = (rating) => {
+    setSelectedRating(rating);
   };
 
   const handleBookNow = async () => {
@@ -123,10 +240,12 @@ function Detail() {
     var data = {
       startTime: selectedStartTime.format("HH:mm"),
       endTime: selectedEndTime.format("HH:mm"),
-      fieldId: fieldType,
-      customerId: "1",
+      fieldId: field && field.fieldId,
+      customerId: userId,
       bookingDate: formattedDate,
     };
+
+    
 
     // Send booking request
     const response = await axiosPrivate.post("/booking/create", data);
@@ -146,35 +265,36 @@ function Detail() {
 
     // [TODO] Check availability
     setIsCheckLoading(true); // Show loading spinner
-    setIsAvailable(false); // Reset state
 
     setTimeout(() => {
-
       const formattedDate = startDate.toLocaleDateString("en-US", {
         month: "2-digit",
         day: "2-digit",
         year: "numeric",
       });
-  
 
-      axiosPrivate.post("/booking/checkAvailability", {
-        fieldId: field && field.fieldId,
-        bookingDate: formattedDate,
-        startTime: selectedStartTime.format("HH:mm"),
-        endTime: selectedEndTime.format("HH:mm"),
-      }).then((res) => {
-        if (res.status === 200) {
-          const isAvailable = res.data.result;
-          setIsAvailable(isAvailable); // Update state based on availability
-        }
-        else {
-          setIsAvailable(false); 
-        }
-        setIsCheckLoading(false); // Hide loading spinner
-      }).catch((err) => {
-        alert("Đã có lỗi xảy ra");
-        setIsCheckLoading(false); // Hide loading spinner
-      });
+      axiosPrivate
+        .post("/booking/checkAvailability", {
+          fieldId: field && field.fieldId,
+          bookingDate: formattedDate,
+          startTime: selectedStartTime.format("HH:mm"),
+          endTime: selectedEndTime.format("HH:mm"),
+        })
+        .then((res) => {
+          setIsCheck(true); // Show check result
+          if (res.status === 200) {
+            setIsCheck(true); // Show check result
+            const isAvailable = res.data.result;
+            setIsAvailable(isAvailable); // Update state based on availability
+          } else {
+            setIsAvailable(false);
+          }
+          setIsCheckLoading(false); // Hide loading spinner
+        })
+        .catch((err) => {
+          alert("Đã có lỗi xảy ra");
+          setIsCheckLoading(false); // Hide loading spinner
+        });
     }, 1500);
   };
 
@@ -414,16 +534,16 @@ function Detail() {
                       Kiểm tra
                     </button>
                   )}
-                  {isAvailable ? (
-                    <div className="mt-2 text-success">
-                      Thời gian đã chọn có sẵn
-                    </div>
-                  ) : (
-                    <div className="mt-2 text-danger">
-                      Thời gian đã chọn không có sẵn
-                    </div>
-                  )
-                  }
+                  {isCheck &&
+                    (isAvailable ? (
+                      <div className="mt-2 text-success">
+                        Thời gian đã chọn có sẵn
+                      </div>
+                    ) : (
+                      <div className="mt-2 text-danger">
+                        Thời gian đã chọn không có sẵn
+                      </div>
+                    ))}
                 </div>
               </div>
             </div>
@@ -577,45 +697,65 @@ function Detail() {
         <div className="reviews-list">
           {
             // Display reviews here
-            field &&
-              field.venue &&
-              field.venue.reviews &&
-              field.venue.reviews.map((review) => (
-                <div className="card mb-3">
-                  <div className="card-body">
-                    <div className="d-flex">
-                      <div className="flex-shrink-0">
-                        <img
-                          src="https://cdn.malaebapp.com/images/user/151097/large"
-                          className="imgCircle"
-                          alt="img"
-                        />
-                      </div>
-                      <div className="flex-grow-1 mx-3 pt-1">
-                        <h5 className="fw-bold mb-1 d-flex justify-content-between">
-                          {review.username}{" "}
-                          <span className="float-end fw-normal textSmall">
-                            {formatTimeDifference(review.createdDate)}
-                          </span>
-                        </h5>
-                        <p className="textVsmall">
-                          {Array(review.rating)
-                            .fill()
-                            .map(() => (
-                              <img
-                                src="https://malaebapp.com/images/star.png"
-                                width="15"
-                                alt="img"
-                              />
-                            ))}
-                        </p>
-                      </div>
+            fieldReviews.map((review) => (
+              <div className="card mb-3">
+                <div className="card-body">
+                  <div className="d-flex">
+                    <div className="flex-shrink-0">
+                      <img
+                        src="https://cdn.malaebapp.com/images/user/151097/large"
+                        className="imgCircle"
+                        alt="img"
+                      />
                     </div>
-                    <p>{review.content}</p>
+                    <div className="flex-grow-1 mx-3 pt-1">
+                      <h5 className="fw-bold mb-1 d-flex justify-content-between">
+                        {review?.username}{" "}
+                        <span className="float-end fw-normal textSmall">
+                          {formatTimeDifference(review.createdDate)}
+                        </span>
+                      </h5>
+                      <p className="textVsmall">
+                        {Array(review.rating)
+                          .fill()
+                          .map(() => (
+                            <img
+                              src="https://malaebapp.com/images/star.png"
+                              width="15"
+                              alt="img"
+                            />
+                          ))}
+                      </p>
+                    </div>
                   </div>
+                  <p>{review.content}</p>
                 </div>
-              ))
+              </div>
+            ))
           }
+        </div>
+        <div className="card mb-3">
+          <div className="card-body">
+            <div className="flex items-center mb-2">
+              <StarRating
+                rating={selectedRating}
+                onStarClick={handleStarClick}
+              />
+            </div>
+            <textarea
+              value={review}
+              onChange={(e) => setReview(e.target.value)}
+              className="w-full h-20 border rounded p-2 mb-2"
+              placeholder="Viết đánh giá của bạn tại đây"
+            ></textarea>
+            <button
+              disabled={!review || !selectedRating}
+              className="bg-blue-500 text-white rounded ml-auto py-2 px-4"
+              onClick={handleReviewSubmit}
+            >
+              Gửi
+            </button>
+          </div>
         </div>
       </div>
     </div>

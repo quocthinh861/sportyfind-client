@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import "./style.css";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
-const Checkbox = () => {
-  const [checkedIndex, setCheckedIndex] = useState(-1);
+const Checkbox = ({userId, gameMatchId, checkedIndex, setCheckedIndex, gameMatchInfo}) => {
 
+  const axiosPrivate = useAxiosPrivate();
   const handleCheckboxChange = (index) => {
     setCheckedIndex(index === checkedIndex ? -1 : index);
+
+    // Call API
+    axiosPrivate.post("/game/updateCustomGameMatchInfo", {
+      userId,
+      gameMatchId,
+      status: index,
+    });
   };
 
   return (
@@ -26,7 +34,7 @@ const Checkbox = () => {
             <label htmlFor="cbtest-0" className="check-box"></label>
             <span className="ml-2">Tham gia</span>
           </div>
-          <small>0 bình chọn</small>
+          <small>{gameMatchInfo.noJoin} bình chọn</small>
         </span>
       </div>
       <div className="my-2">
@@ -45,7 +53,7 @@ const Checkbox = () => {
             <label htmlFor="cbtest-1" className="check-box"></label>
             <span className="ml-2">Không tham gia</span>
           </div>
-          <small>0 bình chọn</small>
+          <small>{gameMatchInfo.noReject} bình chọn</small>
         </span>
       </div>
       <div className="my-2">
@@ -64,7 +72,7 @@ const Checkbox = () => {
             <label htmlFor="cbtest-2" className="check-box"></label>
             <span className="ml-2">Có thể</span>
           </div>
-          <small>0 bình chọn</small>
+          <small>{gameMatchInfo.noWait} bình chọn</small>
         </span>
       </div>
     </>

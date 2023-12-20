@@ -8,7 +8,7 @@ import flashIcon from "../../assets/images/icons/flash.png";
 import calendar from "../../assets/images/icons/calendar.png";
 import placeHolder from "../../assets/images/icons/placeholder.png";
 import questionMark from "../../assets/images/icons/question-mark.png";
-import { formatDateAndTime } from "../../utils/TimeUtil";
+import { formatDate, formatDateAndTime } from "../../utils/TimeUtil";
 
 const TeamLogo = styled.div`
   width: 150px;
@@ -105,7 +105,7 @@ function index({ type, gameMatch, onClick }) {
             <img src={calendar} className="w-5 h-5" />
           </div>
           <div className="">
-            {formatDateAndTime(booking.bookingDate + " " + booking.startTime)}
+            {booking.bookingDate + " " + booking.startTime + " - " + booking.endTime}
           </div>
         </div>
         <div className="d-flex align-item-center">

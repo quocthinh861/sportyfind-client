@@ -41,7 +41,7 @@ function Home() {
               <div className="d-flex">
                 <div className="flex-shrink-0">
                   <img
-                    src="https://vuongtrachdesign.com/w/thethao/wp-content/uploads/2019/12/img7742-8409.jpg"
+                    src="https://giaydabongtot.com/wp-content/uploads/2020/04/Kich-thuoc-san-co-tu-nhien-11-nguoi-tieu-chuan-fifa-vff.jpg"
                     className="imgMedia"
                     alt="..."
                   />
