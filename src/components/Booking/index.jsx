@@ -27,7 +27,7 @@ const BookingStatus = {
 };
 
 const mapBookingStatus = (status) => {
-  return BookingStatus[status] || status; // Use the mapped value or the original status
+  return BookingStatus[status];
 };
 
 
@@ -46,6 +46,27 @@ function Account() {
   const [createGame, setCreateGame] = React.useState(null);
   const user = useSelector((state) => state.user);
   const userId = user.data?.user?.id;
+
+  const cancelBooking = (bookingId) => {
+    axiosPrivate
+      .post("/booking/cancelBooking", {
+        bookingId: bookingId,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          alert("Hủy đặt sân thành công");
+          setBookingList(bookingList.filter((booking) => booking.id !== bookingId));
+        }
+        else {
+          alert("Hủy đặt sân thất bại");
+        }
+
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const handleSearch = (e) => {
     e.preventDefault();
 
@@ -64,9 +85,8 @@ function Account() {
     var query = {
       beginDate: startDateFormatted,
       endDate: endDateFormatted,
-      status: bookingStatus === "" ? null : mapBookingStatus(bookingStatus),
-      customerId: 1,
-      fieldId: 2,
+      status: bookingStatus === "" ? null : bookingStatus,
+      customerId: userId,
     };
 
     setIsLoading(true);
@@ -151,7 +171,9 @@ function Account() {
                 Action
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item>Hủy</Dropdown.Item>
+                <Dropdown.Item onClick={() => {
+                  cancelBooking(row.values.id)
+                }}>Hủy</Dropdown.Item>
                 <Dropdown.Item>Thanh toán</Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {

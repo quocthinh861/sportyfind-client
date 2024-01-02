@@ -12,6 +12,11 @@ function List() {
   const [filter, setFilter] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
 
+    // Pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const stadiumsPerPage = 5; // Change this value based on your requirement
+  
+
   const mockData = [
     {
       id: 1,
@@ -82,18 +87,62 @@ function List() {
       image:
         "https://top10tphcm.com/wp-content/uploads/2020/12/san-bong-da-o-quan-12.jpg",
     },
+    {
+      id: 5,
+      link: "/san-bong-phuong-do",
+      name: "Sân bóng đá Phương Đô",
+      address: "37 Nguyễn Văn Lượng, Phường 10, Quận Gò Vấp, TPHCM",
+      distance: 15,
+      totalField: 2,
+      comment: ``,
+      rating: 5.7,
+      minPrice: 250000,
+      maxPrice: 500000,
+      image:
+        "https://hcmtoplist.com/wp-content/uploads/2022/03/san-bong-thanh-danh-hcmtoplist.jpg",
+    },
+    {
+      id: 6,
+      link: "/san-bong-tan-quy",
+      name: "Sân bóng đá Tân Quý",
+      address:
+        "754/11 Đường Tân Kỳ Tân Quý, KP5, Bình Hưng Hòa, Quận Bình Tân, TPHCM",
+      distance: 15,
+      totalField: 2,
+      comment: ``,
+      rating: 5.7,
+      minPrice: 250000,
+      maxPrice: 500000,
+      image:
+        "https://images.toplist.vn/images/800px/san-bong-da-khang-an-845937.jpg",
+    },
   ];
   const [listOfStadiums, setListOfStadiums] = useState(mockData);
   const [sportSelected, setSportSelected] = useState("football");
   const [fieldTypeSelected, setFieldTypeSelected] = useState("5vs5");
 
+  const indexOfLastStadium = currentPage * stadiumsPerPage;
+  const indexOfFirstStadium = indexOfLastStadium - stadiumsPerPage;
+  const currentStadiums = listOfStadiums.slice(indexOfFirstStadium, indexOfLastStadium);
+
+  const paginate = (pageNumber) => {
+
+    // Scroll to top
+    scroll.scrollToTop({
+      duration: 100,
+      smooth: true,
+    });
+
+    setCurrentPage(pageNumber);
+  };
+
   const handleFieldTypeChange = (event) => {
     const { name } = event.target;
 
     console.log("name", name);
-    
+
     // Update the selected item based on the checkbox that was clicked
-    setFieldTypeSelected(name === fieldTypeSelected ? '' : name);
+    setFieldTypeSelected(name === fieldTypeSelected ? "" : name);
   };
 
   useEffect(() => {
@@ -188,10 +237,7 @@ function List() {
                     id="1"
                     autoComplete="off"
                   />
-                  <label
-                    className="btn btn-outline-success w-100"
-                    htmlFor="1"
-                  >
+                  <label className="btn btn-outline-success w-100" htmlFor="1">
                     <img
                       src="https://malaebapp.com/images/sports/0.png"
                       width="40"
@@ -207,10 +253,7 @@ function List() {
                     id="2"
                     autoComplete="off"
                   />
-                  <label
-                    className="btn btn-outline-success w-100 "
-                    htmlFor="2"
-                  >
+                  <label className="btn btn-outline-success w-100 " htmlFor="2">
                     <img
                       src="https://malaebapp.com/images/sports/1.png"
                       width="40"
@@ -226,10 +269,7 @@ function List() {
                     autoComplete="off"
                     id="3"
                   />
-                  <label
-                    className="btn btn-outline-success w-100 "
-                    htmlFor="3"
-                  >
+                  <label className="btn btn-outline-success w-100 " htmlFor="3">
                     <img
                       src="https://malaebapp.com/images/sports/2.png"
                       width="40"
@@ -245,10 +285,7 @@ function List() {
                     id="4"
                     autoComplete="off"
                   />
-                  <label
-                    className="btn btn-outline-success w-100 "
-                    htmlFor="4"
-                  >
+                  <label className="btn btn-outline-success w-100 " htmlFor="4">
                     <img
                       src="https://malaebapp.com/images/sports/3.png"
                       width="40"
@@ -264,10 +301,7 @@ function List() {
                     id="5"
                     autoComplete="off"
                   />
-                  <label
-                    className="btn btn-outline-success w-100 "
-                    htmlFor="5"
-                  >
+                  <label className="btn btn-outline-success w-100 " htmlFor="5">
                     <img
                       src="https://malaebapp.com/images/sports/4.png"
                       width="40"
@@ -283,10 +317,7 @@ function List() {
                     autoComplete="off"
                     id="6"
                   />
-                  <label
-                    className="btn btn-outline-success w-100 "
-                    htmlFor="6"
-                  >
+                  <label className="btn btn-outline-success w-100 " htmlFor="6">
                     <img
                       src="https://malaebapp.com/images/sports/8.png"
                       width="40"
@@ -413,14 +444,14 @@ function List() {
                 </div>
               ) : (
                 <>
-                  {listOfStadiums.length > 0
-                    ? listOfStadiums.map((stadium, index) => (
+                  {currentStadiums.length > 0
+                    ? currentStadiums.map((stadium, index) => (
                         <a
                           className="card mb-4 cardList d-none d-md-flex"
                           href={stadium.link}
                         >
                           <div className="row g-0">
-                            <div className="col-md-4 position-relative">
+                            <div className="col-md-4 position-relative thumnail">
                               <img
                                 src={stadium.image}
                                 className="card-img-top"
@@ -487,19 +518,20 @@ function List() {
                       ))
                     : "Trống"}
                 </>
-                
               )}
-              {
-                <>
-                  <div className="d-flex justify-content-center">
-                    <Pagination>
-                      <Pagination.Prev />
-                      <Pagination.Item>{1}</Pagination.Item>
-                      <Pagination.Next />
-                    </Pagination>
-                  </div>
-                </>
-              }
+        {
+          currentStadiums.length > 0 && (
+            <div className="d-flex justify-content-center">
+              <Pagination>
+                {Array.from({ length: Math.ceil(listOfStadiums.length / stadiumsPerPage) }, (_, i) => (
+                  <Pagination.Item key={i + 1} active={i + 1 === currentPage} onClick={() => paginate(i + 1)}>
+                    {i + 1}
+                  </Pagination.Item>
+                ))}
+              </Pagination>
+            </div>
+          )
+        }
             </div>
           </div>
         </div>

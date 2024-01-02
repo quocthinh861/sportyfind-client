@@ -1,6 +1,15 @@
 import React from "react";
+import Slider from "react-slick";
 
 function Home() {
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 5,
+    slidesToScroll: 1,
+  };
+
   return (
     <>
       <div className="sectionFirst">
@@ -14,7 +23,9 @@ function Home() {
                 <p className="text-white py-4">
                   Tìm kiếm sân xung quanh bạn ở Thành phố Hồ Chí Minh
                 </p>
-                <button className="search-now"><a href="/danh-sach">Tìm kiếm ngay</a></button>
+                <button className="search-now">
+                  <a href="/danh-sach">Tìm kiếm ngay</a>
+                </button>
               </div>
             </div>
           </div>
@@ -29,7 +40,7 @@ function Home() {
               src="https://malaebapp.com/images/point.png"
               alt="img"
             />{" "}
-            Sân thể thao Thành phố Hồ Chí Minh {" "}
+            Sân thể thao Thành phố Hồ Chí Minh{" "}
             <img
               className="ms-2 d-inline"
               src="https://malaebapp.com/images/point.png"
@@ -37,126 +48,128 @@ function Home() {
             />
           </h3>
           <div className="row pt-5">
-            <div className="col-lg-3 col-md-4 col-6 mb-3 clickable">
-              <div className="d-flex">
-                <div className="flex-shrink-0">
-                  <img
-                    src="https://giaydabongtot.com/wp-content/uploads/2020/04/Kich-thuoc-san-co-tu-nhien-11-nguoi-tieu-chuan-fifa-vff.jpg"
-                    className="imgMedia"
-                    alt="..."
-                  />
-                </div>
-                <div className="flex-grow-1 mx-3 pt-lg-4 pt-md-4 pt-sm-3 pt-1">
-                  <h6 className="fw-bold pt-1">Quận 1</h6>
-                  <p className="textVsmall">26</p>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3 col-md-4 col-6 mb-3 clickable">
-              <div className="d-flex">
-                <div className="flex-shrink-0">
-                  <img
-                    src="https://images.foody.vn/res/g14/131336/prof/s576x330/foody-mobile-87-jpg-428-635649729499912898.jpg"
-                    className="imgMedia"
-                    alt="..."
-                  />
-                </div>
-                <div className="flex-grow-1 mx-3 pt-lg-4 pt-md-4 pt-sm-3 pt-1">
-                  <h6 className="fw-bold pt-1">Quận 2</h6>
-                  <p className="textVsmall">15</p>
+            <Slider {...settings}>
+              <div className="col-lg-3 col-md-4 col-6 mb-3 clickable">
+                <div className="d-flex">
+                  <div className="flex-shrink-0">
+                    <img
+                      src="https://giaydabongtot.com/wp-content/uploads/2020/04/Kich-thuoc-san-co-tu-nhien-11-nguoi-tieu-chuan-fifa-vff.jpg"
+                      className="imgMedia"
+                      alt="..."
+                    />
+                  </div>
+                  <div className="flex-grow-1 mx-3 pt-lg-4 pt-md-4 pt-sm-3 pt-1">
+                    <h6 className="fw-bold pt-1">Quận 1</h6>
+                    <p className="textVsmall">1</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="col-lg-3 col-md-4 col-6 mb-3 clickable">
-              <div className="d-flex">
-                <div className="flex-shrink-0">
-                  <img
-                    src="http://thanhphatsports.com/vantindat/images/image1.jpeg"
-                    className="imgMedia"
-                    alt="..."
-                  />
-                </div>
-                <div className="flex-grow-1 mx-3 pt-lg-4 pt-md-4 pt-sm-3 pt-1">
-                  <h6 className="fw-bold pt-1">Quận 12</h6>
-                  <p className="textVsmall">10</p>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3 col-md-4 col-6 mb-3 clickable">
-              <div className="d-flex">
-                <div className="flex-shrink-0">
-                  <img
-                    src="https://nld.mediacdn.vn/k:thumb_w/684/2015/thethao-1444486269151/khanh-thanh-cau-lac-bo-tdtt-ho-xuan-huong.jpg"
-                    className="imgMedia"
-                    alt="..."
-                  />
-                </div>
-                <div className="flex-grow-1 mx-3 pt-lg-4 pt-md-4 pt-sm-3 pt-1">
-                  <h6 className="fw-bold pt-1">Quận 5</h6>
-                  <p className="textVsmall">8</p>
+              <div className="col-lg-3 col-md-4 col-6 mb-3 clickable">
+                <div className="d-flex">
+                  <div className="flex-shrink-0">
+                    <img
+                      src="https://images.foody.vn/res/g14/131336/prof/s576x330/foody-mobile-87-jpg-428-635649729499912898.jpg"
+                      className="imgMedia"
+                      alt="..."
+                    />
+                  </div>
+                  <div className="flex-grow-1 mx-3 pt-lg-4 pt-md-4 pt-sm-3 pt-1">
+                    <h6 className="fw-bold pt-1">Quận 2</h6>
+                    <p className="textVsmall">2</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="col-lg-3 col-md-4 col-6 mb-3 clickable">
-              <div className="d-flex">
-                <div className="flex-shrink-0">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/S%C3%A2n_v%E1%BA%ADn_%C4%91%E1%BB%99ng_Qu%C3%A2n_khu_7.jpg/330px-S%C3%A2n_v%E1%BA%ADn_%C4%91%E1%BB%99ng_Qu%C3%A2n_khu_7.jpg"
-                    className="imgMedia"
-                    alt="..."
-                  />
-                </div>
-                <div className="flex-grow-1 mx-3 pt-lg-4 pt-md-4 pt-sm-3 pt-1">
-                  <h6 className="fw-bold pt-1">Gò Vấp</h6>
-                  <p className="textVsmall">22</p>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3 col-md-4 col-6 mb-3 clickable">
-              <div className="d-flex">
-                <div className="flex-shrink-0">
-                  <img
-                    src="https://thethaodonga.com/wp-content/uploads/2022/03/san-bong-chuyen-tai-tphcm-3.png"
-                    className="imgMedia"
-                    alt="..."
-                  />
-                </div>
-                <div className="flex-grow-1 mx-3 pt-lg-4 pt-md-4 pt-sm-3 pt-1">
-                  <h6 className="fw-bold pt-1">Tân Bình</h6>
-                  <p className="textVsmall">6</p>
+              <div className="col-lg-3 col-md-4 col-6 mb-3 clickable">
+                <div className="d-flex">
+                  <div className="flex-shrink-0">
+                    <img
+                      src="http://thanhphatsports.com/vantindat/images/image1.jpeg"
+                      className="imgMedia"
+                      alt="..."
+                    />
+                  </div>
+                  <div className="flex-grow-1 mx-3 pt-lg-4 pt-md-4 pt-sm-3 pt-1">
+                    <h6 className="fw-bold pt-1">Quận 12</h6>
+                    <p className="textVsmall">2</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="col-lg-3 col-md-4 col-6 mb-3 clickable">
-              <div className="d-flex">
-                <div className="flex-shrink-0">
-                  <img
-                    src="https://cdnmedia.webthethao.vn/uploads/img/files/images/fullsize/2019/09/28/tennis/ntd-pt.jpg"
-                    className="imgMedia"
-                    alt="..."
-                  />
-                </div>
-                <div className="flex-grow-1 mx-3 pt-lg-4 pt-md-4 pt-sm-3 pt-1">
-                  <h6 className="fw-bold pt-1">Bình Thạnh</h6>
-                  <p className="textVsmall">27</p>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3 col-md-4 col-6 mb-3 clickable">
-              <div className="d-flex">
-                <div className="flex-shrink-0">
-                  <img
-                    src="https://fileth.hcm.edu.vn/UploadImages/thvothisauq7/2022_11/12_BONGROCAPQUAN/023_3011202211.jpg?w=1130"
-                    className="imgMedia"
-                    alt="..."
-                  />
-                </div>
-                <div className="flex-grow-1 mx-3 pt-lg-4 pt-md-4 pt-sm-3 pt-1">
-                  <h6 className="fw-bold pt-1">Hóc Môn</h6>
-                  <p className="textVsmall">2</p>
+              <div className="col-lg-3 col-md-4 col-6 mb-3 clickable">
+                <div className="d-flex">
+                  <div className="flex-shrink-0">
+                    <img
+                      src="https://nld.mediacdn.vn/k:thumb_w/684/2015/thethao-1444486269151/khanh-thanh-cau-lac-bo-tdtt-ho-xuan-huong.jpg"
+                      className="imgMedia"
+                      alt="..."
+                    />
+                  </div>
+                  <div className="flex-grow-1 mx-3 pt-lg-4 pt-md-4 pt-sm-3 pt-1">
+                    <h6 className="fw-bold pt-1">Bình Tân</h6>
+                    <p className="textVsmall">2</p>
+                  </div>
                 </div>
               </div>
-            </div>
+              <div className="col-lg-3 col-md-4 col-6 mb-3 clickable">
+                <div className="d-flex">
+                  <div className="flex-shrink-0">
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/S%C3%A2n_v%E1%BA%ADn_%C4%91%E1%BB%99ng_Qu%C3%A2n_khu_7.jpg/330px-S%C3%A2n_v%E1%BA%ADn_%C4%91%E1%BB%99ng_Qu%C3%A2n_khu_7.jpg"
+                      className="imgMedia"
+                      alt="..."
+                    />
+                  </div>
+                  <div className="flex-grow-1 mx-3 pt-lg-4 pt-md-4 pt-sm-3 pt-1">
+                    <h6 className="fw-bold pt-1">Gò Vấp</h6>
+                    <p className="textVsmall">1</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-3 col-md-4 col-6 mb-3 clickable">
+                <div className="d-flex">
+                  <div className="flex-shrink-0">
+                    <img
+                      src="https://thethaodonga.com/wp-content/uploads/2022/03/san-bong-chuyen-tai-tphcm-3.png"
+                      className="imgMedia"
+                      alt="..."
+                    />
+                  </div>
+                  <div className="flex-grow-1 mx-3 pt-lg-4 pt-md-4 pt-sm-3 pt-1">
+                    <h6 className="fw-bold pt-1">Tân Bình</h6>
+                    <p className="textVsmall">3</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-3 col-md-4 col-6 mb-3 clickable">
+                <div className="d-flex">
+                  <div className="flex-shrink-0">
+                    <img
+                      src="https://cdnmedia.webthethao.vn/uploads/img/files/images/fullsize/2019/09/28/tennis/ntd-pt.jpg"
+                      className="imgMedia"
+                      alt="..."
+                    />
+                  </div>
+                  <div className="flex-grow-1 mx-3 pt-lg-4 pt-md-4 pt-sm-3 pt-1">
+                    <h6 className="fw-bold pt-1">Bình Thạnh</h6>
+                    <p className="textVsmall">2</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-3 col-md-4 col-6 mb-3 clickable">
+                <div className="d-flex">
+                  <div className="flex-shrink-0">
+                    <img
+                      src="https://fileth.hcm.edu.vn/UploadImages/thvothisauq7/2022_11/12_BONGROCAPQUAN/023_3011202211.jpg?w=1130"
+                      className="imgMedia"
+                      alt="..."
+                    />
+                  </div>
+                  <div className="flex-grow-1 mx-3 pt-lg-4 pt-md-4 pt-sm-3 pt-1">
+                    <h6 className="fw-bold pt-1">Hóc Môn</h6>
+                    <p className="textVsmall">2</p>
+                  </div>
+                </div>
+              </div>
+            </Slider>
           </div>
         </div>
         <div className="pt-5">
@@ -331,9 +344,7 @@ function Home() {
                 </div>
                 <div>
                   <h3 className="fw-bold pt-4 pt-lg-3">Chọn</h3>
-                  <p className="textSmall">
-                    Ngày, giờ và loại sân
-                  </p>
+                  <p className="textSmall">Ngày, giờ và loại sân</p>
                 </div>
               </div>
             </div>

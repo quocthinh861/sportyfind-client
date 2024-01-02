@@ -378,7 +378,7 @@ function Detail() {
             alt="img"
           ></img>
           <div>
-            {/* <Map
+            <Map
               lat={field.venue && parseFloat(field.venue.latitude)}
               lng={field.venue && parseFloat(field.venue.longitude)}
               googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${'AIzaSyAB_ahjB8F275QK0oE3zJ2B4G958mUTXIg'}&callback=initMap`}
@@ -393,7 +393,7 @@ function Detail() {
                 />
               }
               mapElement={<div style={{ height: `100%` }} />}
-            /> */}
+            /> 
           </div>
         </div>
         <div className="col-lg-5 col-md-5">

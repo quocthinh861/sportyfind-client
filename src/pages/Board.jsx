@@ -13,6 +13,12 @@ function Board() {
         // Get all teams from API
         const res = await axiosPrivate.get("/team/getTeamList");
         if (res.status === 200) {
+          var order = res.data.result.sort((a, b) => {
+            return (
+              b.rankingpoint * 0.7 + b.legitpoint * 0.3 -
+              (a.rankingpoint * 0.7 + a.legitpoint * 0.3)
+            );
+          });
           setTeams(res.data.result);
         }
       } catch (error) {
@@ -116,7 +122,7 @@ function Board() {
                 {100 - team.legitpoint}
               </td>
               <td className="whitespace-nowrap px-3 py-5 text-sm text-center text-gray-600">
-                {team.statistics && (team.skilllevel + team.legitpoint)} 
+                {team.statistics && (team.rankingpoint * 0.7  + team.legitpoint * 0.3 .toFixed(2))} 
               </td>
             </tr>
           ))}
